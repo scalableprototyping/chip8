@@ -23,8 +23,8 @@ namespace chip8
             memory::Ram ram_;
             memory::RamIter program_counter_;
 
-            const memory::RamIter program_memory_       { ram_.begin() + memory::begin_program_ram };
-            const memory::RamIter end_interpter_memory_ { ram_.begin() + memory::interpreter_ram_size };
+            const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };
+            const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
     };
 }
 #endif

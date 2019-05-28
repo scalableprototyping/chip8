@@ -7,7 +7,7 @@ endif()
 
 list(APPEND INTERPRETER_SOURCE_FILES
     src/Interpreter.cpp
-    src/utils/rom.cpp
+    src/details/memory.cpp
 )
 
 add_executable(${PROJECT_NAME}_interpreter src/main.cpp ${INTERPRETER_SOURCE_FILES})
