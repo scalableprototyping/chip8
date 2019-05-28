@@ -24,6 +24,7 @@ namespace chip8
     {
         program_counter_ = ram_.begin();
         //TODO: parse commands
+        //TODO: tick timers
     }
 
     //Private

@@ -22,7 +22,7 @@ if(BUILD_TESTS)
         message("Could not find gtest library. It will be fetch and compiled..")
         set(EXTERNAL_GTEST_PATH depends/googletest)
         execute_process(COMMAND git submodule update --init -- ${EXTERNAL_GTEST_PATH}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
         option(INSTALL_GTEST "" OFF)
         option(INSTALL_GMOCK "" OFF)
         add_subdirectory(${EXTERNAL_GTEST_PATH})
@@ -33,6 +33,7 @@ if(BUILD_TESTS)
     list(APPEND TEST_SOURCE_FILES
         ${INTERPRETER_SOURCE_FILES}
         test/rom_test.cpp
+        test/timer_test.cpp
     )
 
     add_executable(${PROJECT_NAME}_tests test/test_main.cpp ${TEST_SOURCE_FILES})
