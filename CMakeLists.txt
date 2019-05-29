@@ -5,13 +5,20 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
+
+find_package(SFML 2.3 COMPONENTS graphics audio window system)
+
 list(APPEND INTERPRETER_SOURCE_FILES
     src/Interpreter.cpp
+    src/io/Speaker.cpp
     src/details/memory.cpp
+    src/details/audio.cpp
 )
 
 add_executable(${PROJECT_NAME}_interpreter src/main.cpp ${INTERPRETER_SOURCE_FILES})
-target_include_directories(${PROJECT_NAME}_interpreter PRIVATE include)
+target_include_directories(${PROJECT_NAME}_interpreter PRIVATE include ${SFML_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME}_interpreter PRIVATE ${SFML_LIBRARIES})
 target_compile_options(${PROJECT_NAME}_interpreter PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
 
 if(BUILD_TESTS)
@@ -34,11 +41,12 @@ if(BUILD_TESTS)
         ${INTERPRETER_SOURCE_FILES}
         test/rom_test.cpp
         test/timer_test.cpp
+        test/speaker_test.cpp
     )
 
     add_executable(${PROJECT_NAME}_tests test/test_main.cpp ${TEST_SOURCE_FILES})
-    target_include_directories(${PROJECT_NAME}_tests PRIVATE include ${GTEST_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${GTEST_LIBRARIES})
+    target_include_directories(${PROJECT_NAME}_tests PRIVATE include ${GTEST_INCLUDE_DIRS} ${SFML_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${GTEST_LIBRARIES} ${SFML_LIBRARIES})
     target_compile_options(${PROJECT_NAME}_tests PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
     add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}_tests)
 endif()

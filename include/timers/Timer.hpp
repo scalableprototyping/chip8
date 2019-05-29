@@ -13,7 +13,7 @@ namespace chip8::timers
         static_assert(std::is_integral<Resolution>::value, "Timer<T> expects an integral value as resolution");
 
         public:
-            GeneralizedTimer(const Callback& _start_callback = {}, const Callback& _end_callback = {});
+            explicit GeneralizedTimer(const Callback& _start_callback = {}, const Callback& _end_callback = {});
             ~GeneralizedTimer() = default;
 
             void Tick();
