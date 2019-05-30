@@ -19,6 +19,7 @@ addons:
         - libopenal-dev
         - libjpeg62
         - libsfml-dev
+        - g++-8
         - cmake
 
 env:
