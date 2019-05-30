@@ -1,5 +1,13 @@
 language: cpp
 
+addons:
+    apt:
+        packages:
+            - xvfb
+env:
+    global:
+        - DISPLAY=:99
+
 before_script:
     - git clone https://github.com/sfml/sfml 
     - cd sfml 
@@ -20,3 +28,5 @@ matrix:
   - name: "Linux GCC Dynamic"
     os: linux
     compiler: gcc
+
+
