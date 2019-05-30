@@ -37,8 +37,8 @@ before_script:
 
 script:
     - mkdir build && cd build
-    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DSFML_DIR=$TRAVIS_BUILD_DIR/sfml/install/lib/cmake/SFML -DCMAKE_INSTALL_PREFIX=../install
-    - cmake --build . --target install --config Release
+    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DCMAKE_INSTALL_PREFIX=../install
+    - ./chip_8_cpp_tests
 
 matrix:
   include:
