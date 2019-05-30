@@ -33,6 +33,8 @@ install:
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
     - sudo apt-get install libsfml-dev
     - sudo apt-get install pulseaudio
+    - sudo apt-get install alsa-utils
+    - sudo apt-get install alsamixer
     - sudo alsa force-reload
     - pavucontrol
 
