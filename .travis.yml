@@ -2,7 +2,7 @@ language: cpp
 
 addons:
     sources:
-        - ubuntu-toolchain-r-test
+        - ubuntu-toolchain-r/test
     apt:
         packages:
         - libpthread-stubs0-dev
@@ -53,6 +53,6 @@ matrix:
   - name: "Linux GCC Dynamic"
     os: linux
     dist: xenial
-    compiler: gcc
+    compiler: gcc-8
 
 
