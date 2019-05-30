@@ -1,10 +1,59 @@
-#include <SFML/Graphics.hpp>
+#include "io/Display.hpp"
 
-class TileMap : public sf::Drawable, public sf::Transformable
+#include <iostream>
+
+namespace chip8::io
 {
-public:
+    DisplayPixels::DisplayPixels() 
+    {
+        Clear();
+    }
 
-    bool load(const std::string& tileset, sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height)
+    void DisplayPixels::Clear() {
+        for (auto& col : pixels_) 
+        {
+            col.fill(0);
+        }
+    }
+
+    DisplayRenderer::DisplayRenderer(DisplayPixels& displayPixels) :
+        displayPixels_(displayPixels)
+    {
+        const int kTextureHeight = 32;
+        const int kTextureWidth = 32;
+        const int kMapWidth = displayPixels.kWidth_*kTextureWidth;
+        const int kMapHeight = displayPixels.kHeight_*kTextureHeight;
+        if (!tileMap_.Load("../assets/tileset.png", sf::Vector2u(kTextureWidth, kTextureHeight), displayPixels_, displayPixels.kWidth_, displayPixels.kHeight_))
+        {
+            // TODO: improve exection handling
+        }
+
+        tileMap_.setScale(
+            float(window_.getSize().x) / kMapWidth, 
+            float(window_.getSize().y) / kMapHeight
+            );
+    }
+
+    void DisplayRenderer::Update() 
+    {
+        if (window_.isOpen()) 
+        {
+            // handle events
+            sf::Event event;
+            while (window_.pollEvent(event))
+            {
+                if(event.type == sf::Event::Closed)
+                    window_.close();
+            }
+
+            // draw the map
+            window_.clear();
+            window_.draw(tileMap_);
+            window_.display();
+        }
+    }
+
+    bool DisplayRenderer::TileMap::Load(const std::string& tileset, sf::Vector2u tileSize, DisplayPixels& tiles, unsigned int width, unsigned int height)
     {
         // load the tileset texture
         if (!m_tileset.loadFromFile(tileset))
@@ -19,7 +68,7 @@ public:
             for (unsigned int j = 0; j < height; ++j)
             {
                 // get the current tile number
-                int tileNumber = tiles[i + j * width];
+                int tileNumber = tiles[i][j];
 
                 // find its position in the tileset texture
                 int tu = tileNumber % (m_tileset.getSize().x / tileSize.x);
@@ -44,9 +93,7 @@ public:
         return true;
     }
 
-private:
-
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+    void DisplayRenderer::TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
         // apply the transform
         states.transform *= getTransform();
@@ -57,7 +104,4 @@ private:
         // draw the vertex array
         target.draw(m_vertices, states);
     }
-
-    sf::VertexArray m_vertices;
-    sf::Texture m_tileset;
-};
+}
