@@ -32,6 +32,9 @@ install:
     - sudo apt-get install -qq g++-8
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
     - sudo apt-get install libsfml-dev
+    - sudo apt-get install pulseaudio
+    - sudo alsa force-reload
+    - pavucontrol
 
 before_script:
     - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x24"
