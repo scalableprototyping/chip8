@@ -37,9 +37,8 @@ before_script:
 
 script:
     - mkdir build && cd build
-    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1
+    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DOS_ARCH=1
     - make
-    - ls
     - ./chip_8_cpp_tests
 
 matrix:
