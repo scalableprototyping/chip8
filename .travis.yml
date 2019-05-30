@@ -40,6 +40,7 @@ before_script:
 script:
     - mkdir build && cd build
     - export CXX="g++-8"
+    - export CXX_FOR_BUILD="g++-8"
     - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DOS_TRAVIS=1
     - make
     - ./chip_8_cpp_tests
