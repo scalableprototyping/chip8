@@ -37,7 +37,7 @@ before_script:
 
 script:
     - mkdir build && cd build
-    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DCMAKE_INSTALL_PREFIX=../install
+    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1
     - make
     - ./chip_8_cpp_tests
 
