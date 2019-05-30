@@ -60,7 +60,8 @@ if(BUILD_TESTS)
         ${INTERPRETER_SOURCE_FILES}
         test/rom_test.cpp
         test/timer_test.cpp
-        #test/speaker_test.cpp
+        test/speaker_test.cpp
+        test/display_test.cpp
     )
 
     set(EXECUTABLE_NAME_TEST ${PROJECT_NAME}_tests)

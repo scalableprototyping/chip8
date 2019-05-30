@@ -18,6 +18,7 @@ int main()
         std::cout << "Updating screen \n";
         using namespace std::literals::chrono_literals;
         std::this_thread::sleep_for(1s);
+        displayPixels[100][100] = 1;
 
         switch (++change) {
             case 1:
