@@ -7,7 +7,7 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
 
-find_package(SFML 2.3 COMPONENTS graphics audio window system)
+find_package(SFML 2 COMPONENTS graphics audio window system)
 
 list(APPEND INTERPRETER_SOURCE_FILES
     src/Interpreter.cpp
