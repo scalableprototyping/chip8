@@ -38,7 +38,7 @@ before_script:
 
 script:
     - mkdir build && cd build
-    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DOS_UBUNTU=1
+    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DOS_TRAVIS=1
     - make
     - ./chip_8_cpp_tests
 
