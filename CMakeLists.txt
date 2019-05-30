@@ -35,6 +35,7 @@ if(OS_UBUNTU)
 endif()
 
 if(OS_TRAVIS)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
     find_package(SFML 2.1 COMPONENTS graphics audio window system)
     add_executable(${PROJECT_NAME}_interpreter src/main.cpp ${INTERPRETER_SOURCE_FILES})
     target_include_directories(${PROJECT_NAME}_interpreter PRIVATE include ${SFML_INCLUDE_DIRS})
