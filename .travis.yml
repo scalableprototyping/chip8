@@ -1,8 +1,6 @@
 language: cpp
 
 addons:
-    sources:
-        - ubuntu-toolchain-r/test
     apt:
         packages:
         - libpthread-stubs0-dev
@@ -21,12 +19,19 @@ addons:
         - libopenal-dev
         - libjpeg62
         - libsfml-dev
-        - g++-8
         - cmake
 
 env:
     global:
         - DISPLAY=:99
+
+before_install:
+    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    - sudo apt-get update -qq
+
+install:
+    - sudo apt-get install -qq g++-8
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
 
 before_script:
     - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x24"
