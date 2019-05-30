@@ -17,5 +17,4 @@ matrix:
 
   - name: "Linux GCC Dynamic"
     os: linux
-    dist: xenial
     compiler: gcc
