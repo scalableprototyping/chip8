@@ -43,21 +43,31 @@ namespace chip8::io
     class DisplayRenderer
     {
         public:
+            DisplayRenderer() = delete;
             explicit DisplayRenderer(DisplayPixels& displayPixels);
             void Update();
         private:
+            // TODO:
+            // How can I make this const?? I don't want tileMap to be able to write here
             DisplayPixels& displayPixels_;
 
             class TileMap : public sf::Drawable, public sf::Transformable
             {
                 public:
-                    bool Load(const std::string& tileset, sf::Vector2u tileSize, DisplayPixels& tiles, unsigned int width, unsigned int height);
+                    TileMap() = delete;
+                    TileMap(DisplayPixels& displayPixels);
 
+                    void Update();
+                    const std::string kTileSetTexturePath_{"../assets/tileset.png"};
+                    const int kTextureHeight_ = 32;
+                    const int kTextureWidth_ = 32;
                 private:
-                    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
-                    sf::VertexArray m_vertices;
-                    sf::Texture m_tileset;
+                    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+                    sf::VertexArray vertices_;
+                    sf::Texture tileSetTexture_;
+                    // TODO:
+                    // How can I make this const?? I don't want tileMap to be able to write here
+                    DisplayPixels& displayPixels_;
             };
             TileMap tileMap_;
 
