@@ -1,6 +1,8 @@
 language: cpp
 
 addons:
+    sources:
+        - ubuntu-toolchain-r-test
     apt:
         packages:
         - libpthread-stubs0-dev
@@ -19,7 +21,6 @@ addons:
         - libopenal-dev
         - libjpeg62
         - libsfml-dev
-        - gcc-8
         - g++-8
         - cmake
 
