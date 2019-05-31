@@ -30,8 +30,9 @@ before_install:
     - pip install --user cpp-coveralls
 
 install:
-    - sudo apt-get install -qq g++-8
+    - sudo apt-get install -qq g++-8 gcc-8
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
+    - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 90
     - sudo apt-get install libsfml-dev
     - sudo apt-get install pulseaudio
 
@@ -46,6 +47,7 @@ script:
     - ./chip_8_cpp_tests
 
 after_success:
+  - gcov --version
   - pip show cpp-coveralls   
   - coveralls --root . -E depends -E lib -E CMakeFiles/chip_8_cpp_tests.dir
 
