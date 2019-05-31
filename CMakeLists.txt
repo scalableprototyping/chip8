@@ -99,6 +99,7 @@ if(BUILD_TESTS)
     endif()
 
     if (COVERAGE)
+        set(COVERAGE_EXCLUDES "/usr/include/\\*;")
         target_compile_options(${EXECUTABLE_NAME_TEST} PRIVATE --coverage)
         target_link_libraries(${EXECUTABLE_NAME_TEST} PRIVATE --coverage)
     endif()
