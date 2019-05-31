@@ -49,7 +49,7 @@ script:
 after_success:
   - gcov --version
   - pip show cpp-coveralls   
-  - coveralls --root . 
+  - coveralls --root .. 
 
 matrix:
   include:
