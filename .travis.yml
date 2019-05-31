@@ -46,7 +46,7 @@ script:
     - ./chip_8_cpp_tests
 
 after_success:
-  - coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*"
+  - coveralls --root . -E depends -E lib -E CMakeFiles/chip_8_cpp_tests.dir
 
 matrix:
   include:
