@@ -91,17 +91,16 @@ if(BUILD_TESTS)
         target_compile_options(${EXECUTABLE_NAME_TEST} PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
     endif()
 
-    SET(COVERAGE OFF CACHE BOOL "Coverage")
-    if (COVERAGE)
-        target_compile_options(${EXECUTABLE_NAME_TEST} PRIVATE --coverage)
-        target_link_libraries(${EXECUTABLE_NAME_TEST} PRIVATE --coverage)
-    endif()
-
     if(OS_TRAVIS)
         add_executable(${EXECUTABLE_NAME_TEST} test/test_main.cpp ${TEST_SOURCE_FILES})
         target_include_directories(${EXECUTABLE_NAME_TEST} PRIVATE include ${GTEST_INCLUDE_DIRS} ${SFML_INCLUDE_DIRS})
         target_link_libraries(${EXECUTABLE_NAME_TEST} PRIVATE ${GTEST_LIBRARIES} ${SFML_LIBRARIES})
         target_compile_options(${EXECUTABLE_NAME_TEST} PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
+    endif()
+
+    if (COVERAGE)
+        target_compile_options(${EXECUTABLE_NAME_TEST} PRIVATE --coverage)
+        target_link_libraries(${EXECUTABLE_NAME_TEST} PRIVATE --coverage)
     endif()
 
     add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}_tests)
