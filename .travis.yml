@@ -23,6 +23,7 @@ addons:
 env:
     global:
         - DISPLAY=:99
+        - CODECOV_TOKEN="72c3050b-5436-4a43-b7f6-249c00383508"
 
 before_install:
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
@@ -47,6 +48,7 @@ script:
 
 after_success:
   - coveralls --root . -E depends -E lib -E CMakeFiles/chip_8_cpp_tests.dir
+  - bash <(curl -s https://codecov.io/bash)
 
 matrix:
   include:
