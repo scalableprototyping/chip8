@@ -49,7 +49,7 @@ script:
 after_success:
   - gcov --version
   - pip show cpp-coveralls   
-  - coveralls --root .. -e ./CMakeFiles/3.12.4 -e ../depends -e ../test -e ../assets -e ../cmake -e ../docs
+  - coveralls --root .. --exclude depends --exclude test --exclude assets --exclude cmake --exclude docs
 
 matrix:
   include:
