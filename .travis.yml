@@ -49,7 +49,7 @@ script:
 after_success:
   - gcov --version
   - pip show cpp-coveralls   
-  - coveralls --root . -E depends -E lib -E CMakeFiles/chip_8_cpp_tests.dir
+  - coveralls --root . -E depends -E lib --gcov-options '\-lp'
 
 matrix:
   include:
@@ -58,5 +58,3 @@ matrix:
     os: linux
     dist: xenial
     compiler: gcc
-
-
