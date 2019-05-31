@@ -27,6 +27,7 @@ env:
 before_install:
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     - sudo apt-get update -qq
+    - pip install --user cpp-coveralls
 
 install:
     - sudo apt-get install -qq g++-8
@@ -37,20 +38,15 @@ install:
 before_script:
     - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x24"
     - sleep 3
-      # Compiles but then I don't know how to link it properly in CMake
-      #- git clone https://github.com/sfml/sfml 
-      #- cd sfml 
-      #- git checkout 2.5.0
-      #- mkdir build && cd build
-      #- cmake .. $CMAKE_FLAGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install
-      #- cmake --build . --target install
-      #- cd ../..
 
 script:
     - mkdir build && cd build
     - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DOS_TRAVIS=1
     - make
     - ./chip_8_cpp_tests
+
+after_success:
+  - coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*"
 
 matrix:
   include:
