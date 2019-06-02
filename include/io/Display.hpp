@@ -5,6 +5,10 @@
 
 namespace chip8::io
 {
+    // TODO:
+    // Pixel calss with set unset xor
+    // array of rows, althoug addressed in [x][y] order
+    // Define RHS and LHS behavoir. Return iterator?
     class DisplayPixels
     {
         public:
@@ -22,6 +26,7 @@ namespace chip8::io
                     friend DisplayPixels;
                     PixelValue_t& operator[](std::size_t row)
                     {
+                        // Just use at
                         if (col_ >= parent_.kWidth_ || row >= parent_.kHeight_)
                         {
                             throw std::out_of_range ("Trying to access display pixel index out of range.");
