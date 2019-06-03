@@ -7,12 +7,15 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
 
+add_definitions(-DASSETS_PATH="${PROJECT_SOURCE_DIR}/assets/")
+
 find_package(SFML 2.3 COMPONENTS graphics audio window system)
 
 list(APPEND INTERPRETER_SOURCE_FILES
     src/Interpreter.cpp
     src/io/Speaker.cpp
     src/io/display/PixelArray.cpp
+    src/io/display/SpriteRow.cpp
     src/io/display/Renderer.cpp
     src/details/memory.cpp
     src/details/audio.cpp

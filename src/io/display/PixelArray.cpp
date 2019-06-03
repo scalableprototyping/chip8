@@ -18,25 +18,27 @@ namespace chip8::io::display
         pixels_.fill(0); 
     }
 
-    PixelValue_t& PixelArray::at(std::size_t col, std::size_t row)
+    PixelValue_t& PixelArray::at(uint8_t col, uint8_t row)
     {
         throwIfOutOfRange(col, row);
         return pixels_.at(row*kWidth_ + col);
     }
 
-    const PixelValue_t& PixelArray::at(std::size_t col, std::size_t row) const
+    const PixelValue_t& PixelArray::at(uint8_t col, uint8_t row) const
     {
         throwIfOutOfRange(col, row);
         return pixels_.at(row*kWidth_ + col);
     }
 
-    Iterator_t PixelArray::iterator_at(std::size_t col, std::size_t row)
+    Iterator_t PixelArray::iterator_at(uint8_t col, uint8_t row)
     {
+        throwIfOutOfRange(col, row);
         return pixels_.begin() + (row*kWidth_ + col);
     }
 
-    ConstIterator_t PixelArray::iterator_at(std::size_t col, std::size_t row) const
+    ConstIterator_t PixelArray::iterator_at(uint8_t col, uint8_t row) const
     {
+        throwIfOutOfRange(col, row);
         return pixels_.begin() + (row*kWidth_ + col);
     }
 
@@ -100,7 +102,7 @@ namespace chip8::io::display
         return pixels_.crend(); 
     }
 
-    void PixelArray::throwIfOutOfRange(std::size_t col, std::size_t row) const
+    void PixelArray::throwIfOutOfRange(uint8_t col, uint8_t row) const
     {
         if (col >= kWidth_)
         {

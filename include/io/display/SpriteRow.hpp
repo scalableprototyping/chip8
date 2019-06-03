@@ -1,33 +1,28 @@
 #pragma once
 
-#include <cstdint>
 #include <array>
+#include <cstdint>
 
 namespace chip8::io::display
 {
-    class PixelArray
+    class SpriteRow
     {
         public:
-            using PixelValue_t = bool;
-            static const uint8_t kWidth_ = 64;
-            static const uint8_t kHeight_ = 32;
-            using Array_t = std::array<PixelValue_t, kHeight_*kWidth_>;
+            using BitValue_t = bool;
+            static const uint8_t kWidth_ = 8;
+            using Array_t = std::array<BitValue_t, kWidth_>;
             using Iterator_t = Array_t::iterator;
             using ConstIterator_t = Array_t::const_iterator;
             using ReverseIterator_t = Array_t::reverse_iterator;
             using ConstReverseIterator_t = Array_t::const_reverse_iterator;
 
-            PixelArray();
-            PixelArray (const PixelArray&) = delete;
-            PixelArray& operator= (const PixelArray&) = delete;
+            SpriteRow(uint8_t byte);
 
-            void Clear();
+            BitValue_t& at(uint8_t index);
+            const BitValue_t& at(uint8_t index) const;
 
-            PixelValue_t& at(uint8_t col, uint8_t row);
-            const PixelValue_t& at(uint8_t col, uint8_t row) const;
-
-            Iterator_t iterator_at(uint8_t col, uint8_t row);
-            ConstIterator_t iterator_at(uint8_t col, uint8_t row) const;
+            Iterator_t iterator_at(uint8_t index);
+            ConstIterator_t iterator_at(uint8_t index) const;
 
             Iterator_t begin();
             Iterator_t end();
@@ -48,7 +43,7 @@ namespace chip8::io::display
             ConstReverseIterator_t crend() const;
 
         private:
-            Array_t pixels_;
-            void throwIfOutOfRange(uint8_t col, uint8_t row) const;
+            Array_t bits_;
+            void throwIfOutOfRange(uint8_t index) const;
     };
 }

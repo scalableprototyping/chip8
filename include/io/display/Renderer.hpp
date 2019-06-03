@@ -27,7 +27,9 @@ namespace chip8::io::display
                     TileMap(PixelArray& pixels);
 
                     void Update();
-                    const std::string kTileSetTexturePath_{"../assets/tileset.png"};
+                    const std::string kTileSetTexturePath_{
+                        std::string{ASSETS_PATH} + "tileset.png"
+                    };
                     const int kTextureHeight_ = 32;
                     const int kTextureWidth_ = 32;
                 private:

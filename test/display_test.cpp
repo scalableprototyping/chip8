@@ -7,9 +7,10 @@
 #include <gtest/gtest.h>
 
 #include "io/display/PixelArray.hpp"
+#include "io/display/SpriteRow.hpp"
 #include "io/display/Renderer.hpp"
 
-#include <iostream>
+#include <bitset>
 
 namespace chip8::test
 {
@@ -53,13 +54,23 @@ namespace chip8::test
             }
         }
 
+        auto spriteRow = chip8::io::display::SpriteRow(0b101);
+        std::copy(spriteRow.begin(), spriteRow.end(), pixels.iterator_at(15,15));
+        EXPECT_TRUE(pixels.at(15,15) == 1);
+        EXPECT_TRUE(pixels.at(16,15) == 0);
+        EXPECT_TRUE(pixels.at(17,15) == 1);
+        EXPECT_TRUE(pixels.at(18,15) == 0);
+        EXPECT_TRUE(pixels.at(19,15) == 0);
+        EXPECT_TRUE(pixels.at(20,15) == 0);
+        EXPECT_TRUE(pixels.at(21,15) == 0);
+        EXPECT_TRUE(pixels.at(22,15) == 0);
+
         pixels.Clear();
         expect_cleared_display(pixels);
 
         chip8::io::display::Renderer displayRenderer(pixels);
         for (std::size_t i = 0; i < pixels.kHeight_; ++i) 
         {
-            std::cout << "i: " << i << "\n";
             pixels.Clear();
             pixels.at(i,i) = 1;
             displayRenderer.Update();
