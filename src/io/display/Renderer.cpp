@@ -1,27 +1,17 @@
-#include "io/Display.hpp"
+#include "io/display/Renderer.hpp"
+#include "io/display/PixelArray.hpp"
 
 #include <iostream>
+#include <stdexcept>
 
-namespace chip8::io
+namespace chip8::io::display
 {
-    DisplayPixels::DisplayPixels() 
+    Renderer::Renderer(PixelArray& pixels) :
+        pixels_(pixels),
+        tileMap_(pixels_)
     {
-        Clear();
-    }
-
-    void DisplayPixels::Clear() {
-        for (auto& col : pixels_) 
-        {
-            col.fill(0);
-        }
-    }
-
-    DisplayRenderer::DisplayRenderer(DisplayPixels& displayPixels) :
-        displayPixels_(displayPixels),
-        tileMap_(displayPixels_)
-    {
-        const int kMapWidth = displayPixels.kWidth_*tileMap_.kTextureWidth_;
-        const int kMapHeight = displayPixels.kHeight_*tileMap_.kTextureHeight_;
+        const int kMapWidth = pixels_.kWidth_*tileMap_.kTextureWidth_;
+        const int kMapHeight = pixels_.kHeight_*tileMap_.kTextureHeight_;
 
         tileMap_.setScale(
             float(window_.getSize().x) / kMapWidth, 
@@ -29,7 +19,7 @@ namespace chip8::io
             );
     }
 
-    void DisplayRenderer::Update() 
+    void Renderer::Update() 
     {
         if (window_.isOpen()) 
         {
@@ -47,31 +37,31 @@ namespace chip8::io
         }
     }
 
-    DisplayRenderer::TileMap::TileMap(DisplayPixels& displayPixels) : 
-        displayPixels_(displayPixels)
+    Renderer::TileMap::TileMap(PixelArray& pixels) : 
+        pixels_(pixels)
     {
         if (!tileSetTexture_.loadFromFile(kTileSetTexturePath_))
         {
-            // TODO: Error handling
+            throw std::runtime_error("Could not open tilteset texture file.");
         }
         vertices_.setPrimitiveType(sf::Quads);
         const int kNumberOfVerticesPerQuad = 4;
-        vertices_.resize(displayPixels_.kWidth_ * displayPixels_.kHeight_ * kNumberOfVerticesPerQuad);
+        vertices_.resize(pixels_.kWidth_ * pixels_.kHeight_ * kNumberOfVerticesPerQuad);
     }
 
-    void DisplayRenderer::TileMap::Update() 
+    void Renderer::TileMap::Update() 
     {
-        for (unsigned int i = 0; i < displayPixels_.kWidth_; ++i)
-            for (unsigned int j = 0; j < displayPixels_.kHeight_; ++j)
+        for (unsigned int i = 0; i < pixels_.kWidth_; ++i)
+            for (unsigned int j = 0; j < pixels_.kHeight_; ++j)
             {
-                const int pixelValue = displayPixels_[i][j];
+                const int pixelValue = pixels_.at(i,j);
 
                 // Find its position in the tileset texture
                 const int tu = pixelValue % (tileSetTexture_.getSize().x / kTextureWidth_);
                 const int tv = pixelValue / (tileSetTexture_.getSize().x / kTextureWidth_);
 
                 // Get a pointer to the current tile's quad
-                sf::Vertex* quad = &vertices_[(i + j * displayPixels_.kWidth_) * 4];
+                sf::Vertex* quad = &vertices_[(i + j * pixels_.kWidth_) * 4];
 
                 // Define its 4 corners
                 quad[0].position = sf::Vector2f(i * kTextureWidth_, j * kTextureHeight_);
@@ -87,7 +77,7 @@ namespace chip8::io
             }
     }
 
-    void DisplayRenderer::TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
+    void Renderer::TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
         states.transform *= getTransform();
         states.texture = &tileSetTexture_;

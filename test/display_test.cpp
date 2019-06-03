@@ -1,71 +1,67 @@
 #include <cstdint>
 #include <chrono>
 #include <thread>
-#include <string>
+
 #include <stdexcept>
 
 #include <gtest/gtest.h>
 
-#include "io/Display.hpp"
+#include "io/display/PixelArray.hpp"
+#include "io/display/Renderer.hpp"
+
+#include <iostream>
 
 namespace chip8::test
 {
-    using namespace chip8::io;
-    void assert_cleared_display(DisplayPixels displayPixels)
+    void expect_cleared_display(const chip8::io::display::PixelArray& pixels)
     {
-        for (std::size_t col = 0; col < displayPixels.kWidth_; ++col) 
+        for (const auto& pixel : pixels)
         {
-            for (std::size_t row = 0; row < displayPixels.kHeight_; ++row) 
-            {
-                ASSERT_TRUE(displayPixels[col][row] == 0);
-            }
+            EXPECT_TRUE(pixel == 0);
         }
     }
 
-    TEST(Chip8TestSuite, Display)
+    TEST(Chip8TestSuite, DisplayColumnOutOfRange) 
     {
-        DisplayPixels displayPixels;
-        assert_cleared_display(displayPixels);
+        chip8::io::display::PixelArray pixels;
+        EXPECT_THROW(pixels.at(64,0) = 1, std::out_of_range);
+        EXPECT_THROW(pixels.at(200,0) = 1, std::out_of_range);
+    }
 
-        displayPixels[15][30] = 1;
-        for (std::size_t col = 0; col < displayPixels.kWidth_; ++col) 
+    TEST(Chip8TestSuite, DisplayRowOutOfRange) 
+    {
+        chip8::io::display::PixelArray pixels;
+        EXPECT_THROW(pixels.at(0,32) = 1, std::out_of_range);
+        EXPECT_THROW(pixels.at(0,200) = 1, std::out_of_range);
+    }
+
+    TEST(Chip8TestSuite, DisplayRendering)
+    {
+        chip8::io::display::PixelArray pixels;
+        expect_cleared_display(pixels);
+
+        pixels.at(15,30) = 1;
+        for (auto pixelIterator = pixels.begin(); pixelIterator != pixels.end(); ++pixelIterator)
         {
-            for (std::size_t row = 0; row < displayPixels.kHeight_; ++row) 
+            if (pixelIterator != pixels.iterator_at(15,30))
             {
-                if(col == 15 && row == 30)
-                {
-                    ASSERT_TRUE(displayPixels[col][row] == 1);
-                }
-                else
-                {
-                    ASSERT_TRUE(displayPixels[col][row] == 0);
-                }
+                EXPECT_TRUE(*pixelIterator == 0);
+            }
+            else
+            {
+                EXPECT_TRUE(*pixelIterator == 1);
             }
         }
 
-        displayPixels.Clear();
-        assert_cleared_display(displayPixels);
+        pixels.Clear();
+        expect_cleared_display(pixels);
 
-        try 
+        chip8::io::display::Renderer displayRenderer(pixels);
+        for (std::size_t i = 0; i < pixels.kHeight_; ++i) 
         {
-            displayPixels[200][200] = 5;
-            FAIL() << "Accessing out of bound indeces should throw an std::out_of_range exception\n";
-        } 
-        catch (std::out_of_range& e) 
-        {
-            EXPECT_TRUE(std::string(e.what()) == std::string("Trying to access display pixel index out of range."));
-        }
-        catch (...) 
-        {
-            FAIL() << "Accessing out of bound indeces should throw an std::out_of_range exception\n";
-        }
-
-
-        DisplayRenderer displayRenderer(displayPixels);
-        for (std::size_t i = 0; i < displayPixels.kHeight_; ++i) 
-        {
-            displayPixels.Clear();
-            displayPixels[i][i] = 1;
+            std::cout << "i: " << i << "\n";
+            pixels.Clear();
+            pixels.at(i,i) = 1;
             displayRenderer.Update();
             using namespace std::literals::chrono_literals;
             std::this_thread::sleep_for(0.01s);

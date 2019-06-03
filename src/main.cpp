@@ -1,41 +1,38 @@
-#include "io/Display.hpp"
+#include "io/display/PixelArray.hpp"
+#include "io/display/Renderer.hpp"
 
-#include <iostream>
 #include <chrono>
 #include <thread>
 
 int main()
 {
-    using namespace chip8::io;
-    DisplayPixels displayPixels;
+    chip8::io::display::PixelArray pixels;
+    chip8::io::display::Renderer displayRenderer(pixels);
 
     int change = 0; 
-    DisplayRenderer displayRenderer(displayPixels);
 
     while(true) {
         displayRenderer.Update();
 
-        std::cout << "Updating screen \n";
         using namespace std::literals::chrono_literals;
         std::this_thread::sleep_for(1s);
-        displayPixels[100][100] = 1;
 
         switch (++change) {
             case 1:
-                displayPixels.Clear();
-                displayPixels[0][31] = 1;
+                pixels.Clear();
+                pixels.at(0,31) = 1;
                 break;
             case 2:
-                displayPixels.Clear();
-                displayPixels[63][31] = 1;
+                pixels.Clear();
+                pixels.at(63,31) = 1;
                 break;
             case 3:
-                displayPixels.Clear();
-                displayPixels[63][0] = 1;
+                pixels.Clear();
+                pixels.at(63,0) = 1;
                 break;
             default:
-                displayPixels.Clear();
-                displayPixels[0][0] = 1;
+                pixels.Clear();
+                pixels.at(0,0) = 1;
                 change = 0;
                 break;
         }

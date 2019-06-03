@@ -12,7 +12,8 @@ find_package(SFML 2.3 COMPONENTS graphics audio window system)
 list(APPEND INTERPRETER_SOURCE_FILES
     src/Interpreter.cpp
     src/io/Speaker.cpp
-    src/io/Display.cpp
+    src/io/display/PixelArray.cpp
+    src/io/display/Renderer.cpp
     src/details/memory.cpp
     src/details/audio.cpp
 )
