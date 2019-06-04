@@ -1,13 +1,15 @@
 #pragma once
 
+#include "io/display/PixelArray.hpp"
+
 #include <SFML/Graphics.hpp>
 
 #include <string>
+#include <vector>
+#include <algorithm>
 
 namespace chip8::io::display
 {
-    class PixelArray;
-
     class Renderer
     {
         public:
@@ -16,31 +18,37 @@ namespace chip8::io::display
             void Update();
 
         private:
-            // TODO:
-            // How can I make this const?? I don't want the renderer to be able to write here
-            PixelArray& pixels_;
+            const PixelArray& pixels_;
 
-            class TileMap : public sf::Drawable, public sf::Transformable
+            void UpdatePixels();
+
+            class PixelQuads : public sf::Drawable, public sf::Transformable
             {
                 public:
-                    TileMap() = delete;
-                    TileMap(PixelArray& pixels);
+                    PixelQuads() = delete;
+                    explicit PixelQuads(const PixelArray& pixels);
 
                     void Update();
+
+                    const int kTextureHeight_ = 32;
+                    const int kTextureWidth_ = 32;
+
+                private:
+                    const PixelArray& pixels_;
+
+                    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+                    sf::VertexArray vertices_;
+                    sf::Texture pixelsTexture_;
                     const std::string kTileSetTexturePath_{
                         std::string{ASSETS_PATH} + "tileset.png"
                     };
-                    const int kTextureHeight_ = 32;
-                    const int kTextureWidth_ = 32;
-                private:
-                    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-                    sf::VertexArray vertices_;
-                    sf::Texture tileSetTexture_;
-                    // TODO:
-                    // How can I make this const?? I don't want tileMap to be able to write here
-                    PixelArray& pixels_;
+                    std::vector<sf::Vector2f> pixelOffTextureCoords;
+                    std::vector<sf::Vector2f> pixelOnTextureCoords;
+                    using pixelTextureCoords_t = std::vector<std::vector<sf::Vector2f>>;
+                    pixelTextureCoords_t pixelTextureCoords; 
             };
-            TileMap tileMap_;
+            PixelQuads pixelQuads_;
 
             sf::RenderWindow window_{sf::VideoMode(800, 600), "Chip8 Display"};
     };

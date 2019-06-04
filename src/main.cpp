@@ -1,9 +1,12 @@
 #include "io/display/PixelArray.hpp"
 #include "io/display/Renderer.hpp"
-#include "io/display/SpriteRow.hpp"
+
+#include "details/display.hpp"
 
 #include <chrono>
 #include <thread>
+#include <algorithm>
+#include <iostream>
 
 int main()
 {
@@ -18,24 +21,30 @@ int main()
         using namespace std::literals::chrono_literals;
         std::this_thread::sleep_for(1s);
 
+        std::cout << "Updating Screen\n";
         switch (++change) {
             case 1:
                 {
                     pixels.Clear();
                     pixels.at(0,31) = 1;
-                    std::vector<chip8::io::display::SpriteRow> sprite;
-                    sprite.emplace_back(0xF0);
-                    sprite.emplace_back(0x90);
-                    sprite.emplace_back(0xF0);
-                    sprite.emplace_back(0x90);
-                    sprite.emplace_back(0x90);
-                    auto start_at_row = 15;
-                    auto start_at_col = 15;
-                    for (const auto& spriteRow : sprite)
-                    {
-                        std::copy(spriteRow.begin(), spriteRow.end(), 
-                                  pixels.iterator_at(start_at_col, start_at_row++));
-                    }
+
+                    std::vector<int> sprite{
+                        0xF0,
+                        0x90,
+                        0xF0,
+                        0x90,
+                        0x90
+                    };
+                    const auto startRow = 15;
+                    const auto startCol = 15;
+                    std::for_each(sprite.begin(), sprite.end(), [&, i=0](auto spriteRow) mutable {
+                        auto pixel = pixels.iterator_at(startCol, startRow + i++);
+                        chip8::details::forEachBitInByte(spriteRow, [&](auto bit) {
+                            *pixel = bit;
+                            ++pixel;
+                        });
+                    });
+
                     break;
                 }
             case 2:

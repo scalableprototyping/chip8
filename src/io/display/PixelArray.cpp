@@ -113,5 +113,4 @@ namespace chip8::io::display
             throw std::out_of_range ("Trying to access row index out of range.");
         }
     }
-
 }

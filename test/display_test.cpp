@@ -7,8 +7,8 @@
 #include <gtest/gtest.h>
 
 #include "io/display/PixelArray.hpp"
-#include "io/display/SpriteRow.hpp"
 #include "io/display/Renderer.hpp"
+#include "details/display.hpp"
 
 #include <bitset>
 
@@ -54,8 +54,10 @@ namespace chip8::test
             }
         }
 
-        auto spriteRow = chip8::io::display::SpriteRow(0b101);
-        std::copy(spriteRow.begin(), spriteRow.end(), pixels.iterator_at(15,15));
+        chip8::details::forEachBitInByte(0b101, [i=0, &pixels](auto bit) mutable {
+            pixels.at(15+i, 15) = bit;
+            ++i;
+        });
         EXPECT_TRUE(pixels.at(15,15) == 1);
         EXPECT_TRUE(pixels.at(16,15) == 0);
         EXPECT_TRUE(pixels.at(17,15) == 1);

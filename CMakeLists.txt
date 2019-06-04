@@ -15,7 +15,6 @@ list(APPEND INTERPRETER_SOURCE_FILES
     src/Interpreter.cpp
     src/io/Speaker.cpp
     src/io/display/PixelArray.cpp
-    src/io/display/SpriteRow.cpp
     src/io/display/Renderer.cpp
     src/details/memory.cpp
     src/details/audio.cpp
