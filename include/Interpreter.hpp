@@ -6,6 +6,8 @@
 #include "memory/Ram.hpp"
 #include "timers/Timer.hpp"
 
+#include "details/instructions.hpp"
+
 namespace chip8
 {
     class Interpreter
@@ -20,11 +22,16 @@ namespace chip8
         private:
             void InitializeRam();
 
+            friend details::Instruction details::parseInstruction(const details::OpBytes& _op_bytes,
+                                                                  Interpreter& _interpreter);
+
         private:
             memory::Ram ram_;
             memory::RamIter program_counter_;
 
             timers::Timer delay_timer_;
+            //TODO: initialize sound timer callbacks
+            timers::Timer sound_timer_;
 
             const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };

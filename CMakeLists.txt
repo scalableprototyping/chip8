@@ -16,6 +16,7 @@ list(APPEND INTERPRETER_SOURCE_FILES
     src/io/KeyMap.cpp
     src/details/memory.cpp
     src/details/audio.cpp
+    src/details/instructions.cpp
 )
 
 add_executable(${PROJECT_NAME}_interpreter src/main.cpp ${INTERPRETER_SOURCE_FILES})

@@ -23,8 +23,18 @@ namespace chip8
     void Interpreter::StartRom()
     {
         program_counter_ = ram_.begin();
-        //TODO: parse commands
-        //TODO: tick timers
+
+        //TODO: when should we stop?
+        while(true)
+        {
+            details::OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
+            auto next_instruction = details::parseInstruction(op_bytes, *this);
+
+            next_instruction();
+
+            delay_timer_.Tick();
+            sound_timer_.Tick();
+        }
     }
 
     //Private
