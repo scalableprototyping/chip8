@@ -30,8 +30,8 @@ namespace chip8::io::display
 
                     void Update();
 
-                    const int kTextureHeight_ = 32;
-                    const int kTextureWidth_ = 32;
+                    static constexpr int kTextureHeight_ = 32;
+                    static constexpr int kTextureWidth_ = 32;
 
                 private:
                     const PixelArray& pixels_;

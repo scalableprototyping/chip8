@@ -9,8 +9,8 @@ namespace chip8::io::display
     {
         public:
             using PixelValue_t = bool;
-            static const uint8_t kWidth_ = 64;
-            static const uint8_t kHeight_ = 32;
+            static constexpr uint8_t kWidth_ = 64;
+            static constexpr uint8_t kHeight_ = 32;
             using Array_t = std::array<PixelValue_t, kHeight_*kWidth_>;
             using Iterator_t = Array_t::iterator;
             using ConstIterator_t = Array_t::const_iterator;
