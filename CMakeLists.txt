@@ -14,6 +14,8 @@ find_package(SFML 2.3 COMPONENTS graphics audio window system)
 list(APPEND INTERPRETER_SOURCE_FILES
     src/Interpreter.cpp
     src/io/Speaker.cpp
+    src/io/Keypad.cpp
+    src/io/KeyMap.cpp
     src/io/display/PixelArray.cpp
     src/io/display/Renderer.cpp
     src/details/memory.cpp
@@ -64,6 +66,7 @@ if(BUILD_TESTS)
         test/rom_test.cpp
         test/timer_test.cpp
         test/speaker_test.cpp
+        test/keypad_test.cpp
         test/display_test.cpp
     )
 
@@ -93,5 +96,5 @@ if(BUILD_TESTS)
         target_link_libraries(${EXECUTABLE_NAME_TESTS} PRIVATE --coverage)
     endif()
 
-    add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}_tests)
+    add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE_NAME_TESTS})
 endif()
