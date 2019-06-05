@@ -20,11 +20,9 @@ list(APPEND INTERPRETER_SOURCE_FILES
     src/details/audio.cpp
 )
 
-# TODO: 
-# I couldn't make it work, so I'm going to separate between arch and 
-# ubuntu. We should clean this up 
+set(EXECUTABLE_NAME ${PROJECT_NAME}_interpreter)
+
 if(OS_ARCH)
-    set(EXECUTABLE_NAME ${PROJECT_NAME}_interpreter)
     add_executable(${EXECUTABLE_NAME} src/main.cpp ${INTERPRETER_SOURCE_FILES})
     target_include_directories(${EXECUTABLE_NAME} PRIVATE include)
     target_compile_options(${EXECUTABLE_NAME} PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
@@ -33,6 +31,8 @@ if(OS_ARCH)
 endif()
 
 if(OS_UBUNTU)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
+    find_package(SFML 2.3 COMPONENTS graphics audio window system)
     add_executable(${PROJECT_NAME}_interpreter src/main.cpp ${INTERPRETER_SOURCE_FILES})
     target_include_directories(${PROJECT_NAME}_interpreter PRIVATE include ${SFML_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME}_interpreter PRIVATE ${SFML_LIBRARIES})
@@ -67,24 +67,30 @@ if(BUILD_TESTS)
         test/display_test.cpp
     )
 
-    set(EXECUTABLE_NAME_TEST ${PROJECT_NAME}_tests)
+    set(EXECUTABLE_NAME_TESTS ${PROJECT_NAME}_tests)
 
     if(OS_ARCH)
-        add_executable(${EXECUTABLE_NAME_TEST} test/test_main.cpp ${TEST_SOURCE_FILES})
-        target_include_directories(${EXECUTABLE_NAME_TEST} PRIVATE include ${GTEST_INCLUDE_DIRS})
+        add_executable(${EXECUTABLE_NAME_TESTS} test/test_main.cpp ${TEST_SOURCE_FILES})
+        target_include_directories(${EXECUTABLE_NAME_TESTS} PRIVATE include ${GTEST_INCLUDE_DIRS})
         find_package(SFML 2.5 COMPONENTS graphics audio window system REQUIRED)
-        target_link_libraries(${EXECUTABLE_NAME_TEST} PRIVATE 
+        target_link_libraries(${EXECUTABLE_NAME_TESTS} PRIVATE 
             ${GTEST_LIBRARIES} 
             sfml-graphics sfml-audio sfml-window sfml-system
             )
-        target_compile_options(${EXECUTABLE_NAME_TEST} PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
+        target_compile_options(${EXECUTABLE_NAME_TESTS} PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
     endif()
 
     if(OS_UBUNTU)
-        add_executable(${EXECUTABLE_NAME_TEST} test/test_main.cpp ${TEST_SOURCE_FILES})
-        target_include_directories(${EXECUTABLE_NAME_TEST} PRIVATE include ${GTEST_INCLUDE_DIRS} ${SFML_INCLUDE_DIRS})
-        target_link_libraries(${EXECUTABLE_NAME_TEST} PRIVATE ${GTEST_LIBRARIES} ${SFML_LIBRARIES})
-        target_compile_options(${EXECUTABLE_NAME_TEST} PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
+        add_executable(${EXECUTABLE_NAME_TESTS} test/test_main.cpp ${TEST_SOURCE_FILES})
+        target_include_directories(${EXECUTABLE_NAME_TESTS} PRIVATE include ${GTEST_INCLUDE_DIRS} ${SFML_INCLUDE_DIRS})
+        target_link_libraries(${EXECUTABLE_NAME_TESTS} PRIVATE ${GTEST_LIBRARIES} ${SFML_LIBRARIES})
+        target_compile_options(${EXECUTABLE_NAME_TESTS} PRIVATE --std=c++17 -Wall -Werror -Wfatal-errors -pedantic)
+    endif()
+
+    if (COVERAGE)
+        set(COVERAGE_EXCLUDES "/usr/include/\\*;")
+        target_compile_options(${EXECUTABLE_NAME_TESTS} PRIVATE --coverage)
+        target_link_libraries(${EXECUTABLE_NAME_TESTS} PRIVATE --coverage)
     endif()
 
     add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}_tests)
