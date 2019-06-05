@@ -1,27 +1,65 @@
+#include "io/display/PixelArray.hpp"
+#include "io/display/Renderer.hpp"
+
+#include "details/display.hpp"
+
+#include <chrono>
+#include <thread>
+#include <algorithm>
 #include <iostream>
 
-#include "Interpreter.hpp"
-
-int main(int argc, char** argv)
+int main()
 {
-    if(argc != 2)
-    {
-        std::cerr << "Missing rom file. Usage: " << argv[0] << " /path/to/rom." << std::endl;
-        return -1;
-    }
+    chip8::io::display::PixelArray pixels;
+    chip8::io::display::Renderer displayRenderer(pixels);
 
-    chip8::Interpreter chip8_interpreter;
+    int change = 0; 
 
-    try
-    {
-        chip8_interpreter.LoadRom(argv[1]);
-        chip8_interpreter.StartRom();
-    }
-    catch(const std::runtime_error& ex)
-    {
-        std::cerr << ex.what() << std::endl;
-        return -1;
-    }
+    while(true) {
+        displayRenderer.Update();
 
-    return 0;
+        using namespace std::literals::chrono_literals;
+        std::this_thread::sleep_for(1s);
+
+        std::cout << "Updating Screen\n";
+        switch (++change) {
+            case 1:
+                {
+                    pixels.Clear();
+                    pixels.at(0,31) = 1;
+
+                    std::vector<int> sprite{
+                        0xF0,
+                        0x90,
+                        0xF0,
+                        0x90,
+                        0x90
+                    };
+                    std::for_each(sprite.begin(), sprite.end(), [&, i=0](auto spriteRow) mutable {
+                        const auto startRow = 15;
+                        const auto startCol = 15;
+                        auto pixel = pixels.iterator_at(startCol, startRow + i++);
+                        chip8::details::forEachBitInByte(spriteRow, [&](auto bit) {
+                            *pixel = bit;
+                            ++pixel;
+                        });
+                    });
+
+                    break;
+                }
+            case 2:
+                pixels.Clear();
+                pixels.at(63,31) = 1;
+                break;
+            case 3:
+                pixels.Clear();
+                pixels.at(63,0) = 1;
+                break;
+            default:
+                pixels.Clear();
+                pixels.at(0,0) = 1;
+                change = 0;
+                break;
+        }
+    }
 }
