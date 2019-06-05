@@ -35,9 +35,9 @@ int main()
                         0x90,
                         0x90
                     };
-                    const auto startRow = 15;
-                    const auto startCol = 15;
                     std::for_each(sprite.begin(), sprite.end(), [&, i=0](auto spriteRow) mutable {
+                        const auto startRow = 15;
+                        const auto startCol = 15;
                         auto pixel = pixels.iterator_at(startCol, startRow + i++);
                         chip8::details::forEachBitInByte(spriteRow, [&](auto bit) {
                             *pixel = bit;
