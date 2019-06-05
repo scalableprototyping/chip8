@@ -15,7 +15,7 @@ namespace chip8::test
         ASSERT_TRUE(speaker.IsPlaying());
 
         using namespace std::literals::chrono_literals;
-        std::this_thread::sleep_for(5s);
+        std::this_thread::sleep_for(0.3s);
 
         ASSERT_TRUE(speaker.IsPlaying());
         speaker.Stop();
