@@ -18,6 +18,8 @@ list(APPEND INTERPRETER_SOURCE_FILES
     src/io/KeyMap.cpp
     src/io/display/PixelArray.cpp
     src/io/display/Renderer.cpp
+    src/registers/DataRegister.cpp
+    src/registers/IRegister.cpp
     src/details/memory.cpp
     src/details/audio.cpp
 )
@@ -68,6 +70,8 @@ if(BUILD_TESTS)
         test/speaker_test.cpp
         test/keypad_test.cpp
         test/display_test.cpp
+        test/register_test.cpp
+        test/random_test.cpp
     )
 
     set(EXECUTABLE_NAME_TESTS ${PROJECT_NAME}_tests)
