@@ -5,11 +5,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
-
 add_definitions(-DASSETS_PATH="${PROJECT_SOURCE_DIR}/assets/")
-
-find_package(SFML 2.3 COMPONENTS graphics audio window system)
 
 list(APPEND INTERPRETER_SOURCE_FILES
     src/Interpreter.cpp
@@ -21,6 +17,7 @@ list(APPEND INTERPRETER_SOURCE_FILES
     src/details/memory.cpp
     src/details/audio.cpp
     src/details/instructions.cpp
+    src/details/opcodes.cpp
 )
 
 set(EXECUTABLE_NAME ${PROJECT_NAME}_interpreter)
@@ -34,6 +31,7 @@ if(OS_ARCH)
 endif()
 
 if(OS_UBUNTU)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
     find_package(SFML 2.3 COMPONENTS graphics audio window system)
     add_executable(${PROJECT_NAME}_interpreter src/main.cpp ${INTERPRETER_SOURCE_FILES})
     target_include_directories(${PROJECT_NAME}_interpreter PRIVATE include ${SFML_INCLUDE_DIRS})

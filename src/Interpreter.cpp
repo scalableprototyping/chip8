@@ -1,4 +1,5 @@
 #include "Interpreter.hpp"
+
 #include "details/memory.hpp"
 
 namespace chip8

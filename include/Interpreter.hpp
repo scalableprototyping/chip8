@@ -22,6 +22,9 @@ namespace chip8
         private:
             void InitializeRam();
 
+            template<uint8_t OpId>
+            void ExecuteInstruction(const details::OpBytes&);
+
             friend details::Instruction details::parseInstruction(const details::OpBytes& _op_bytes,
                                                                   Interpreter& _interpreter);
 
@@ -37,4 +40,5 @@ namespace chip8
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
     };
 }
+
 #endif
