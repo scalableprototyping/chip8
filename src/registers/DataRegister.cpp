@@ -23,15 +23,15 @@ namespace chip8::registers
         return Add(_register.Get());
     }
 
-    bool DataRegister::Substract(uint8_t _value)
+    bool DataRegister::Subtract(uint8_t _value)
     {
         value_ -= _value;
         return value_ > _value;
     }
 
-    bool DataRegister::Substract(const DataRegister& _register)
+    bool DataRegister::Subtract(const DataRegister& _register)
     {
-        return Substract(_register.Get());
+        return Subtract(_register.Get());
     }
 
     uint8_t DataRegister::ShiftLeft()

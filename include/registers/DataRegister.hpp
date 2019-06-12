@@ -16,8 +16,8 @@ namespace chip8::registers
             bool Add(uint8_t _value);
             bool Add(const DataRegister& _register);
 
-            bool Substract(uint8_t _value);
-            bool Substract(const DataRegister& _register);
+            bool Subtract(uint8_t _value);
+            bool Subtract(const DataRegister& _register);
 
             uint8_t ShiftLeft();
             uint8_t ShiftRight();

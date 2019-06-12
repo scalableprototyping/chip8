@@ -32,7 +32,7 @@ namespace chip8::test
         ASSERT_TRUE(overflow);
 
         first_register.Set(249);
-        overflow = first_register.Substract(second_register);
+        overflow = first_register.Subtract(second_register);
         ASSERT_TRUE(overflow);
 
         first_register.Set(0x01);
