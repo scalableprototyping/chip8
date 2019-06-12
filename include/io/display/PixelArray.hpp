@@ -22,12 +22,13 @@ namespace chip8::io::display
             PixelArray& operator= (const PixelArray&) = delete;
 
             void Clear();
+            void WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte);
 
-            PixelValue_t& at(uint8_t col, uint8_t row);
-            const PixelValue_t& at(uint8_t col, uint8_t row) const;
+            PixelValue_t& at(uint8_t _col, uint8_t _row);
+            const PixelValue_t& at(uint8_t _col, uint8_t _row) const;
 
-            Iterator_t iterator_at(uint8_t col, uint8_t row);
-            ConstIterator_t iterator_at(uint8_t col, uint8_t row) const;
+            Iterator_t iterator_at(uint8_t _col, uint8_t _row);
+            ConstIterator_t iterator_at(uint8_t _col, uint8_t _row) const;
 
             Iterator_t begin();
             Iterator_t end();
@@ -49,6 +50,6 @@ namespace chip8::io::display
 
         private:
             Array_t pixels_;
-            void throwIfOutOfRange(uint8_t col, uint8_t row) const;
+            void throwIfOutOfRange(uint8_t _col, uint8_t _row) const;
     };
 }

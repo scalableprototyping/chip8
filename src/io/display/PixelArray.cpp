@@ -18,6 +18,14 @@ namespace chip8::io::display
         pixels_.fill(0); 
     }
 
+    void PixelArray::WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte)
+    {
+        chip8::details::forEachBitInByte(_byte, [bit_index=0, &](auto bit) mutable {
+            at(_x+bit_index, _y) = bit;
+            ++bit_index;
+        });
+    }
+
     PixelValue_t& PixelArray::at(uint8_t col, uint8_t row)
     {
         throwIfOutOfRange(col, row);

@@ -5,6 +5,7 @@
 
 #include "memory/Ram.hpp"
 #include "timers/Timer.hpp"
+#include "io/display/PixelArray.hpp"
 
 #include "details/instructions.hpp"
 
@@ -38,6 +39,12 @@ namespace chip8
 
             const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
+
+            io::display::PixelArray pixels_;
+
+            std::vector<memory::RamIter> stack_;
+            //TODO: change with register class
+            uint16_t index_register_;
     };
 }
 
