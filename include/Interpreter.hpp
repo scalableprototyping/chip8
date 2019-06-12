@@ -7,29 +7,35 @@
 #include "timers/Timer.hpp"
 #include "io/display/PixelArray.hpp"
 
-#include "details/instructions.hpp"
-
 namespace chip8
 {
     class Interpreter
     {
         public:
+            using OpBytes = std::pair<uint8_t, uint8_t>;
+
             Interpreter();
             ~Interpreter() = default;
 
             void LoadRom(std::string_view _rom);
             void StartRom();
 
+            class enum OpCodes {
+                OpCode_0NNN,
+                OpCode_00EE,
+                OpCode_00E0,
+                OpCode_2NNN,
+                OpCode_DXYN
+            };
+
+            void parseInstruction(const OpBytes& _op_bytes);
+
         private:
             void InitializeRam();
 
-            template<uint8_t OpId>
-            void ExecuteInstruction(const details::OpBytes&);
+            template<OpCodes>
+            void ExecuteInstruction(const OpBytes&) = delete;
 
-            friend details::Instruction details::parseInstruction(const details::OpBytes& _op_bytes,
-                                                                  Interpreter& _interpreter);
-
-        private:
             memory::Ram ram_;
             memory::RamIter program_counter_;
 
