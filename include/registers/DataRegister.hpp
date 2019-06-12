@@ -8,29 +8,33 @@ namespace chip8::registers
     class DataRegister
     {
         public:
+            using Value_t = uint8_t;
+            using Borrow_t = bool;
+            using MostSignificantBit_t = bool;
+            using LessSignificantBit_t = bool;
+
             ~DataRegister() = default;
 
-            void Set(uint8_t _value);
+            void Set(Value_t _value);
             void Set(const DataRegister& _register);
 
-            bool Add(uint8_t _value);
-            bool Add(const DataRegister& _register);
+            Carry_t Add(Value_t _value);
+            Carry_t Add(const DataRegister& _register);
 
-            bool Subtract(uint8_t _value);
-            bool Subtract(const DataRegister& _register);
+            Borrow_t Subtract(Value_t _value);
+            Borrow_t Subtract(const DataRegister& _register);
 
-            uint8_t ShiftLeft();
-            uint8_t ShiftRight();
+            MostSignificantBit_t ShiftLeft();
+            LessSignificantBit_t ShiftRight();
 
-            uint8_t Get() const;
+            Value_t Get() const;
 
         private:
-            uint8_t value_ {};
+            Value_t value_ {};
     };
 
-    static constexpr uint8_t num_data_registers { 16 };
+    static constexpr int num_data_registers { 16 };
     using DataRegisters = std::array<DataRegister, num_data_registers>;
-
 }
 
 #endif

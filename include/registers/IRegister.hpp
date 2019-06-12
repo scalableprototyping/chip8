@@ -8,15 +8,17 @@ namespace chip8::registers
     class IRegister
     {
         public:
+            using Value_t = uint16_t;
+
             ~IRegister() = default;
 
-            void Set(uint16_t _value);
+            void Set(Value_t _value);
             void Add(const DataRegister& _register);
 
-            uint16_t Get() const;
+            Value_t Get() const;
 
         private:
-            uint16_t value_ {};
+            Value_t value_ {};
     };
 }
 

@@ -2,7 +2,9 @@
 
 namespace chip8::registers
 {
-    void IRegister::Set(uint16_t _value)
+    using Value_t = IRegister::Value_t;
+
+    void IRegister::Set(Value_t _value)
     {
         value_ = _value;
     }
@@ -12,7 +14,7 @@ namespace chip8::registers
         value_ += _register.Get();
     }
 
-    uint16_t IRegister::Get() const
+    Value_t IRegister::Get() const
     {
         return value_;
     }
