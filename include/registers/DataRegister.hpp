@@ -9,9 +9,10 @@ namespace chip8::registers
     {
         public:
             using Value_t = uint8_t;
+            using Carry_t = bool;
             using Borrow_t = bool;
-            using MostSignificantBit_t = bool;
-            using LessSignificantBit_t = bool;
+            using MostSignificantBit_t = uint8_t;
+            using LessSignificantBit_t = uint8_t;
 
             ~DataRegister() = default;
 
