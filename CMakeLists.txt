@@ -16,7 +16,6 @@ list(APPEND INTERPRETER_SOURCE_FILES
     src/io/display/Renderer.cpp
     src/details/memory.cpp
     src/details/audio.cpp
-    src/details/instructions.cpp
     src/details/opcodes.cpp
 )
 

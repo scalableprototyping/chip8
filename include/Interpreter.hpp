@@ -20,21 +20,25 @@ namespace chip8
             void LoadRom(std::string_view _rom);
             void StartRom();
 
-            class enum OpCodes {
+            enum OpCodes {
                 OpCode_0NNN,
                 OpCode_00EE,
                 OpCode_00E0,
+                OpCode_1NNN,
                 OpCode_2NNN,
-                OpCode_DXYN
+                OpCode_DXYN,
+                OpCode_ANNN
             };
 
-            void parseInstruction(const OpBytes& _op_bytes);
+            void processInstruction(const OpBytes& _op_bytes);
 
         private:
             void InitializeRam();
 
-            template<OpCodes>
-            void ExecuteInstruction(const OpBytes&) = delete;
+            template<OpCodes> 
+            void ExecuteInstruction(const OpBytes&) {
+                throw std::runtime_error("Unimplemented opcode function.");
+            }
 
             memory::Ram ram_;
             memory::RamIter program_counter_;

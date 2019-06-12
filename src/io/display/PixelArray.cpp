@@ -1,5 +1,7 @@
 #include "io/display/PixelArray.hpp"
 
+#include "details/display.hpp"
+
 namespace chip8::io::display
 {
     using PixelValue_t = PixelArray::PixelValue_t;
@@ -20,8 +22,8 @@ namespace chip8::io::display
 
     void PixelArray::WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte)
     {
-        chip8::details::forEachBitInByte(_byte, [bit_index=0, &](auto bit) mutable {
-            at(_x+bit_index, _y) = bit;
+        chip8::details::forEachBitInByte(_byte, [&, bit_index=0](auto bit) mutable {
+            at(_col+bit_index, _row) = bit;
             ++bit_index;
         });
     }
