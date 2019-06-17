@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 set(MAIN_TARGET ${PROJECT_NAME}_interpreter)
-add_executable(${MAIN_TARGET} src/main.cpp ${INTERPRETER_SOURCE_FILES})
+add_executable(${MAIN_TARGET} src/main.cpp)
 
 set_property(TARGET ${MAIN_TARGET} PROPERTY CXX_STANDARD 17)
 set_property(TARGET ${MAIN_TARGET} PROPERTY CXX_STANDARD_REQUIRED TRUE)
@@ -19,14 +19,17 @@ target_add_compiler_warnigs(${MAIN_TARGET})
 include(sfml)
 target_add_sfml(${MAIN_TARGET})
 
-include(clang-tidy)
-target_add_clang_tidy(${MAIN_TARGET})
+#include(clang-tidy)
+#target_add_clang_tidy(${MAIN_TARGET})
 
 include(include-what-you-use)
 set(CMAKE_LINK_WHAT_YOU_USE TRUE)
 
 target_sources(${MAIN_TARGET}
-    PRIVATE
+)
+
+add_library(PROJECT_SRC
+    OBJECT
         src/Interpreter.cpp
         src/io/Speaker.cpp
         src/io/Keypad.cpp
@@ -37,22 +40,28 @@ target_sources(${MAIN_TARGET}
         src/details/audio.cpp
 )
 
+include(clang-tidy)
+target_add_clang_tidy(${PROJECT_SRC})
+
+# NOTE: Resetting only needed if you have a global CMAKE_CXX_CLANG_TIDY
+set_target_properties(
+    target_no_static_code_analysis
+    PROPERTIES
+         CXX_CLANG_TIDY ""
+)
+
+...
+add_library(target ${other_srcs} $<TARGET_OBJECTS:target_no_static_code_analysis>)
+
+
+
 if(BUILD_TESTS)
     set(TESTS_TARGET ${PROJECT_NAME}_tests)
 
-    add_executable(${TESTS_TARGET} test/test_main.cpp ${TEST_SOURCE_FILES})
+    add_executable(${TESTS_TARGET} test/test_main.cpp)
 
-    target_sources(${TESTS_TARGET}
-        PRIVATE
-            src/Interpreter.cpp
-            src/io/Speaker.cpp
-            src/io/Keypad.cpp
-            src/io/KeyMap.cpp
-            src/io/display/PixelArray.cpp
-            src/io/display/Renderer.cpp
-            src/details/memory.cpp
-            src/details/audio.cpp
-
+    add_library(TESTS_SRC
+        OBJECT
             test/rom_test.cpp
             test/timer_test.cpp
             test/speaker_test.cpp
