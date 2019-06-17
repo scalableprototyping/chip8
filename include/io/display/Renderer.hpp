@@ -41,7 +41,7 @@ namespace chip8::io::display
                     sf::VertexArray vertices_;
                     sf::Texture pixelsTexture_;
                     const std::string kTileSetTexturePath_{
-                        std::string{ASSETS_PATH} + "tileset.png"
+                        "assets/tileset.png"
                     };
                     std::vector<sf::Vector2f> pixelOffTextureCoords;
                     std::vector<sf::Vector2f> pixelOnTextureCoords;
