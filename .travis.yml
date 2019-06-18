@@ -44,6 +44,9 @@ install:
             update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 90
         fi
 
+    # Include What You Use
+    - sudo apt-get install iwyu
+
     # SFML
     - sudo apt-get install libsfml-dev
     - sudo apt-get install pulseaudio
