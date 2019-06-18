@@ -1,13 +1,13 @@
 add_library(CHIP8_TESTS_LIB
     OBJECT
-        ${PROJECT_SOURCE_DIR}/test/rom_test.cpp
-        ${PROJECT_SOURCE_DIR}/test/timer_test.cpp
-        ${PROJECT_SOURCE_DIR}/test/speaker_test.cpp
-        ${PROJECT_SOURCE_DIR}/test/keypad_test.cpp
-        ${PROJECT_SOURCE_DIR}/test/display_test.cpp
+        test/rom_test.cpp
+        test/timer_test.cpp
+        test/speaker_test.cpp
+        test/keypad_test.cpp
+        test/display_test.cpp
 )
 
-target_include_directories(CHIP8_TESTS_LIB PUBLIC "${PROJECT_SOURCE_DIR}/include")
+target_include_directories(CHIP8_TESTS_LIB PRIVATE include)
 
 set_property(TARGET CHIP8_TESTS_LIB PROPERTY CXX_STANDARD 17)
 set_property(TARGET CHIP8_TESTS_LIB PROPERTY CXX_STANDARD_REQUIRED TRUE)

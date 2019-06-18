@@ -1,16 +1,16 @@
 add_library(CHIP8_CORE_LIB
     OBJECT
-        ${PROJECT_SOURCE_DIR}/src/Interpreter.cpp
-        ${PROJECT_SOURCE_DIR}/src/io/Speaker.cpp
-        ${PROJECT_SOURCE_DIR}/src/io/Keypad.cpp
-        ${PROJECT_SOURCE_DIR}/src/io/KeyMap.cpp
-        ${PROJECT_SOURCE_DIR}/src/io/display/PixelArray.cpp
-        ${PROJECT_SOURCE_DIR}/src/io/display/Renderer.cpp
-        ${PROJECT_SOURCE_DIR}/src/details/memory.cpp
-        ${PROJECT_SOURCE_DIR}/src/details/audio.cpp
+        src/Interpreter.cpp
+        src/io/Speaker.cpp
+        src/io/Keypad.cpp
+        src/io/KeyMap.cpp
+        src/io/display/PixelArray.cpp
+        src/io/display/Renderer.cpp
+        src/details/memory.cpp
+        src/details/audio.cpp
 )
 
-target_include_directories(CHIP8_CORE_LIB PUBLIC "${PROJECT_SOURCE_DIR}/include")
+target_include_directories(CHIP8_CORE_LIB PRIVATE include)
 
 set_property(TARGET CHIP8_CORE_LIB PROPERTY CXX_STANDARD 17)
 set_property(TARGET CHIP8_CORE_LIB PROPERTY CXX_STANDARD_REQUIRED TRUE)

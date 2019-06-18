@@ -10,11 +10,10 @@ list(APPEND CMAKE_MODULE_PATH
 set(MAIN_EXECUTABLE ${PROJECT_NAME}_interpreter)
 
 include(chip8_core_lib)
-
 add_executable(${MAIN_EXECUTABLE} src/main.cpp  
     $<TARGET_OBJECTS:CHIP8_CORE_LIB>
 )
-target_include_directories(${MAIN_EXECUTABLE} PUBLIC "${PROJECT_SOURCE_DIR}/include")
+target_include_directories(${MAIN_EXECUTABLE} PRIVATE include)
 
 set_property(TARGET ${MAIN_EXECUTABLE} PROPERTY CXX_STANDARD 17)
 set_property(TARGET ${MAIN_EXECUTABLE} PROPERTY CXX_STANDARD_REQUIRED TRUE)
@@ -35,13 +34,11 @@ if(BUILD_TESTS)
     set(TESTS_EXECUTABLE ${PROJECT_NAME}_tests)
 
     include(chip8_tests_lib)
-
     add_executable(${TESTS_EXECUTABLE} test/test_main.cpp 
         $<TARGET_OBJECTS:CHIP8_CORE_LIB> 
         $<TARGET_OBJECTS:CHIP8_TESTS_LIB>
     )
-
-    target_include_directories(${TESTS_EXECUTABLE} PUBLIC "${PROJECT_SOURCE_DIR}/include")
+    target_include_directories(${TESTS_EXECUTABLE} PRIVATE include)
 
     set_property(TARGET ${TESTS_EXECUTABLE} PROPERTY CXX_STANDARD 17)
     set_property(TARGET ${TESTS_EXECUTABLE} PROPERTY CXX_STANDARD_REQUIRED TRUE)
