@@ -60,6 +60,7 @@ after_success:
     - gcov --version
     - pip show cpp-coveralls   
     - coveralls --root .. 
+        --exclude src/main.cpp 
         --exclude depends 
         --exclude test 
         --exclude assets 
