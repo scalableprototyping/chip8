@@ -35,7 +35,7 @@ install:
         fi
     - |
         if [ "${COMPILER_ID}" == "clang" ]; then
-            sudo apt-get install -qq - y clang-6.0
+            sudo apt-get install -qq -y clang-6.0
             sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 90
             sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 90
         fi
