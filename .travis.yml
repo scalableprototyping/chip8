@@ -25,6 +25,7 @@ addons:
 
 install:
     # C++17
+    - echo ${COMPILER_ID}
     - |
         if [ "${COMPILER_ID}" == "gcc"]; then
         sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test

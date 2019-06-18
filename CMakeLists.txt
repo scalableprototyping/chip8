@@ -26,8 +26,6 @@ target_add_iwyu(${MAIN_EXECUTABLE})
 include(chip8_compiler_warnings)
 target_add_compiler_warnigs(${MAIN_EXECUTABLE})
 
-file(COPY src/assets DESTINATION ${CMAKE_BINARY_DIR})
-
 if(BUILD_TESTS)
     enable_testing()
 
@@ -55,3 +53,8 @@ if(BUILD_TESTS)
 
     add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${TESTS_EXECUTABLE})
 endif()
+
+include(chip8_uninstall)
+
+install(TARGETS ${MAIN_EXECUTABLE} DESTINATION bin)
+install(TARGETS ${TESTS_EXECUTABLE} DESTINATION bin)
