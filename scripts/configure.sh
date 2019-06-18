@@ -7,10 +7,29 @@ if [ -z "${CHIP8_ROOT_DIR}" ]; then
     return
 fi
 
-cd "${CHIP8_ROOT_DIR}"
-rm -rf build
-mkdir build
-cd build
-cmake -DBUILD_TESTS=TRUE -DCMAKE_BUILD_TYPE=Debug ..
+function build_project()
+{
+    cd "${CHIP8_ROOT_DIR}"
+    rm -rf build
+    mkdir build
+    cd build
+    cmake -DBUILD_TESTS=TRUE -DCMAKE_BUILD_TYPE=Debug ..
 
-make -j8
+    make -j8
+}
+
+if [[ "$1" == "gcc" ]]; then
+    export CXX=g++
+    export CC=gcc
+    build_project
+
+elif [[ "$1" == "clang" ]]; then
+    export CXX=clang++
+    export CC=clang
+    build_project
+
+else
+    echo "Error: Provide gcc or clang argument"
+    return
+fi
+

@@ -48,7 +48,7 @@ before_script:
 
 script:
     - mkdir build && cd build
-    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DCOVERAGE=1 -DCMAKE_BUILD_TYPE=Debug
+    - cmake .. -DBUILD_TESTS=TRUE -DCOVERAGE=TRUE -DCMAKE_BUILD_TYPE=Debug
     - make
     - ./chip_8_cpp_tests
 
