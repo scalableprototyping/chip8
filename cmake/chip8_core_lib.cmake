@@ -22,10 +22,15 @@ target_compile_features(CHIP8_CORE_LIB PRIVATE cxx_std_17)
 
 include(chip8_sfml)
 target_add_sfml(CHIP8_CORE_LIB)
+
 include(chip8_include_what_you_use)
 target_add_iwyu(CHIP8_CORE_LIB)
+
 include(chip8_compiler_warnings)
 target_add_compiler_warnigs(CHIP8_CORE_LIB)
+
+include(chip8_clang_tidy)
+target_add_clang_tidy(CHIP8_CORE_LIB)
 
 file(COPY src/assets DESTINATION ${CMAKE_BINARY_DIR})
 install(DIRECTORY src/assets DESTINATION bin)

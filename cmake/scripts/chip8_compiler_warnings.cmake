@@ -1,14 +1,11 @@
 function(target_add_compiler_warnigs TARGET_NAME_ARG)
 
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS_EQUAL "8.0.0")
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0.0")
             message(FATAL_ERROR "Insufficient Clang version")
         endif()
 
         message(STATUS "Setting Clang warnings")
-
-        include(chip8_clang_tidy)
-        target_add_clang_tidy(${TARGET_NAME_ARG})
 
         set(COMPILE_WARNINGS 
             -Wall 
@@ -18,7 +15,7 @@ function(target_add_compiler_warnigs TARGET_NAME_ARG)
         )
 
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS_EQUAL "8.0.0")
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0.0")
             message(FATAL_ERROR "Insufficient GCC version")
         endif()
 
