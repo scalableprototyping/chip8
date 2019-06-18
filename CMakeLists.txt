@@ -54,7 +54,7 @@ if(BUILD_TESTS)
     add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${TESTS_EXECUTABLE})
 endif()
 
-include(chip8_uninstall)
-
 install(TARGETS ${MAIN_EXECUTABLE} DESTINATION bin)
 install(TARGETS ${TESTS_EXECUTABLE} DESTINATION bin)
+
+include(chip8_uninstall)
