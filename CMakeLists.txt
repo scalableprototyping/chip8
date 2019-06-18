@@ -61,6 +61,9 @@ if(BUILD_TESTS)
     include(chip8_coverage)
     target_add_coverage(${TESTS_EXECUTABLE})
 
+    include(chip8_compiler_warnings)
+    target_add_compiler_warnigs(${TESTS_EXECUTABLE})
+
     add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${TESTS_EXECUTABLE})
 endif()
 

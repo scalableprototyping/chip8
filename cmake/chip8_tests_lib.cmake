@@ -6,7 +6,9 @@ add_library(CHIP8_TESTS_LIB
         test/keypad_test.cpp
         test/display_test.cpp
 )
+
 target_include_directories(CHIP8_TESTS_LIB PRIVATE include)
+
 target_compile_features(CHIP8_TESTS_LIB PRIVATE cxx_std_17)
 
 include(chip8_gtest)
