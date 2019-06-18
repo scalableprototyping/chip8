@@ -20,38 +20,38 @@ addons:
             - libopenal-dev
             - libjpeg62
 
-            # CMake
+              # CMake
             - cmake
 
 install:
     # C++17
     - |
         if [ $COMPILER_ID == "gcc"]; then
-            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-            sudo apt-get update
-            sudo apt-get install -qq g++-8 gcc-8
-            sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
-            sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90
-            sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 90
+        sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+        sudo apt-get update
+        sudo apt-get install -qq g++-8 gcc-8
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90
+        sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 90
         fi
     - |
         if [ $COMPILER_ID == "clang"]; then
-            wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-            sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main"
-            sudo apt-get update
-            sudo apt-get install -y clang-6.0
-            update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 90
-            update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 90
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main"
+        sudo apt-get update
+        sudo apt-get install -y clang-6.0
+        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 90
+        update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 90
         fi
 
-    # Include What You Use
+        # Include What You Use
     - sudo apt-get install iwyu
 
-    # SFML
+      # SFML
     - sudo apt-get install libsfml-dev
     - sudo apt-get install pulseaudio
 
-    # Coveralls
+      # Coveralls
     - pip install --user cpp-coveralls
 
 before_script:
@@ -71,25 +71,25 @@ after_success:
     - gcov --version
     - pip show cpp-coveralls   
     - coveralls --root .. 
-        --exclude depends 
-        --exclude test 
-        --exclude assets 
-        --exclude cmake 
-        --exclude docs 
-        --exclude build/CMakeFiles/3.12.4 
-        --exclude build/CMakeFiles/feature_tests.c 
-        --exclude build/CMakeFiles/feature_tests.cxx
+      --exclude depends 
+      --exclude test 
+      --exclude assets 
+      --exclude cmake 
+      --exclude docs 
+      --exclude build/CMakeFiles/3.12.4 
+      --exclude build/CMakeFiles/feature_tests.c 
+      --exclude build/CMakeFiles/feature_tests.cxx
 
 matrix:
     include:
         - name: "Ubuntu GCC"
-            os: linux
-            dist: xenial
-            compiler: gcc
-            env: COMPILER_ID=gcc
+          os: linux
+          dist: xenial
+          compiler: gcc
+          env: COMPILER_ID=gcc
 
-            #- name: "Ubuntu Clang"
-            #    os: linux
-            #    dist: xenial
-            #    compiler: clang
-            #    env: COMPILER_ID=clang
+          #- name: "Ubuntu Clang"
+          #    os: linux
+          #    dist: xenial
+          #    compiler: clang
+          #    env: COMPILER_ID=clang
