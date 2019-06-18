@@ -32,6 +32,9 @@ target_add_compiler_warnigs(${MAIN_EXECUTABLE})
 include(chip8_clang_tidy)
 target_add_clang_tidy(${MAIN_EXECUTABLE})
 
+include(chip8_coverage)
+target_add_coverage(${MAIN_EXECUTABLE})
+
 if(BUILD_TESTS)
     enable_testing()
 
@@ -54,6 +57,9 @@ if(BUILD_TESTS)
 
     include(chip8_sfml)
     target_add_sfml(${TESTS_EXECUTABLE})
+
+    include(chip8_coverage)
+    target_add_coverage(${TESTS_EXECUTABLE})
 
     add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${TESTS_EXECUTABLE})
 endif()

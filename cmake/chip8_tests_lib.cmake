@@ -22,4 +22,4 @@ include(chip8_compiler_warnings)
 target_add_compiler_warnigs(CHIP8_TESTS_LIB)
 
 include(chip8_clang_tidy)
-target_add_clang_tidy(CHIP8_CORE_LIB)
+target_add_clang_tidy(CHIP8_TESTS_LIB)
