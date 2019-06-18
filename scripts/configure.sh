@@ -10,6 +10,6 @@ cd "${CHIP8_ROOT_DIR}"
 rm -rf build
 mkdir build
 cd build
-cmake -DBUILD_TESTS=1 -DCMAKE_BUILD_TYPE=Debug ..
+cmake -DBUILD_TESTS=TRUE -DCMAKE_BUILD_TYPE=Debug ..
 
 make

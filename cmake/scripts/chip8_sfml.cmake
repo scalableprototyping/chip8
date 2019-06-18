@@ -1,4 +1,4 @@
-function(target_add_sfml TARGET_NAME_ARG)
+macro(target_add_sfml TARGET_NAME_ARG)
 
     if (NOT SFML_FOUND)
         find_package(SFML 2.5 COMPONENTS graphics audio window system)
@@ -19,4 +19,4 @@ function(target_add_sfml TARGET_NAME_ARG)
         target_link_libraries(${TARGET_NAME_ARG} PRIVATE ${SFML_LIBRARIES})
     endif()
 
-endfunction(target_add_sfml)
+endmacro(target_add_sfml)
