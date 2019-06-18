@@ -8,5 +8,6 @@ if [ -z "${CHIP8_ROOT_DIR}" ]; then
 fi
 
 echo "Run configure_chip8_<gcc,clang> to rebuild and make the project"
+
 alias configure_chip8_gcc=". ${CHIP8_ROOT_DIR}/scripts/configure.sh gcc"
 alias configure_chip8_clang=". ${CHIP8_ROOT_DIR}/scripts/configure.sh clang"

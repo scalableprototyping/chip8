@@ -50,21 +50,21 @@ script:
     - mkdir build && cd build
     - cmake .. -DBUILD_TESTS=TRUE -DCOVERAGE=TRUE -DCMAKE_BUILD_TYPE=Debug
     - make
-    - ./chip_8_cpp_tests
+    - ./chip8_cpp_tests
 
 after_success:
     # Coveralls
     - gcov --version
     - pip show cpp-coveralls   
     - coveralls --root .. 
-      --exclude depends 
-      --exclude test 
-      --exclude assets 
-      --exclude cmake 
-      --exclude docs 
-      --exclude build/CMakeFiles/3.12.4 
-      --exclude build/CMakeFiles/feature_tests.c 
-      --exclude build/CMakeFiles/feature_tests.cxx
+        --exclude depends 
+        --exclude test 
+        --exclude assets 
+        --exclude cmake 
+        --exclude docs 
+        --exclude build/CMakeFiles/3.12.4 
+        --exclude build/CMakeFiles/feature_tests.c 
+        --exclude build/CMakeFiles/feature_tests.cxx
 
 matrix:
     include:
