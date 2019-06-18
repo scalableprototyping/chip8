@@ -3,6 +3,7 @@ language: cpp
 addons:
     apt:
         packages:
+        # SFML build dependencies
         - libpthread-stubs0-dev
         - libgl1-mesa-dev
         - libx11-dev
@@ -18,26 +19,40 @@ addons:
         - libsndfile1-dev
         - libopenal-dev
         - libjpeg62
+
+        # CMake
         - cmake
 
-env:
-    global:
-        - DISPLAY=:99
-
-before_install:
-    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    - sudo apt-get update -qq
-    - pip install --user cpp-coveralls
-
 install:
-    - sudo apt-get install -qq g++-8 gcc-8
-    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
-    - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 90
+    # C++17
+    - if [ $COMPILER_ID = "gcc"]; then
+        sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
+        sudo apt-get update;
+        sudo apt-get install -qq g++-8 gcc-8;
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90;
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90;
+        sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 90;
+    fi
+    - if [ $COMPILER_ID = "clang"]; then
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -;
+        sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main";
+        sudo apt-get update;
+        sudo apt-get install -y clang-6.0;
+        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 90;
+        update-alternatives --install /usr/bin/clang clang /usr/bin/clang-6.0 90;
+    fi
+
+    # SFML
     - sudo apt-get install libsfml-dev
     - sudo apt-get install pulseaudio
 
+    # Coveralls
+    - pip install --user cpp-coveralls
+
 before_script:
-    - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x24"
+    # Open a X screen
+    - export DISPLAY=:99
+    - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x24
     - sleep 3
 
 script:
@@ -47,14 +62,30 @@ script:
     - ./chip_8_cpp_tests
 
 after_success:
-  - gcov --version
-  - pip show cpp-coveralls   
-  - coveralls --root .. --exclude depends --exclude test --exclude assets --exclude cmake --exclude docs --exclude build/CMakeFiles/3.12.4 --exclude build/CMakeFiles/feature_tests.c --exclude build/CMakeFiles/feature_tests.cxx
+    # Coveralls
+    - gcov --version
+    - pip show cpp-coveralls   
+    - coveralls --root .. 
+      --exclude depends 
+      --exclude test 
+      --exclude assets 
+      --exclude cmake 
+      --exclude docs 
+      --exclude build/CMakeFiles/3.12.4 
+      --exclude build/CMakeFiles/feature_tests.c 
+      --exclude build/CMakeFiles/feature_tests.cxx
 
 matrix:
   include:
 
-  - name: "Linux GCC Dynamic"
+  - name: "Ubuntu GCC"
     os: linux
     dist: xenial
     compiler: gcc
+    env: COMPILER_ID=gcc
+
+  - name: "Ubuntu Clang"
+    os: linux
+    dist: xenial
+    compiler: clang
+    env: COMPILER_ID=clang

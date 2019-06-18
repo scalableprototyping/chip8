@@ -1,7 +1,7 @@
 function(target_add_compiler_warnigs TARGET_NAME_ARG)
 
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0.0")
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS_EQUAL "6.0.0")
             message(FATAL_ERROR "Insufficient Clang version")
         endif()
 
@@ -13,7 +13,7 @@ function(target_add_compiler_warnigs TARGET_NAME_ARG)
         set(COMPILE_WARNINGS "-Wall -Wextra -Wpedantic")
 
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "8.0.0")
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS_EQUAL "8.0.0")
             message(FATAL_ERROR "Insufficient GCC version")
         endif()
 
