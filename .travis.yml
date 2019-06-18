@@ -3,25 +3,25 @@ language: cpp
 addons:
     apt:
         packages:
-        # SFML build dependencies
-        - libpthread-stubs0-dev
-        - libgl1-mesa-dev
-        - libx11-dev
-        - libx11-xcb-dev
-        - libxcb-image0-dev
-        - libxrandr-dev
-        - libxcb-randr0-dev
-        - libudev-dev
-        - libfreetype6-dev
-        - libglew-dev
-        - libjpeg8-dev
-        - libgpgme11-dev
-        - libsndfile1-dev
-        - libopenal-dev
-        - libjpeg62
+            # SFML build dependencies
+            - libpthread-stubs0-dev
+            - libgl1-mesa-dev
+            - libx11-dev
+            - libx11-xcb-dev
+            - libxcb-image0-dev
+            - libxrandr-dev
+            - libxcb-randr0-dev
+            - libudev-dev
+            - libfreetype6-dev
+            - libglew-dev
+            - libjpeg8-dev
+            - libgpgme11-dev
+            - libsndfile1-dev
+            - libopenal-dev
+            - libjpeg62
 
-        # CMake
-        - cmake
+            # CMake
+            - cmake
 
 install:
     # C++17
@@ -59,7 +59,7 @@ before_script:
 
 script:
     - mkdir build && cd build
-    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=1 -DCOVERAGE=1 -DCMAKE_BUILD_TYPE=Debug
+    - cmake ..  $CMAKE_FLAGS -DBUILD_TESTS=TRUE -DCOVERAGE=TRUE -DCMAKE_BUILD_TYPE=Debug
     - make
     - ./chip8_cpp_tests
 
@@ -68,26 +68,25 @@ after_success:
     - gcov --version
     - pip show cpp-coveralls   
     - coveralls --root .. 
-      --exclude depends 
-      --exclude test 
-      --exclude assets 
-      --exclude cmake 
-      --exclude docs 
-      --exclude build/CMakeFiles/3.12.4 
-      --exclude build/CMakeFiles/feature_tests.c 
-      --exclude build/CMakeFiles/feature_tests.cxx
+        --exclude depends 
+        --exclude test 
+        --exclude assets 
+        --exclude cmake 
+        --exclude docs 
+        --exclude build/CMakeFiles/3.12.4 
+        --exclude build/CMakeFiles/feature_tests.c 
+        --exclude build/CMakeFiles/feature_tests.cxx
 
 matrix:
-  include:
+    include:
+        - name: "Ubuntu GCC"
+            os: linux
+            dist: xenial
+            compiler: gcc
+            env: COMPILER_ID=gcc
 
-  - name: "Ubuntu GCC"
-    os: linux
-    dist: xenial
-    compiler: gcc
-    env: COMPILER_ID=gcc
-
-    #- name: "Ubuntu Clang"
-    #  os: linux
-    #  dist: xenial
-    #  compiler: clang
-    #  env: COMPILER_ID=clang
+        - name: "Ubuntu Clang"
+            os: linux
+            dist: xenial
+            compiler: clang
+            env: COMPILER_ID=clang
