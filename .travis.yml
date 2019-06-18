@@ -33,6 +33,9 @@ install:
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
     - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 90
 
+    # Include What You Use
+    - sudo apt-get install -qq -y iwyu
+
     # SFML
     - sudo apt-get install libsfml-dev
     - sudo apt-get install pulseaudio
