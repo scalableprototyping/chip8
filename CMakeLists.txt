@@ -55,11 +55,6 @@ if(BUILD_TESTS)
     include(chip8_sfml)
     target_add_sfml(${TESTS_EXECUTABLE})
 
-    if (COVERAGE)
-        include(chip8_coverage)
-        target_add_coverage(${TESTS_EXECUTABLE})
-    endif()
-
     add_test(Chip8TestSuite ${EXECUTABLE_OUTPUT_PATH}/${TESTS_EXECUTABLE})
 endif()
 

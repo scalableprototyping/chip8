@@ -32,5 +32,10 @@ target_add_compiler_warnigs(CHIP8_CORE_LIB)
 include(chip8_clang_tidy)
 target_add_clang_tidy(CHIP8_CORE_LIB)
 
+if (COVERAGE)
+    include(chip8_coverage)
+    target_add_coverage(CHIP8_CORE_LIB)
+endif()
+
 file(COPY src/assets DESTINATION ${CMAKE_BINARY_DIR})
 install(DIRECTORY src/assets DESTINATION bin)
