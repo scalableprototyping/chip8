@@ -1,7 +1,7 @@
 function(target_add_sfml TARGET_NAME_ARG)
 
     if (NOT SFML_FOUND)
-        find_package(SFML 2.5 COMPONENTS graphics audio window system REQUIRED)
+        find_package(SFML 2.5 COMPONENTS graphics audio window system)
     endif()
 
     if (NOT SFML_FOUND)
