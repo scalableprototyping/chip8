@@ -23,3 +23,6 @@ target_add_compiler_warnigs(CHIP8_TESTS_LIB)
 
 include(chip8_clang_tidy)
 target_add_clang_tidy(CHIP8_TESTS_LIB)
+
+include(chip8_coverage)
+target_add_coverage(${MAIN_EXECUTABLE})
