@@ -27,7 +27,7 @@ install:
     # C++17
     - echo ${COMPILER_ID}
     - |
-        if [ "${COMPILER_ID}" == "gcc"]; then
+        if [ "${COMPILER_ID}" == "gcc" ]; then
         sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
         sudo apt-get update
         sudo apt-get install -qq g++-8 gcc-8
@@ -36,7 +36,7 @@ install:
         sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 90
         fi
     - |
-        if [ "${COMPILER_ID}" == "clang"]; then
+        if [ "${COMPILER_ID}" == "clang" ]; then
         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
         sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main"
         sudo apt-get update
