@@ -84,8 +84,8 @@ matrix:
     compiler: gcc
     env: COMPILER_ID=gcc
 
-  - name: "Ubuntu Clang"
-    os: linux
-    dist: xenial
-    compiler: clang
-    env: COMPILER_ID=clang
+    #- name: "Ubuntu Clang"
+    #  os: linux
+    #  dist: xenial
+    #  compiler: clang
+    #  env: COMPILER_ID=clang
