@@ -18,8 +18,7 @@ target_include_directories(CHIP8_CORE_LIB
         ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
-set_property(TARGET CHIP8_CORE_LIB PROPERTY CXX_STANDARD 17)
-set_property(TARGET CHIP8_CORE_LIB PROPERTY CXX_STANDARD_REQUIRED TRUE)
+target_compile_features(CHIP8_CORE_LIB PRIVATE cxx_std_17)
 
 include(chip8_sfml)
 target_add_sfml(CHIP8_CORE_LIB)

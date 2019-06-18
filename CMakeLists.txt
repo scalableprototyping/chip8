@@ -15,8 +15,7 @@ add_executable(${MAIN_EXECUTABLE} src/main.cpp
 )
 target_include_directories(${MAIN_EXECUTABLE} PRIVATE include)
 
-set_property(TARGET ${MAIN_EXECUTABLE} PROPERTY CXX_STANDARD 17)
-set_property(TARGET ${MAIN_EXECUTABLE} PROPERTY CXX_STANDARD_REQUIRED TRUE)
+target_compile_features(${MAIN_EXECUTABLE} PRIVATE cxx_std_17)
 set_property(TARGET ${MAIN_EXECUTABLE} PROPERTY LINK_WHAT_YOU_USE TRUE)
 
 include(chip8_sfml)
@@ -38,8 +37,7 @@ if(BUILD_TESTS)
     )
     target_include_directories(${TESTS_EXECUTABLE} PRIVATE include)
 
-    set_property(TARGET ${TESTS_EXECUTABLE} PROPERTY CXX_STANDARD 17)
-    set_property(TARGET ${TESTS_EXECUTABLE} PROPERTY CXX_STANDARD_REQUIRED TRUE)
+    target_compile_features(${TESTS_EXECUTABLE} PRIVATE cxx_std_17)
     set_property(TARGET ${TESTS_EXECUTABLE} PROPERTY LINK_WHAT_YOU_USE TRUE)
 
     include(chip8_gtest)
