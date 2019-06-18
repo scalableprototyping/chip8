@@ -30,7 +30,7 @@ include(chip8_compiler_warnings)
 target_add_compiler_warnigs(${MAIN_EXECUTABLE})
 
 include(chip8_clang_tidy)
-target_add_clang_tidy(CHIP8_CORE_LIB)
+target_add_clang_tidy(${MAIN_EXECUTABLE})
 
 if(BUILD_TESTS)
     enable_testing()
@@ -54,12 +54,6 @@ if(BUILD_TESTS)
 
     include(chip8_sfml)
     target_add_sfml(${TESTS_EXECUTABLE})
-
-    include(chip8_include_what_you_use)
-    target_add_iwyu(${TESTS_EXECUTABLE})
-
-    include(chip8_compiler_warnings)
-    target_add_compiler_warnigs(${TESTS_EXECUTABLE})
 
     if (COVERAGE)
         include(chip8_coverage)
