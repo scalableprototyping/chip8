@@ -23,8 +23,8 @@ namespace chip8
             void InitializeRam();
 
         private:
-            memory::Ram ram_;
-            memory::RamIter program_counter_;
+            memory::Ram ram_{};
+            memory::RamIter program_counter_{};
 
             timers::Timer delay_timer_;
 

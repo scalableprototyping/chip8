@@ -2,6 +2,7 @@
 #define CHIP_8_DATA_REGISTER_HPP
 
 #include <array>
+#include <stdint.h>  // for uint8_t
 
 namespace chip8::registers
 {

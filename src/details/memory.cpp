@@ -1,7 +1,14 @@
-#include <algorithm>
-#include <fstream>
 
 #include "details/memory.hpp"
+
+#include <algorithm>  // for copy
+#include <array>      // for array<>::const_iterator, array
+#include <cstddef>    // for size_t
+#include <cstdint>    // for uint8_t
+#include <fstream>    // for ifstream, ios, operator|, basic_istream, basic_...
+#include <iterator>   // for distance, operator!=, istreambuf_iterator
+#include <stdexcept>  // for runtime_error
+#include <string>     // for char_traits<>::pos_type
 
 namespace chip8::details
 {

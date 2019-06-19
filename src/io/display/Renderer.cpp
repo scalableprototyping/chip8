@@ -1,9 +1,19 @@
 #include "io/display/Renderer.hpp"
-#include "io/display/PixelArray.hpp"
 
-#include <stdexcept>
-#include <algorithm>
-#include <iterator>
+#include "io/display/PixelArray.hpp"        // for PixelArray, PixelArray::k...
+
+#include <SFML/Graphics/PrimitiveType.hpp>  // for Quads
+#include <SFML/Graphics/RenderTarget.hpp>   // for RenderTarget
+#include <SFML/Graphics/Transform.hpp>      // for operator*=, Transform
+#include <SFML/Graphics/Vertex.hpp>         // for Vertex
+#include <SFML/System/Vector2.hpp>          // for Vector2::Vector2<T>, oper...
+// IWYU pragma: no_include <SFML/System/Vector2.inl>
+#include <SFML/Window/Event.hpp>            // for Event, Event::Closed
+
+#include <algorithm>                        // for transform
+#include <ext/alloc_traits.h>               // for __alloc_traits<>::value_type
+#include <iterator>                         // for back_insert_iterator, bac...
+#include <stdexcept>                        // for runtime_error
 
 namespace chip8::io::display
 {
@@ -11,8 +21,8 @@ namespace chip8::io::display
         pixels_(pixels),
         pixelQuads_(pixels_)
     {
-        const int kMapWidth = pixels_.kWidth_*pixelQuads_.kTextureWidth_;
-        const int kMapHeight = pixels_.kHeight_*pixelQuads_.kTextureHeight_;
+        const int kMapWidth = PixelArray::kWidth_ * PixelQuads::kTextureWidth_;
+        const int kMapHeight = PixelArray::kHeight_ * PixelQuads::kTextureHeight_;
         pixelQuads_.setScale(
             float(window_.getSize().x) / kMapWidth, 
             float(window_.getSize().y) / kMapHeight
@@ -23,11 +33,13 @@ namespace chip8::io::display
     {
         if (window_.isOpen()) 
         {
-            sf::Event event;
+            sf::Event event{};
             while (window_.pollEvent(event))
             {
                 if(event.type == sf::Event::Closed)
+                {
                     window_.close();
+                }
             }
 
             pixelQuads_.Update();
@@ -47,7 +59,7 @@ namespace chip8::io::display
 
         vertices_.setPrimitiveType(sf::Quads);
         const int kNumberOfVerticesPerQuad = 4;
-        vertices_.resize(pixels_.kWidth_ * pixels_.kHeight_ * kNumberOfVerticesPerQuad);
+        vertices_.resize(PixelArray::kWidth_ * PixelArray::kHeight_ * kNumberOfVerticesPerQuad);
 
         pixelOffTextureCoords = std::vector<sf::Vector2f>
         {
@@ -61,7 +73,7 @@ namespace chip8::io::display
         (
             pixelOffTextureCoords.begin(), pixelOffTextureCoords.end(),
             std::back_inserter(pixelOnTextureCoords),
-            [this](auto v) {
+            [](auto v) {
                 return v + sf::Vector2f(kTextureWidth_, 0);
         });
 
@@ -74,11 +86,12 @@ namespace chip8::io::display
 
     void Renderer::PixelQuads::Update() 
     {
-        for (auto i = 0; i < pixels_.kWidth_; ++i)
-            for (auto j = 0; j < pixels_.kHeight_; ++j)
+        for (auto i = 0; i < PixelArray::kWidth_; ++i)
+        {
+            for (auto j = 0; j < PixelArray::kHeight_; ++j)
             {
                 // Get a pointer to the current tile's quad
-                sf::Vertex* quad = &vertices_[(i + j*pixels_.kWidth_)*4];
+                sf::Vertex* quad = &vertices_[(i + j*PixelArray::kWidth_)*4];
 
                 // Set Quad texture coordinates
                 const auto pixelState = pixels_.at(i,j);
@@ -93,6 +106,7 @@ namespace chip8::io::display
                 quad[2].position = sf::Vector2f((i + 1) * kTextureWidth_, (j + 1) * kTextureHeight_);
                 quad[3].position = sf::Vector2f(i * kTextureWidth_, (j + 1) * kTextureHeight_);
             }
+        }
     }
 
     void Renderer::PixelQuads::draw(sf::RenderTarget& target, sf::RenderStates states) const

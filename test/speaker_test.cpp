@@ -1,8 +1,9 @@
-#include <chrono>
-#include <thread>
 #include <gtest/gtest.h>
 
 #include "io/Speaker.hpp"
+
+#include <chrono>
+#include <thread>
 
 namespace chip8::test
 {

@@ -1,5 +1,7 @@
 #include "registers/IRegister.hpp"
 
+#include "registers/DataRegister.hpp"
+
 namespace chip8::registers
 {
     using Value_t = IRegister::Value_t;

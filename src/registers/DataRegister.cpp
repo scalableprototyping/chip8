@@ -3,6 +3,7 @@
 namespace chip8::registers
 {
     using Value_t = DataRegister::Value_t;
+    using Carry_t = DataRegister::Carry_t;
     using Borrow_t = DataRegister::Borrow_t;
     using MostSignificantBit_t = DataRegister::MostSignificantBit_t;
     using LessSignificantBit_t = DataRegister::LessSignificantBit_t;
@@ -41,16 +42,16 @@ namespace chip8::registers
 
     MostSignificantBit_t DataRegister::ShiftLeft()
     {
-        auto most_significant_bit = (value_ >> 7) & 0x1;
-        value_ <<= 1;
+        uint8_t most_significant_bit = (value_ >> 7) & 0x1; //NOLINT
+        value_ <<= 1; //NOLINT
 
         return most_significant_bit;
     }
 
     LessSignificantBit_t DataRegister::ShiftRight()
     {
-        auto less_significant_bit = value_ & 0x1;
-        value_ >>= 1;
+        uint8_t less_significant_bit = value_ & 0x1; //NOLINT
+        value_ >>= 1; //NOLINT
 
         return less_significant_bit;
     }

@@ -1,7 +1,9 @@
 #ifndef CHIP_8_I_REGISTER_HPP
 #define CHIP_8_I_REGISTER_HPP
 
-#include "registers/DataRegister.hpp"
+#include <cstdint>  // for uint16_t
+
+namespace chip8::registers { class DataRegister; }
 
 namespace chip8::registers
 {

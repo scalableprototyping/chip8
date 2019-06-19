@@ -1,7 +1,7 @@
-#include <chrono>
-#include <thread>
-
 #include "io/Keypad.hpp"
+
+#include <chrono>  // for operator""ms, chrono_literals
+#include <thread>  // for sleep_for
 
 namespace chip8::io
 {

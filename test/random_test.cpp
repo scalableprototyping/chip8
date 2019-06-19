@@ -1,7 +1,8 @@
-#include <set>
 #include <gtest/gtest.h>
 
 #include "details/random.hpp"
+
+#include <set>
 
 namespace chip8::test
 {
