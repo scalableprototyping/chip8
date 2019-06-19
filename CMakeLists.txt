@@ -30,7 +30,7 @@ include(chip8_compiler_warnings)
 target_add_compiler_warnigs(${MAIN_EXECUTABLE})
 
 include(chip8_clang_tidy)
-target_add_clang_tidy(${MAIN_EXECUTABLE})
+target_add_clang_tidy(${MAIN_EXECUTABLE} ${CHIP8_CORE_CLANG_TIDY_CHECKS})
 
 include(chip8_coverage)
 target_add_coverage(${MAIN_EXECUTABLE})

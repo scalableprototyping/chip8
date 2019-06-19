@@ -1,5 +1,9 @@
 #include "io/Speaker.hpp"
+
 #include "details/audio.hpp"
+
+#include <stdexcept>  // for runtime_error
+#include <vector>     // for vector
 
 namespace chip8::io
 {

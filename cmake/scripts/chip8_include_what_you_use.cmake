@@ -1,21 +1,26 @@
 function(target_add_iwyu TARGET_NAME_ARG)
 
-    if (NOT INCLUDE_WHAT_YOU_USE_EXE)
-        find_program(
-            INCLUDE_WHAT_YOU_USE_EXE
-            NAMES "include-what-you-use"
-            DOC "Path to include-what-you-use executable"
-            )
-    endif()
+    if (IWYU)
+        if (NOT IWYU_PATH)
+            find_program(
+                IWYU_PATH
+                NAMES "include-what-you-use"
+                DOC "Path to IWYU executable"
+                )
+        endif()
 
-    if(NOT INCLUDE_WHAT_YOU_USE_EXE)
-        message(FATAL_ERROR "include-what-you-use not found.")
-    endif()
+        if(NOT IWYU_PATH)
+            message(FATAL_ERROR "IWYU not found.")
+        endif()
 
-    if(INLCUDE_WHAT_YOU_USE_EXE)
+        set(IWYU_PATH_AND_OPTIONS ${IWYU_PATH} 
+            #-Xiwyu --verbose=1
+            -Xiwyu --cxx17ns
+        )
+
         set_property(
             TARGET ${TARGET_NAME_ARG} 
-            PROPERTY CXX_INCLUDE_WHAT_YOU_USE "include-what-you-use"
+            PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${IWYU_PATH_AND_OPTIONS}
         )
     endif()
 

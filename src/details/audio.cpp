@@ -1,7 +1,9 @@
-#include <cmath>
-#include <algorithm>
-
 #include "details/audio.hpp"
+
+#include <algorithm>  // for generate
+#include <cmath>
+#include <cstddef>   // for size_t
+#include <cstdint>   // for int16_t, uint16_t
 
 namespace chip8::details
 {

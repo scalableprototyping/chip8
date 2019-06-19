@@ -5,6 +5,8 @@
 
 #include "memory/Ram.hpp"
 #include "timers/Timer.hpp"
+#include "registers/DataRegister.hpp"
+#include "registers/IRegister.hpp"
 
 namespace chip8
 {
@@ -21,10 +23,13 @@ namespace chip8
             void InitializeRam();
 
         private:
-            memory::Ram ram_;
-            memory::RamIter program_counter_;
+            memory::Ram ram_{};
+            memory::RamIter program_counter_{};
 
             timers::Timer delay_timer_;
+
+            registers::IRegister i_register_;
+            registers::DataRegisters data_registers_;
 
             const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };

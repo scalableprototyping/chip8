@@ -1,16 +1,14 @@
-#include <cstdint>
-#include <chrono>
-#include <thread>
-
-#include <stdexcept>
-
 #include <gtest/gtest.h>
 
+#include "details/display.hpp"
 #include "io/display/PixelArray.hpp"
 #include "io/display/Renderer.hpp"
-#include "details/display.hpp"
 
 #include <bitset>
+#include <chrono>
+#include <cstdint>
+#include <stdexcept>
+#include <thread>
 
 namespace chip8::test
 {
@@ -71,7 +69,7 @@ namespace chip8::test
         expect_cleared_display(pixels);
 
         chip8::io::display::Renderer displayRenderer(pixels);
-        for (std::size_t i = 0; i < pixels.kHeight_; ++i) 
+        for (std::size_t i = 0; i < chip8::io::display::PixelArray::kHeight_; ++i) 
         {
             pixels.Clear();
             pixels.at(i,i) = 1;

@@ -1,5 +1,10 @@
 #include "Interpreter.hpp"
+
+#include <stdexcept>             // for runtime_error
+#include <string>                // for allocator, operator+, char_traits
+
 #include "details/memory.hpp"
+#include "timers/TimerImpl.hpp"  // for GeneralizedTimer::GeneralizedTimer<R...
 
 namespace chip8
 {

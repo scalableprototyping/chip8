@@ -1,5 +1,7 @@
 #include "io/display/PixelArray.hpp"
 
+#include <stdexcept>  // for out_of_range
+
 namespace chip8::io::display
 {
     using PixelValue_t = PixelArray::PixelValue_t;

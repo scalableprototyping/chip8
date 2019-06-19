@@ -12,6 +12,7 @@ function(target_add_compiler_warnigs TARGET_NAME_ARG)
             -Wextra 
             -Wpedantic
             -Wfatal-errors
+            -Werror
         )
 
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -26,6 +27,7 @@ function(target_add_compiler_warnigs TARGET_NAME_ARG)
             -Wextra 
             -Wpedantic
             -Wfatal-errors
+            -Werror
         )
 
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")

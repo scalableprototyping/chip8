@@ -1,7 +1,8 @@
-#include <set>
-#include <iostream>
-
 #include "io/KeyMap.hpp"
+
+#include <set>        // for set
+#include <stdexcept>  // for runtime_error, out_of_range
+#include <string>     // for operator+, to_string
 
 namespace chip8::io
 {

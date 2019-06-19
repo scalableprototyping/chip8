@@ -1,12 +1,20 @@
-#pragma once
+#ifndef CHIP_8_RENDERER_HPP
+#define CHIP_8_RENDERER_HPP
 
-#include "io/display/PixelArray.hpp"
-
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Drawable.hpp>       // for Drawable
+#include <SFML/Graphics/RenderStates.hpp>   // for RenderStates
+#include <SFML/Graphics/RenderWindow.hpp>   // for RenderWindow
+#include <SFML/Graphics/Texture.hpp>        // for Texture
+#include <SFML/Graphics/Transformable.hpp>  // for Transformable
+#include <SFML/Graphics/VertexArray.hpp>    // for VertexArray
+#include <SFML/System/Vector2.hpp>          // for Vector2f
+#include <SFML/Window/VideoMode.hpp>        // for VideoMode
 
 #include <string>
 #include <vector>
-#include <algorithm>
+
+namespace chip8::io::display { class PixelArray; }
+namespace sf { class RenderTarget; }
 
 namespace chip8::io::display
 {
@@ -53,3 +61,5 @@ namespace chip8::io::display
             sf::RenderWindow window_{sf::VideoMode(800, 600), "Chip8 Display"};
     };
 }
+
+#endif

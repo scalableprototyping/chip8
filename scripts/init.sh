@@ -11,3 +11,5 @@ echo "Run configure_chip8_<gcc,clang> to rebuild and make the project"
 
 alias configure_chip8_gcc=". ${CHIP8_ROOT_DIR}/scripts/configure.sh gcc"
 alias configure_chip8_clang=". ${CHIP8_ROOT_DIR}/scripts/configure.sh clang"
+
+alias make_less="cd ${CHIP8_ROOT_DIR}/build; make 2>&1 | less"

@@ -1,9 +1,11 @@
 #ifndef CHIP_8_KEYPAD_HPP
 #define CHIP_8_KEYPAD_HPP
 
+#include "io/KeyMap.hpp"
+
 #include <SFML/Window/Keyboard.hpp>
 
-#include "io/KeyMap.hpp"
+#include <stdint.h> // for uint8_t
 
 namespace chip8::io
 {
@@ -18,7 +20,7 @@ namespace chip8::io
 
             uint8_t WaitForKey() const;
 
-            bool IsKeyPressed(uint8_t _key) const;
+            bool IsKeyPressed(uint8_t _hex) const;
             bool IsKeyPressed(sf::Keyboard::Key _key) const;
 
             void SetKeyMapping(const KeyMap::KeyMapping& _new_key_mapping);
