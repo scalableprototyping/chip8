@@ -13,7 +13,7 @@ function build_project()
     rm -rf build
     mkdir build
     cd build
-    cmake -DBUILD_TESTS=TRUE -DCLANG_TIDY=TRUE -DCMAKE_BUILD_TYPE=Debug ..
+    cmake -DBUILD_TESTS=TRUE -DCLANG_TIDY=TRUE -DIWYU=TRUE -DCMAKE_BUILD_TYPE=Debug ..
     make -j8
 }
 
