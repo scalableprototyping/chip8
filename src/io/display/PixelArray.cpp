@@ -1,6 +1,7 @@
 #include "io/display/PixelArray.hpp"
 
 #include "details/display.hpp"
+#include <stdexcept>  // for out_of_range
 
 namespace chip8::io::display
 {

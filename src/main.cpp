@@ -1,12 +1,14 @@
-#include "Interpreter.hpp"
-#include <utility>
+#include <cstdint>          // for uint8_t
+#include <utility>          // for pair
+
+#include "Interpreter.hpp"  // for Interpreter
 
 int main()
 {
-    chip8::Interpreter interpreter{};
     using OpBytes = std::pair<uint8_t, uint8_t>;
-    OpBytes op;
-    op.first = 0x00;
-    op.second = 0xEE;
+
+    chip8::Interpreter interpreter{};
+
+    OpBytes op{0x00, 0xEE}; // NOLINT
     interpreter.processInstruction(op);
 }

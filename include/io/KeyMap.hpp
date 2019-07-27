@@ -2,6 +2,8 @@
 #define CHIP_8_KEYMAP_HPP
 
 #include <array>
+#include <stdint.h> // for uint8_t
+
 #include <SFML/Window/Keyboard.hpp>
 
 namespace chip8::io

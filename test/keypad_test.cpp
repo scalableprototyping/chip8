@@ -1,7 +1,8 @@
-#include <memory>
 #include <gtest/gtest.h>
 
 #include "io/Keypad.hpp"
+
+#include <memory>
 
 namespace chip8::test
 {

@@ -1,9 +1,8 @@
 #ifndef CHIP_8_DETAILS_AUDIO_HPP
 #define CHIP_8_DETAILS_AUDIO_HPP
 
+#include <stdint.h>  // for int16_t, uint16_t
 #include <vector>
-
-#include "io/Speaker.hpp"
 
 namespace chip8::details
 {

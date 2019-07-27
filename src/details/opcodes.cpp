@@ -13,7 +13,7 @@ namespace chip8
         constexpr auto OpCode_ANNN = Interpreter::OpCodes::OpCode_ANNN;
     }
 
-    using namespace chip8::opcodes;
+    using namespace chip8::opcodes; // NOLINT
 
     /**
     * OpCode 0NNN 
@@ -86,11 +86,14 @@ namespace chip8
         auto y = (_op_bytes.second & 0xF0) >> 4;
         auto n = (_op_bytes.second & 0x0F);
 
+        /*
+           // TODO: redo with i_register instead of index_register
         for (auto byte_index = 0; byte_index < n; ++byte_index)
         {
             auto byte = ram_.at(index_register_ + byte_index);
             pixels_.WriteByteAt(x, y + byte_index, byte);
         }
+        */
         // TODO: Set VF register appropiately! 
     }
 
@@ -102,7 +105,7 @@ namespace chip8
     void Interpreter::ExecuteInstruction<OpCode_ANNN>(const OpBytes& _op_bytes)
     {
         auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
-        index_register_ = nnn;
+        //index_register_ = nnn;
     }
 
 }

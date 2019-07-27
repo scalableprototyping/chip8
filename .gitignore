@@ -1,1 +1,4 @@
 build/
+
+# Vim Ctrl P project root marker
+.ctrlp

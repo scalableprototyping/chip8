@@ -1,3 +1,6 @@
+#ifndef CHIP_8_DETAILS_DISPLAY_HPP
+#define CHIP_8_DETAILS_DISPLAY_HPP
+
 namespace chip8::details
 {
     template<typename UnaryFunction>
@@ -11,3 +14,5 @@ namespace chip8::details
         }    
     }
 }
+
+#endif

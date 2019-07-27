@@ -1,14 +1,15 @@
-#pragma once
+#ifndef CHIP_8_PIXELARRAY_HPP
+#define CHIP_8_PIXELARRAY_HPP
 
-#include <cstdint>
 #include <array>
+#include <cstdint>
 
 namespace chip8::io::display
 {
     class PixelArray
     {
         public:
-            using PixelValue_t = bool;
+            using PixelValue_t = char;
             static constexpr uint8_t kWidth_ = 64;
             static constexpr uint8_t kHeight_ = 32;
             using Array_t = std::array<PixelValue_t, kHeight_*kWidth_>;
@@ -49,7 +50,9 @@ namespace chip8::io::display
             ConstReverseIterator_t crend() const;
 
         private:
-            Array_t pixels_;
-            void throwIfOutOfRange(uint8_t _col, uint8_t _row) const;
+            Array_t pixels_{};
+            void throwIfOutOfRange(uint8_t col, uint8_t row) const;
     };
 }
+
+#endif

@@ -1,11 +1,17 @@
 #ifndef CHIP_8_INTERPRETER_HPP
 #define CHIP_8_INTERPRETER_HPP
 
-#include <string_view>
+#include <cstdint>                     // for uint8_t
+#include <stdexcept>                   // for runtime_error
+#include <string_view>                 // for string_view
+#include <utility>                     // for pair
+#include <vector>                      // for vector
 
-#include "memory/Ram.hpp"
-#include "timers/Timer.hpp"
-#include "io/display/PixelArray.hpp"
+#include "io/display/PixelArray.hpp"   // for PixelArray
+#include "memory/Ram.hpp"              // for RamIter, Ram, begin_program_ram
+#include "registers/DataRegister.hpp"  // for DataRegisters
+#include "registers/IRegister.hpp"     // for IRegister
+#include "timers/Timer.hpp"            // for Timer
 
 namespace chip8
 {
@@ -40,12 +46,15 @@ namespace chip8
                 throw std::runtime_error("Unimplemented opcode function.");
             }
 
-            memory::Ram ram_;
-            memory::RamIter program_counter_;
+            memory::Ram ram_{};
+            memory::RamIter program_counter_{};
 
             timers::Timer delay_timer_;
             //TODO: initialize sound timer callbacks
             timers::Timer sound_timer_;
+
+            registers::IRegister i_register_;
+            registers::DataRegisters data_registers_;
 
             const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
@@ -53,8 +62,6 @@ namespace chip8
             io::display::PixelArray pixels_;
 
             std::vector<memory::RamIter> stack_;
-            //TODO: change with register class
-            uint16_t index_register_;
     };
 }
 

@@ -1,7 +1,11 @@
 #ifndef CHIP_8_SPEAKER_HPP
 #define CHIP_8_SPEAKER_HPP
 
-#include <SFML/Audio.hpp>
+#include <stdint.h>                    // for uint16_t
+
+#include <SFML/Audio/Sound.hpp>        // for Sound
+#include <SFML/Audio/SoundBuffer.hpp>  // for SoundBuffer
+#include <SFML/Audio/SoundSource.hpp>  // for SoundSource, SoundSource::Playing
 
 namespace chip8::io
 {

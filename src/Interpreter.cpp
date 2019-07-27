@@ -1,11 +1,12 @@
 #include "Interpreter.hpp"
 
-#include "details/memory.hpp"
+#include <iomanip>               // for operator<<, setfill, setw
+#include <iostream>              // for basic_ostream::operator<<, operator<<
+#include <stdexcept>             // for runtime_error
+#include <string>                // for allocator, operator+, char_traits
 
-#include <sstream>
-#include <iomanip>
-
-#include <iostream>
+#include "details/memory.hpp"    // for dumpRomToMemory, initSystemMemory
+#include "timers/TimerImpl.hpp"  // for GeneralizedTimer::GeneralizedTimer<R...
 
 namespace chip8
 {
@@ -48,31 +49,31 @@ namespace chip8
 
     void Interpreter::processInstruction(const OpBytes& _op_bytes)
     {
-        if ((_op_bytes.first & 0xF0) == 0x00 && (_op_bytes.second & 0xF0) != 0xE0) 
+        if ((_op_bytes.first & 0xF0) == 0x00 && (_op_bytes.second & 0xF0) != 0xE0)  // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_0NNN>(_op_bytes); 
         }
-        else if (_op_bytes.first == 0x00 && _op_bytes.second == 0xE0)
+        else if (_op_bytes.first == 0x00 && _op_bytes.second == 0xE0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_00E0>(_op_bytes); 
         }
-        else if (_op_bytes.first == 0x00 && _op_bytes.second == 0xEE)
+        else if (_op_bytes.first == 0x00 && _op_bytes.second == 0xEE) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_00EE>(_op_bytes); 
         }
-        else if ((_op_bytes.first & 0xF0) == 0x10)
+        else if ((_op_bytes.first & 0xF0) == 0x10) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_1NNN>(_op_bytes); 
         }
-        else if ((_op_bytes.first & 0xF0) == 0x20)
+        else if ((_op_bytes.first & 0xF0) == 0x20) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_2NNN>(_op_bytes); 
         }
-        else if ((_op_bytes.first & 0xF0) == 0xD0)
+        else if ((_op_bytes.first & 0xF0) == 0xD0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_DXYN>(_op_bytes); 
         }
-        else if ((_op_bytes.first & 0xA0) == 0xA0)
+        else if ((_op_bytes.first & 0xA0) == 0xA0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_ANNN>(_op_bytes); 
         }
