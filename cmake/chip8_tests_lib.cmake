@@ -7,6 +7,7 @@ add_library(CHIP8_TESTS_LIB
         test/display_test.cpp
         test/register_test.cpp
         test/random_test.cpp
+        test/opcodes.cpp
 )
 
 target_include_directories(CHIP8_TESTS_LIB PRIVATE include)

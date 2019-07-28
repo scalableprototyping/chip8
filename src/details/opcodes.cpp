@@ -23,6 +23,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCode_0NNN>(const OpBytes& _op_bytes)
     {
+        (void) _op_bytes;
         throw std::runtime_error{"0NNN instruction not implemented. ROM not supported."};
     }
 
@@ -33,6 +34,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCode_00E0>(const OpBytes& _op_bytes)
     {
+        (void) _op_bytes;
         pixels_.Clear();
     }
 
@@ -43,6 +45,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCode_00EE>(const OpBytes& _op_bytes)
     {
+        (void) _op_bytes;
         if (stack_.size() == 0)
         {
             throw std::runtime_error("Emtpy stack. Cannot return from subrutine.");
@@ -82,11 +85,12 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCode_DXYN>(const OpBytes& _op_bytes)
     {
+        (void) _op_bytes;
+        /*
         auto x = (_op_bytes.first  & 0x0F);
         auto y = (_op_bytes.second & 0xF0) >> 4;
         auto n = (_op_bytes.second & 0x0F);
 
-        /*
            // TODO: redo with i_register instead of index_register
         for (auto byte_index = 0; byte_index < n; ++byte_index)
         {
@@ -104,7 +108,8 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCode_ANNN>(const OpBytes& _op_bytes)
     {
-        auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
+        (void) _op_bytes;
+        //auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
         //index_register_ = nnn;
     }
 
