@@ -2,18 +2,7 @@
 
 namespace chip8
 {
-    namespace opcodes
-    {
-        constexpr auto OpCode_0NNN = Interpreter::OpCodes::OpCode_0NNN;
-        constexpr auto OpCode_00E0 = Interpreter::OpCodes::OpCode_00E0;
-        constexpr auto OpCode_00EE = Interpreter::OpCodes::OpCode_00EE;
-        constexpr auto OpCode_1NNN = Interpreter::OpCodes::OpCode_1NNN;
-        constexpr auto OpCode_2NNN = Interpreter::OpCodes::OpCode_2NNN;
-        constexpr auto OpCode_DXYN = Interpreter::OpCodes::OpCode_DXYN;
-        constexpr auto OpCode_ANNN = Interpreter::OpCodes::OpCode_ANNN;
-    }
-
-    using namespace chip8::opcodes; // NOLINT
+    using namespace opcodes; // NOLINT
 
     /**
     * OpCode 0NNN 
@@ -21,10 +10,10 @@ namespace chip8
     * was originally implemented. It is ignored by modern interpreters. This will not be implemented.
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCode_0NNN>(const OpBytes& _op_bytes)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_0NNN>(const OpBytes& _op_bytes)
     {
         (void) _op_bytes;
-        throw std::runtime_error{"0NNN instruction not implemented. ROM not supported."};
+        throw OpCodeException(_op_bytes, "Instruction not implemented. ROM not supported.");
     }
 
     /**
@@ -32,7 +21,7 @@ namespace chip8
     * Clear the pixel frame buffer.
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCode_00E0>(const OpBytes& _op_bytes)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_00E0>(const OpBytes& _op_bytes)
     {
         (void) _op_bytes;
         pixels_.Clear();
@@ -43,12 +32,12 @@ namespace chip8
     * Return from a subrutine.
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCode_00EE>(const OpBytes& _op_bytes)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_00EE>(const OpBytes& _op_bytes)
     {
         (void) _op_bytes;
         if (stack_.size() == 0)
         {
-            throw std::runtime_error("Emtpy stack. Cannot return from subrutine.");
+            throw OpCodeException(_op_bytes, "Empty stack. Cannot return from subroutine");
         }
         program_counter_ = stack_.back();
         stack_.pop_back();
@@ -59,7 +48,7 @@ namespace chip8
     * Jump to address NNN.
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCode_1NNN>(const OpBytes& _op_bytes)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_1NNN>(const OpBytes& _op_bytes)
     {
         auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
         program_counter_ = ram_.begin() + nnn;
@@ -70,7 +59,7 @@ namespace chip8
     * Execute subroutine starting at address NNN
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCode_2NNN>(const OpBytes& _op_bytes)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_2NNN>(const OpBytes& _op_bytes)
     {
         auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
         stack_.push_back(program_counter_);
@@ -83,7 +72,7 @@ namespace chip8
     * stored in I Set VF to 01 if any set pixels are changed to unset, and 00 otherwise.
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCode_DXYN>(const OpBytes& _op_bytes)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_DXYN>(const OpBytes& _op_bytes)
     {
         (void) _op_bytes;
         /*
@@ -106,7 +95,7 @@ namespace chip8
     * Store memory address NNN in register I
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCode_ANNN>(const OpBytes& _op_bytes)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_ANNN>(const OpBytes& _op_bytes)
     {
         (void) _op_bytes;
         //auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);

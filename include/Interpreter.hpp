@@ -4,7 +4,6 @@
 #include <cstdint>                     // for uint8_t
 #include <stdexcept>                   // for runtime_error
 #include <string_view>                 // for string_view
-#include <utility>                     // for pair
 #include <vector>                      // for vector
 
 #include "io/display/PixelArray.hpp"   // for PixelArray
@@ -12,38 +11,29 @@
 #include "registers/DataRegister.hpp"  // for DataRegisters
 #include "registers/IRegister.hpp"     // for IRegister
 #include "timers/Timer.hpp"            // for Timer
+#include "details/opcodes.hpp"         // for Opcodes
+#include "details/exceptions.hpp"      // for Exceptions
 
 namespace chip8
 {
     class Interpreter
     {
         public:
-            using OpBytes = std::pair<uint8_t, uint8_t>;
-
             Interpreter();
             ~Interpreter() = default;
 
             void LoadRom(std::string_view _rom);
             void StartRom();
 
-            enum OpCodes {
-                OpCode_0NNN,
-                OpCode_00EE,
-                OpCode_00E0,
-                OpCode_1NNN,
-                OpCode_2NNN,
-                OpCode_DXYN,
-                OpCode_ANNN
-            };
-
-            void processInstruction(const OpBytes& _op_bytes);
+            void processInstruction(const opcodes::OpBytes& _op_bytes);
 
         private:
             void InitializeRam();
 
-            template<OpCodes> 
-            void ExecuteInstruction(const OpBytes&) {
-                throw std::runtime_error("Unimplemented opcode function.");
+            template<opcodes::OpCodes> 
+            void ExecuteInstruction(const opcodes::OpBytes& _op_byte)
+            {
+                throw OpCodeException(_op_byte, "Unimplemented opcode function.");
             }
 
             memory::Ram ram_{};

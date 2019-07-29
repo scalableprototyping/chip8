@@ -1,10 +1,5 @@
 #include "Interpreter.hpp"
 
-#include <iomanip>               // for operator<<, setfill, setw
-#include <iostream>              // for basic_ostream::operator<<, operator<<
-#include <stdexcept>             // for runtime_error
-#include <string>                // for allocator, operator+, char_traits
-
 #include "details/memory.hpp"    // for dumpRomToMemory, initSystemMemory
 #include "timers/TimerImpl.hpp"  // for GeneralizedTimer::GeneralizedTimer<R...
 
@@ -23,7 +18,7 @@ namespace chip8
         }
         catch(const std::runtime_error& ex)
         {
-            throw std::runtime_error { std::string{ "Error loading rom file " } + _rom.data() + ": " + ex.what() };
+            throw Chip8Exception("Error loading rom file ", _rom.data(), ": ", ex.what());
         }
     }
 
@@ -34,7 +29,7 @@ namespace chip8
         //TODO: when should we stop?
         while(true)
         {
-            OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
+            opcodes::OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
             processInstruction(op_bytes);
 
             delay_timer_.Tick();
@@ -47,8 +42,10 @@ namespace chip8
         details::initSystemMemory(ram_.begin(), end_interpreter_memory_);
     }
 
-    void Interpreter::processInstruction(const OpBytes& _op_bytes)
+    void Interpreter::processInstruction(const opcodes::OpBytes& _op_bytes)
     {
+        using namespace opcodes;
+
         if ((_op_bytes.first & 0xF0) == 0x00 && (_op_bytes.second & 0xF0) != 0xE0)  // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_0NNN>(_op_bytes); 
@@ -77,13 +74,9 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_ANNN>(_op_bytes); 
         }
-        else {
-            std::stringstream ss;
-            ss << "0x" << std::setfill('0') << std::setw(2) << std::hex << 
-                int(_op_bytes.first)  << 
-                int(_op_bytes.second) <<
-                " OpCode instruction not recognized.";
-            throw std::runtime_error(ss.str());
+        else
+        {
+            throw OpCodeException(_op_bytes, "Instruction not recognized");
         }
     }
 }
