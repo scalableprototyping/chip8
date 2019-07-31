@@ -359,4 +359,16 @@ namespace chip8
         delay_timer_.SetValue(data_registers_[vx].Get());
     }
 
+    /**
+    * OpCode FX18
+    * Set the sound timer to the value of register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX18>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        sound_timer_.SetValue(data_registers_[vx].Get());
+    }
+
 }
