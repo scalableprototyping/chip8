@@ -155,6 +155,10 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_FX18>(_op_bytes); 
         }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x1E) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX1E>(_op_bytes); 
+        }
         else
         {
             throw OpCodeException(_op_bytes, "Instruction not recognized");

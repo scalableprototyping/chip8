@@ -371,4 +371,16 @@ namespace chip8
         sound_timer_.SetValue(data_registers_[vx].Get());
     }
 
+    /**
+    * OpCode FX1E
+    * Add the value stored in register VX to register I
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX1E>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        i_register_.Add(data_registers_[vx]);
+    }
+
 }

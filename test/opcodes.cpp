@@ -600,6 +600,27 @@ namespace chip8::test
                 processInstruction(op);
                 EXPECT_EQ(data_registers_[0].Get(), sound_timer_.GetValue()); // NOLINT
             }
+
+            /**
+            * Test OpCode FX1E 
+            * Add the value stored in register VX to register I
+            */
+            void TestOpCode_FX1E()
+            {
+                opcodes::OpBytes op { 0xF1, 0x1E }; // NOLINT
+
+                data_registers_[1].Set(10);
+                i_register_.Set(15);
+
+                EXPECT_EQ(data_registers_[1].Get(), 10); // NOLINT
+                EXPECT_EQ(i_register_.Get(), 15); // NOLINT
+
+                for(size_t i = 0; i < 10; i++)
+                {
+                    processInstruction(op);
+                    EXPECT_EQ(i_register_.Get(), 15 + data_registers_[1].Get() * (i + 1)); // NOLINT
+                }
+            }
     };
 
     TEST(Chip8TestSuite, OpCodes)
@@ -633,5 +654,6 @@ namespace chip8::test
         interpreterTests.TestOpCode_FX07();
         interpreterTests.TestOpCode_FX15();
         interpreterTests.TestOpCode_FX18();
+        interpreterTests.TestOpCode_FX1E();
     }
 }
