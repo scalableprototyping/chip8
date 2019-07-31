@@ -21,12 +21,18 @@ namespace chip8::io::display
         pixels_.fill(0); 
     }
 
-    void PixelArray::WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte)
+    bool PixelArray::WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte)
     {
-        chip8::details::forEachBitInByte(_byte, [&, bit_index=0](auto bit) mutable {
-            at(_col+bit_index, _row) = bit;
-            ++bit_index;
+        auto unset_bit_flag = false;
+        chip8::details::forEachBitInByteLittleEndian(_byte, [&](auto bit_index_little_endian, auto bit ) {
+            auto bit_index_big_endian = 7 - bit_index_little_endian; // NOLINT
+            if (at(_col + bit_index_big_endian, _row) == 1 && bit == 0) 
+            {
+                unset_bit_flag = true;
+            }
+            at(_col + bit_index_big_endian, _row) = bit;
         });
+        return unset_bit_flag;
     }
 
     PixelValue_t& PixelArray::at(uint8_t col, uint8_t row)

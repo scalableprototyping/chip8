@@ -69,25 +69,27 @@ namespace chip8
     /**
     * OpCode DXYN 
     * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
-    * stored in I Set VF to 01 if any set pixels are changed to unset, and 00 otherwise.
+    * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
     */
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_DXYN>(const OpBytes& _op_bytes)
     {
-        (void) _op_bytes;
-        /*
         auto x = (_op_bytes.first  & 0x0F);
         auto y = (_op_bytes.second & 0xF0) >> 4;
         auto n = (_op_bytes.second & 0x0F);
 
-           // TODO: redo with i_register instead of index_register
+        data_registers_[0xF].Set(0);
         for (auto byte_index = 0; byte_index < n; ++byte_index)
         {
-            auto byte = ram_.at(index_register_ + byte_index);
-            pixels_.WriteByteAt(x, y + byte_index, byte);
+            auto y_i = y + byte_index;
+            auto byte_i = ram_.at(i_register_.Get() + byte_index);
+
+            bool unset_bit_flat = pixels_.WriteByteAt(x, y_i, byte_i);
+            if (unset_bit_flat) 
+            {
+                data_registers_[0xF].Set(1);
+            }
         }
-        */
-        // TODO: Set VF register appropiately! 
     }
 
     /**
@@ -97,9 +99,8 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_ANNN>(const OpBytes& _op_bytes)
     {
-        (void) _op_bytes;
-        //auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
-        //index_register_ = nnn;
+        uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | _op_bytes.second;
+        i_register_.Set(nnn);
     }
 
 }
