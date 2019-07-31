@@ -78,6 +78,18 @@ namespace chip8
     }
 
     /**
+    * OpCode 4XNN 
+    * Skip the following instruction if the value of register VX is not equal to NN
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_4XNN>(const OpBytes& _op_bytes)
+    {
+        const uint8_t register_id = _op_bytes.first & 0x0F;
+
+        if(data_registers_[register_id].Get() != _op_bytes.second) { std::advance(program_counter_, 2); }
+    }
+
+    /**
     * OpCode DXYN 
     * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
     * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.

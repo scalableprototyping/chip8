@@ -71,6 +71,10 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_3XNN>(_op_bytes); 
         }
+        else if ((_op_bytes.first & 0xF0) == 0x40) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_4XNN>(_op_bytes); 
+        }
         else if ((_op_bytes.first & 0xF0) == 0xD0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_DXYN>(_op_bytes); 
