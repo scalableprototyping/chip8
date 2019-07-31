@@ -1,5 +1,5 @@
 #include "Interpreter.hpp"
-#include "details/opcodes.hpp"         // for Opcodes
+#include "details/opcodes.hpp" // for Opcodes
 
 namespace chip8
 {
@@ -34,7 +34,6 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_00EE>(const OpBytes& _op_bytes)
     {
-        (void) _op_bytes;
         if (stack_.size() == 0)
         {
             throw OpCodeException(_op_bytes, "Empty stack. Cannot return from subroutine");
@@ -64,6 +63,18 @@ namespace chip8
         auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
         stack_.push_back(program_counter_);
         program_counter_ = ram_.begin() + nnn;
+    }
+
+    /**
+    * OpCode 3XNN 
+    * Skip the following instruction if the value of register VX equals NN
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_3XNN>(const OpBytes& _op_bytes)
+    {
+        const uint8_t register_id = _op_bytes.first & 0x0F;
+
+        if(data_registers_[register_id].Get() == _op_bytes.second) { std::advance(program_counter_, 2); }
     }
 
     /**
