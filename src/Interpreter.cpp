@@ -143,6 +143,22 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_CXNN>(_op_bytes); 
         }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x29) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX29>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x33) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX33>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x55) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX55>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x65) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX65>(_op_bytes); 
+        }
         else
         {
             throw OpCodeException(_op_bytes, "Instruction not recognized");

@@ -544,8 +544,91 @@ namespace chip8::test
                     EXPECT_LE(data_registers_[0].Get(), 0x0A); // NOLINT
                     EXPECT_GE(data_registers_[0].Get(), 0x00); // NOLINT
                 }
-
             }
+
+            /**
+            * Test OpCode FX29
+            * Set I to the memory address of the sprite data corresponding to the 
+            * hexadecimal digit stored in register VX
+            */
+            void TestOpCode_FX29()
+            {
+                data_registers_[2].Set(0xA); // NOLINT
+                opcodes::OpBytes op_F229 { 0xF2, 0x29 }; // NOLINT
+                processInstruction(op_F229);
+                EXPECT_EQ(i_register_.Get(), 5*0xA); // NOLINT
+            }
+
+            /**
+            * Test OpCode FX33
+            * Store the binary-coded decimal equivalent of the value stored 
+            * in register VX at addresses I, I+1, and I+2
+            */
+            void TestOpCode_FX33()
+            {
+                data_registers_[2].Set(123); // NOLINT
+
+                opcodes::OpBytes op_F233 { 0xF2, 0x33 }; // NOLINT
+                processInstruction(op_F233);
+
+                EXPECT_EQ(ram_.at(i_register_.Get()+0), 1); // NOLINT
+                EXPECT_EQ(ram_.at(i_register_.Get()+1), 2); // NOLINT
+                EXPECT_EQ(ram_.at(i_register_.Get()+2), 3); // NOLINT
+            }
+
+            /**
+            * Test OpCode FX55
+            * Store the values of registers V0 to VX inclusive in memory starting at address I
+            * I is set to I + X + 1 after operation
+            */
+            void TestOpCode_FX55()
+            {
+                data_registers_[0].Set(0); // NOLINT
+                data_registers_[1].Set(1); // NOLINT
+                data_registers_[2].Set(2); // NOLINT
+                data_registers_[3].Set(3); // NOLINT
+
+                const uint16_t i_0 = 300;
+                i_register_.Set(i_0);
+
+                opcodes::OpBytes op_F355 { 0xF3, 0x55 }; // NOLINT
+                processInstruction(op_F355);
+
+                EXPECT_EQ(ram_.at(i_0+0), 0); // NOLINT
+                EXPECT_EQ(ram_.at(i_0+1), 1); // NOLINT
+                EXPECT_EQ(ram_.at(i_0+2), 2); // NOLINT
+                EXPECT_EQ(ram_.at(i_0+3), 3); // NOLINT
+
+                EXPECT_EQ(i_register_.Get(), i_0 + 3 + 1); // NOLINT
+            }
+
+            /**
+            * Test OpCode FX65
+            * Fill registers V0 to VX inclusive with the values stored in memory 
+            * starting at address I. I is set to I + X + 1 after operation
+            */
+            void TestOpCode_FX65()
+            {
+                const uint16_t i_0 = 300;
+
+                ram_.at(i_0 + 0) = 5; // NOLINT
+                ram_.at(i_0 + 1) = 6; // NOLINT
+                ram_.at(i_0 + 2) = 7; // NOLINT
+                ram_.at(i_0 + 3) = 8; // NOLINT
+
+                i_register_.Set(i_0);
+
+                opcodes::OpBytes op_F365 { 0xF3, 0x65 }; // NOLINT
+                processInstruction(op_F365);
+
+                EXPECT_EQ(data_registers_[0].Get(), 5); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 6); // NOLINT
+                EXPECT_EQ(data_registers_[2].Get(), 7); // NOLINT
+                EXPECT_EQ(data_registers_[3].Get(), 8); // NOLINT
+
+                EXPECT_EQ(i_register_.Get(), i_0 + 3 + 1); // NOLINT
+            }
+
     };
 
     TEST(Chip8TestSuite, OpCodes)
@@ -576,5 +659,9 @@ namespace chip8::test
         interpreterTests.TestOpCode_ANNN();
         interpreterTests.TestOpCode_BNNN();
         interpreterTests.TestOpCode_CXNN();
+        interpreterTests.TestOpCode_FX29();
+        interpreterTests.TestOpCode_FX33();
+        interpreterTests.TestOpCode_FX55();
+        interpreterTests.TestOpCode_FX65();
     }
 }

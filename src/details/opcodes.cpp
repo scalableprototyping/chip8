@@ -35,7 +35,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_00EE>(const OpBytes& _op_bytes)
     {
-        if (stack_.size() == 0)
+        if (stack_.empty())
         {
             throw OpCodeException(_op_bytes, "Empty stack. Cannot return from subroutine");
         }
@@ -50,7 +50,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_1NNN>(const OpBytes& _op_bytes)
     {
-        auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
+        auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF); // NOLINT
         program_counter_ = ram_.begin() + nnn;
     }
 
@@ -61,7 +61,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_2NNN>(const OpBytes& _op_bytes)
     {
-        auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
+        auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF); // NOLINT
         stack_.push_back(program_counter_);
         program_counter_ = ram_.begin() + nnn;
     }
@@ -73,9 +73,9 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_3XNN>(const OpBytes& _op_bytes)
     {
-        const uint8_t register_id = _op_bytes.first & 0x0F;
+        const uint8_t register_id = _op_bytes.first & 0x0F; // NOLINT
 
-        if(data_registers_[register_id].Get() == _op_bytes.second) { std::advance(program_counter_, 2); }
+        if(data_registers_[register_id].Get() == _op_bytes.second) { std::advance(program_counter_, 2); } // NOLINT
     }
 
     /**
@@ -85,9 +85,9 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_4XNN>(const OpBytes& _op_bytes)
     {
-        const uint8_t register_id = _op_bytes.first & 0x0F;
+        const uint8_t register_id = _op_bytes.first & 0x0F; // NOLINT
 
-        if(data_registers_[register_id].Get() != _op_bytes.second) { std::advance(program_counter_, 2); }
+        if(data_registers_[register_id].Get() != _op_bytes.second) { std::advance(program_counter_, 2); } // NOLINT
     }
 
     /**
@@ -97,10 +97,10 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_5XY0>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
-        if(data_registers_[vx].Get() == data_registers_[vy].Get()) { std::advance(program_counter_, 2); }
+        if(data_registers_[vx].Get() == data_registers_[vy].Get()) { std::advance(program_counter_, 2); } // NOLINT
     }
 
     /**
@@ -110,7 +110,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_6XNN>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
         data_registers_[vx].Set(_op_bytes.second);
     }
@@ -122,7 +122,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_7XNN>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
         data_registers_[vx].Add(_op_bytes.second);
     }
@@ -134,8 +134,8 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY0>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         data_registers_[vx].Set(data_registers_[vy]);
     }
@@ -147,8 +147,8 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY1>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         const uint8_t result = data_registers_[vx].Get() | data_registers_[vy].Get();
         data_registers_[vx].Set(result);
@@ -161,8 +161,8 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY2>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         const uint8_t result = data_registers_[vx].Get() & data_registers_[vy].Get();
         data_registers_[vx].Set(result);
@@ -175,8 +175,8 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY3>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         const uint8_t result = data_registers_[vx].Get() ^ data_registers_[vy].Get();
         data_registers_[vx].Set(result);
@@ -189,11 +189,11 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY4>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         const bool carry = data_registers_[vx].Add(data_registers_[vy]);
-        data_registers_[0xF].Set(static_cast<uint8_t>(carry));
+        data_registers_[0xF].Set(static_cast<uint8_t>(carry)); // NOLINT
     }
 
     /**
@@ -203,11 +203,11 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY5>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         const bool carry = data_registers_[vx].Subtract(data_registers_[vy]);
-        data_registers_[0xF].Set(static_cast<uint8_t>(!carry));
+        data_registers_[0xF].Set(static_cast<uint8_t>(!carry)); // NOLINT
     }
 
     /**
@@ -218,13 +218,13 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY6>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         data_registers_[vx].Set(data_registers_[vy]);
         const uint8_t less_significant = data_registers_[vx].ShiftRight();
 
-        data_registers_[0xF].Set(less_significant);
+        data_registers_[0xF].Set(less_significant); // NOLINT
     }
 
     /**
@@ -234,15 +234,15 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY7>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         const uint8_t previous_value = data_registers_[vx].Get();
         data_registers_[vx].Set(data_registers_[vy]);
 
         const bool carry = data_registers_[vx].Subtract(previous_value);
 
-        data_registers_[0xF].Set(static_cast<uint8_t>(!carry));
+        data_registers_[0xF].Set(static_cast<uint8_t>(!carry)); // NOLINT
     }
 
     /**
@@ -253,13 +253,13 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XYE>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         data_registers_[vx].Set(data_registers_[vy]);
         const uint8_t most_significant = data_registers_[vx].ShiftLeft();
 
-        data_registers_[0xF].Set(most_significant);
+        data_registers_[0xF].Set(most_significant); // NOLINT
     }
 
     /**
@@ -269,10 +269,10 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_9XY0>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
-        if(data_registers_[vx].Get() != data_registers_[vy].Get()) { std::advance(program_counter_, 2); }
+        if(data_registers_[vx].Get() != data_registers_[vy].Get()) { std::advance(program_counter_, 2); } // NOLINT
     }
 
     /**
@@ -283,11 +283,11 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_DXYN>(const OpBytes& _op_bytes)
     {
-        auto x = (_op_bytes.first  & 0x0F);
-        auto y = (_op_bytes.second & 0xF0) >> 4;
-        auto n = (_op_bytes.second & 0x0F);
+        auto x = (_op_bytes.first  & 0x0F); // NOLINT
+        auto y = (_op_bytes.second & 0xF0) >> 4; // NOLINT
+        auto n = (_op_bytes.second & 0x0F); // NOLINT
 
-        data_registers_[0xF].Set(0);
+        data_registers_[0xF].Set(0); // NOLINT
         for (auto byte_index = 0; byte_index < n; ++byte_index)
         {
             auto y_i = y + byte_index;
@@ -296,7 +296,7 @@ namespace chip8
             bool unset_bit_flat = pixels_.WriteByteAt(x, y_i, byte_i);
             if (unset_bit_flat) 
             {
-                data_registers_[0xF].Set(1);
+                data_registers_[0xF].Set(1); // NOLINT
             }
         }
     }
@@ -308,7 +308,7 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_ANNN>(const OpBytes& _op_bytes)
     {
-        uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | _op_bytes.second;
+        uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | _op_bytes.second; // NOLINT
         i_register_.Set(nnn);
     }
 
@@ -319,8 +319,8 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_BNNN>(const OpBytes& _op_bytes)
     {
-        const uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
-        program_counter_ = ram_.begin() + nnn + data_registers_[0].Get();
+        const uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF); // NOLINT
+        program_counter_ = ram_.begin() + nnn + data_registers_[0].Get(); // NOLINT
     }
 
     /**
@@ -330,9 +330,77 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_CXNN>(const OpBytes& _op_bytes)
     {
-        const uint8_t vx = _op_bytes.first & 0x0F;
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
         data_registers_[vx].Set(details::getRandomNumber(_op_bytes.second));
+    }
+
+    /**
+    * OpCode FX29
+    * Set I to the memory address of the sprite data corresponding to the 
+    * hexadecimal digit stored in register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX29>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint16_t rows_per_sprite = 5;
+        i_register_.Set(rows_per_sprite*data_registers_[vx].Get());
+    }
+
+    /**
+    * OpCode FX33
+    * Store the binary-coded decimal equivalent of the value stored 
+    * in register VX at addresses I, I+1, and I+2
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX33>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        const uint16_t vx_val = data_registers_[vx].Get();
+
+        uint8_t hundredth = vx_val/100; // NOLINT
+        uint8_t tenth = (vx_val - 100*hundredth)/10; // NOLINT
+        uint8_t unit = (vx_val - 100*hundredth -10*tenth); // NOLINT
+
+        const uint16_t i = i_register_.Get();
+        ram_.at(i) = hundredth;
+        ram_.at(i+1) = tenth; // NOLINT
+        ram_.at(i+2) = unit; // NOLINT
+    }
+
+    /**
+    * OpCode FX55
+    * Store the values of registers V0 to VX inclusive in memory starting at address I
+    * I is set to I + X + 1 after operation
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX55>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        for (auto i = 0; i <= vx; ++i) 
+        {
+            ram_.at(i_register_.Get() + i) = data_registers_[i].Get();
+        }
+        i_register_.Add(vx + 1);
+    }
+
+    /**
+    * OpCode FX65
+    * Fill registers V0 to VX inclusive with the values stored in memory 
+    * starting at address I. I is set to I + X + 1 after operation
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX65>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
+        for (auto i = 0; i <= vx; ++i) 
+        {
+            data_registers_[i].Set( 
+                    ram_.at(i_register_.Get() + i)
+                );
+        }
+        i_register_.Add(vx + 1);
     }
 
 }
