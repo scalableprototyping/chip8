@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "Interpreter.hpp"
 
@@ -13,8 +13,6 @@ namespace chip8::test
 
     class Interpreter : public chip8::Interpreter { 
         public: 
-            using ::testing::HasSubstr;
-
             void TestOpCode_0NNN() {
                 try {
                     chip8::opcodes::OpBytes op{0x01, 0x23}; // NOLINT
@@ -22,7 +20,7 @@ namespace chip8::test
                     FAIL() << "Expected chip8::OpCodeException";
                 }
                 catch(chip8::OpCodeException const & err) {
-                    EXPECT_THAT(err.what(), HasSubstr("Instruction not implemented. ROM not supported."));
+                    EXPECT_THAT(err.what(), ::testing::HasSubstr("Instruction not implemented. ROM not supported."));
                 }
                 catch(...) {
                     FAIL() << "Expected chip8::OpCodeException";
