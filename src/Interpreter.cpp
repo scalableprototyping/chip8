@@ -1,5 +1,10 @@
 #include "Interpreter.hpp"
-#include "utils/rom.hpp"
+
+#include <stdexcept>             // for runtime_error
+#include <string>                // for allocator, operator+, char_traits
+
+#include "details/memory.hpp"
+#include "timers/TimerImpl.hpp"  // for GeneralizedTimer::GeneralizedTimer<R...
 
 namespace chip8
 {
@@ -12,7 +17,7 @@ namespace chip8
     {
         try
         {
-            utils::dumpRomToMemory(_rom, program_memory_, ram_.end());
+            details::dumpRomToMemory(_rom, program_memory_, ram_.end());
         }
         catch(const std::runtime_error& ex)
         {
@@ -24,11 +29,12 @@ namespace chip8
     {
         program_counter_ = ram_.begin();
         //TODO: parse commands
+        //TODO: tick timers
     }
 
     //Private
     void Interpreter::InitializeRam()
     {
-        //TODO: initialize interpreter memory
+        details::initSystemMemory(ram_.begin(), end_interpreter_memory_);
     }
 }
