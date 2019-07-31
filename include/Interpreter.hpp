@@ -29,10 +29,9 @@ namespace chip8
             void LoadRom(std::string_view _rom);
             void StartRom();
 
-            void processInstruction(const opcodes::OpBytes& _op_bytes);
-
         private:
             void InitializeRam();
+            void processInstruction(const opcodes::OpBytes& _op_bytes);
 
             template<opcodes::OpCodes> 
             void ExecuteInstruction(const opcodes::OpBytes& _op_byte)
@@ -40,6 +39,7 @@ namespace chip8
                 throw OpCodeException(_op_byte, "Unimplemented opcode function.");
             }
 
+        private:
             memory::Ram ram_{};
             memory::RamIter program_counter_{};
 

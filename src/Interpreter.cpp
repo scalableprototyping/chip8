@@ -25,7 +25,7 @@ namespace chip8
 
     void Interpreter::StartRom()
     {
-        program_counter_ = ram_.begin();
+        program_counter_ = program_memory_;
 
         //TODO: when should we stop?
         while(true)
