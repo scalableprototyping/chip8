@@ -28,6 +28,7 @@ namespace chip8::opcodes
         OpCode_8XYE,
         OpCode_9XY0,
         OpCode_DXYN,
+        OpCode_EX9E,
         OpCode_ANNN,
         OpCode_BNNN,
         OpCode_CXNN,

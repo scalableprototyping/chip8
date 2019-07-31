@@ -24,6 +24,7 @@ namespace chip8::io
             bool IsKeyPressed(sf::Keyboard::Key _key) const;
 
             void SetKeyMapping(const KeyMap::KeyMapping& _new_key_mapping);
+            const KeyMap::KeyMapping& GetKeyMapping() const;
 
         private:
             KeyMap keymap_;

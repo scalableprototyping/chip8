@@ -621,6 +621,26 @@ namespace chip8::test
                     EXPECT_EQ(i_register_.Get(), 15 + data_registers_[1].Get() * (i + 1)); // NOLINT
                 }
             }
+
+            /**
+            * Test OpCode EX9E 
+            * Skip the following instruction if the key corresponding to the hex value currently
+            * stored in register VX is pressed
+            */
+            void TestOpCode_EX9E()
+            {
+                program_counter_ = program_memory_; // NOLINT
+
+                data_registers_[1].Set(0x0);
+                EXPECT_EQ(data_registers_[1].Get(), 0x0); // NOLINT
+
+                chip8::opcodes::OpBytes op {0xE1, 0x9E}; // NOLINT
+                processInstruction(op);
+
+                //The program counter should not have jumped the next instruction
+                //(the key was not pressed)
+                EXPECT_EQ(std::distance(program_memory_, program_counter_), 0); // NOLINT
+            }
     };
 
     TEST(Chip8TestSuite, OpCodes)
@@ -655,5 +675,6 @@ namespace chip8::test
         interpreterTests.TestOpCode_FX15();
         interpreterTests.TestOpCode_FX18();
         interpreterTests.TestOpCode_FX1E();
+        interpreterTests.TestOpCode_EX9E();
     }
 }

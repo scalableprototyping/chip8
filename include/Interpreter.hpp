@@ -7,6 +7,7 @@
 #include <vector>                      // for vector
 
 #include "io/display/PixelArray.hpp"   // for PixelArray
+#include "io/Keypad.hpp"               // for Keyboard
 #include "memory/Ram.hpp"              // for RamIter, Ram, begin_program_ram
 #include "registers/DataRegister.hpp"  // for DataRegisters
 #include "registers/IRegister.hpp"     // for IRegister
@@ -52,6 +53,7 @@ namespace chip8
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
 
             io::display::PixelArray pixels_;
+            io::Keypad keypad_;
 
             std::vector<memory::RamIter> stack_;
 
