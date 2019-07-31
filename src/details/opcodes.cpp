@@ -103,6 +103,18 @@ namespace chip8
     }
 
     /**
+    * OpCode 6XNN 
+    * Store number NN in register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_6XNN>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        data_registers_[vx].Set(_op_bytes.second);
+    }
+
+    /**
     * OpCode DXYN 
     * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
     * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.

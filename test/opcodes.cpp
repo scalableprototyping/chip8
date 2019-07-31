@@ -180,6 +180,22 @@ namespace chip8::test
             }
 
             /**
+            * Test OpCode 6XNN 
+            * Store number NN in register VX
+            */
+            void TestOpCode_6XNN()
+            {
+                data_registers_[3].Set(10);
+
+                EXPECT_EQ(data_registers_[3].Get(), 10); // NOLINT
+
+                chip8::opcodes::OpBytes op {0x63, 90}; // NOLINT
+                processInstruction(op);
+
+                EXPECT_EQ(data_registers_[3].Get(), 90); // NOLINT
+            }
+
+            /**
             * OpCode DXYN 
             * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
             * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
@@ -254,6 +270,7 @@ namespace chip8::test
         interpreterTests.TestOpCode_3XNN();
         interpreterTests.TestOpCode_4XNN();
         interpreterTests.TestOpCode_5XY0();
+        interpreterTests.TestOpCode_6XNN();
         interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
     }
