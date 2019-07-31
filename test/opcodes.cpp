@@ -266,6 +266,24 @@ namespace chip8::test
             }
 
             /**
+            * Test OpCode 8XY3 
+            * Set VX to VX AND VY
+            */
+            void TestOpCode_8XY3()
+            {
+                data_registers_[0].Set(10);
+                data_registers_[1].Set(11);
+
+                EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
+
+                chip8::opcodes::OpBytes op {0x80, 0x13}; // NOLINT
+                processInstruction(op);
+
+                EXPECT_EQ(data_registers_[0].Get(), 10 ^ 11); // NOLINT
+            }
+
+            /**
             * OpCode DXYN 
             * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
             * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
@@ -345,6 +363,7 @@ namespace chip8::test
         interpreterTests.TestOpCode_8XY0();
         interpreterTests.TestOpCode_8XY1();
         interpreterTests.TestOpCode_8XY2();
+        interpreterTests.TestOpCode_8XY3();
         interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
     }
