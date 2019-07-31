@@ -284,6 +284,36 @@ namespace chip8::test
             }
 
             /**
+            * Test OpCode 8XY4 
+            * Add the value of VY to VX with carry
+            */
+            void TestOpCode_8XY4()
+            {
+                data_registers_[0].Set(10);
+                data_registers_[1].Set(11);
+
+                EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
+
+                chip8::opcodes::OpBytes op {0x80, 0x14}; // NOLINT
+                processInstruction(op);
+
+                //No carry
+                EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
+
+                data_registers_[0].Set(255);
+                data_registers_[1].Set(1);
+
+                EXPECT_EQ(data_registers_[0].Get(), 255); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 1); // NOLINT
+
+                processInstruction(op);
+
+                //Carry should be detected
+                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
+            }
+
+            /**
             * OpCode DXYN 
             * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
             * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
@@ -343,7 +373,6 @@ namespace chip8::test
                 EXPECT_EQ(i_register_.Get(), 0x234);
 
             }
-
     };
 
     TEST(Chip8TestSuite, OpCodes)
@@ -364,6 +393,7 @@ namespace chip8::test
         interpreterTests.TestOpCode_8XY1();
         interpreterTests.TestOpCode_8XY2();
         interpreterTests.TestOpCode_8XY3();
+        interpreterTests.TestOpCode_8XY4();
         interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
     }
