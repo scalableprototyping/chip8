@@ -5,7 +5,8 @@
 
 namespace chip8
 {
-    Interpreter::Interpreter()
+    Interpreter::Interpreter() :
+        sound_timer_([this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } )
     {
         InitializeRam();
     }
