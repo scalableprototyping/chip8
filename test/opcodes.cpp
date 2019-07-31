@@ -564,6 +564,24 @@ namespace chip8::test
                     delay_timer_.Tick();
                 }
             }
+
+            /**
+            * Test OpCode FX15 
+            * Set the delay timer to the value of register VX
+            */
+            void TestOpCode_FX15()
+            {
+                opcodes::OpBytes op { 0xF0, 0x15 }; // NOLINT
+
+                data_registers_[0].Set(10);
+                delay_timer_.SetValue(0);
+
+                EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
+                EXPECT_EQ(delay_timer_.GetValue(), 0); // NOLINT
+
+                processInstruction(op);
+                EXPECT_EQ(data_registers_[0].Get(), delay_timer_.GetValue()); // NOLINT
+            }
     };
 
     TEST(Chip8TestSuite, OpCodes)
@@ -595,5 +613,6 @@ namespace chip8::test
         interpreterTests.TestOpCode_BNNN();
         interpreterTests.TestOpCode_CXNN();
         interpreterTests.TestOpCode_FX07();
+        interpreterTests.TestOpCode_FX15();
     }
 }

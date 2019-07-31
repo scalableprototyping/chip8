@@ -347,4 +347,16 @@ namespace chip8
         data_registers_[vx].Set(delay_timer_.GetValue());
     }
 
+    /**
+    * OpCode FX15
+    * Set the delay timer to the value of register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX15>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        delay_timer_.SetValue(data_registers_[vx].Get());
+    }
+
 }
