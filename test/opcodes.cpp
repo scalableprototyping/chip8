@@ -352,6 +352,7 @@ namespace chip8::test
             {
                 data_registers_[0].Set(0x1);
                 data_registers_[1].Set(0x1);
+                data_registers_[0xF].Set(0);
 
                 EXPECT_EQ(data_registers_[0].Get(), 0x1); // NOLINT
                 EXPECT_EQ(data_registers_[1].Get(), 0x1); // NOLINT
@@ -365,6 +366,42 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0xF].Get(), 0x1); // NOLINT
             }
 
+            /**
+            * Test OpCode 8XY7 
+            * Set register VX to the value of VY minus VX. Set VF to carry
+            */
+            void TestOpCode_8XY7()
+            {
+                data_registers_[0].Set(9);
+                data_registers_[1].Set(10);
+                data_registers_[0xF].Set(0);
+
+                EXPECT_EQ(data_registers_[0].Get(), 9); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 10); // NOLINT
+                EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
+
+                chip8::opcodes::OpBytes op {0x80, 0x17}; // NOLINT
+                processInstruction(op);
+
+                //No borrow
+                EXPECT_EQ(data_registers_[0].Get(), 1); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 10); // NOLINT
+                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
+
+                data_registers_[0].Set(10);
+                data_registers_[1].Set(9);
+
+                EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 9); // NOLINT
+                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
+
+                processInstruction(op);
+
+                //Borrow should be detected
+                EXPECT_EQ(data_registers_[0].Get(), 255); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 9); // NOLINT
+                EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
+            }
 
             /**
             * OpCode DXYN 
@@ -449,6 +486,7 @@ namespace chip8::test
         interpreterTests.TestOpCode_8XY4();
         interpreterTests.TestOpCode_8XY5();
         interpreterTests.TestOpCode_8XY6();
+        interpreterTests.TestOpCode_8XY7();
         interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
     }

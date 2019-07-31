@@ -227,6 +227,24 @@ namespace chip8
     }
 
     /**
+    * OpCode 8XY7 
+    * Set register VX to the value of VY minus VX. Set VF to carry value
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY7>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+
+        const uint8_t previous_value = data_registers_[vx].Get();
+        data_registers_[vx].Set(data_registers_[vy]);
+
+        const bool carry = data_registers_[vx].Subtract(previous_value);
+
+        data_registers_[0xF].Set(static_cast<uint8_t>(!carry));
+    }
+
+    /**
     * OpCode DXYN 
     * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
     * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
