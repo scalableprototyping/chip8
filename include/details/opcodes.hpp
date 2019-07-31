@@ -30,6 +30,7 @@ namespace chip8::opcodes
         OpCode_DXYN,
         OpCode_ANNN,
         OpCode_BNNN,
+        OpCode_CXNN,
     };
 
     using OpBytes = std::pair<uint8_t, uint8_t>;

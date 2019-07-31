@@ -1,5 +1,6 @@
 #include "Interpreter.hpp"
 #include "details/opcodes.hpp" // for Opcodes
+#include "details/random.hpp"  // for getRandomNumber(mask)
 
 namespace chip8
 {
@@ -320,6 +321,18 @@ namespace chip8
     {
         const uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
         program_counter_ = ram_.begin() + nnn + data_registers_[0].Get();
+    }
+
+    /**
+    * OpCode CXNN
+    * Set VX to a random number with a mask of NN
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_CXNN>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        data_registers_[vx].Set(details::getRandomNumber(_op_bytes.second));
     }
 
 }

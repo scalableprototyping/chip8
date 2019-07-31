@@ -529,6 +529,23 @@ namespace chip8::test
 
                 EXPECT_EQ(std::distance(ram_.begin(), program_counter_), 0x111 + 10); // NOLINT
             }
+
+            /**
+            * Test OpCode CXNN
+            * Set VX to a random number with a mask of NN
+            */
+            void TestOpCode_CXNN()
+            {
+                opcodes::OpBytes op { 0xC0, 0x0A }; // NOLINT
+
+                for(size_t i = 0; i < 100; i++)
+                {
+                    processInstruction(op);
+                    EXPECT_LE(data_registers_[0].Get(), 0x0A); // NOLINT
+                    EXPECT_GE(data_registers_[0].Get(), 0x00); // NOLINT
+                }
+
+            }
     };
 
     TEST(Chip8TestSuite, OpCodes)
@@ -558,5 +575,6 @@ namespace chip8::test
         interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
         interpreterTests.TestOpCode_BNNN();
+        interpreterTests.TestOpCode_CXNN();
     }
 }
