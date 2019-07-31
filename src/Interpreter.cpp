@@ -123,6 +123,10 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_8XYE>(_op_bytes); 
         }
+        else if ((_op_bytes.first & 0xF0) == 0x90 && (_op_bytes.second & 0x0F) == 0x0) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_9XY0>(_op_bytes); 
+        }
         else if ((_op_bytes.first & 0xF0) == 0xD0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_DXYN>(_op_bytes); 

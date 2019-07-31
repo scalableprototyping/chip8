@@ -427,6 +427,31 @@ namespace chip8::test
             }
 
             /**
+            * Test OpCode 9XY0 
+            * Skip the following instruction if the value of register VX is not equal to VY
+            */
+            void TestOpCode_9XY0()
+            {
+                program_counter_ = program_memory_; // NOLINT
+
+                data_registers_[0].Set(10);
+                data_registers_[1].Set(11);
+                data_registers_[2].Set(10);
+
+                chip8::opcodes::OpBytes op {0x90, 0x10}; // NOLINT
+                processInstruction(op);
+
+                //The program counter should have jumped the next instruction
+                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+
+                op = {0x90, 0x20}; // NOLINT
+                processInstruction(op);
+
+                //The program counter should not have jumped with the second instrution
+                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+            }
+
+            /**
             * OpCode DXYN 
             * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
             * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
@@ -511,6 +536,7 @@ namespace chip8::test
         interpreterTests.TestOpCode_8XY6();
         interpreterTests.TestOpCode_8XY7();
         interpreterTests.TestOpCode_8XYE();
+        interpreterTests.TestOpCode_9XY0();
         interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
     }

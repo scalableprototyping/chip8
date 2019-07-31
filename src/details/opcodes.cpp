@@ -262,6 +262,19 @@ namespace chip8
     }
 
     /**
+    * OpCode 9XY0 
+    * Skip the following instruction if the value of register VX is not equal to the value of VY
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_9XY0>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+
+        if(data_registers_[vx].Get() != data_registers_[vy].Get()) { std::advance(program_counter_, 2); }
+    }
+
+    /**
     * OpCode DXYN 
     * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
     * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
