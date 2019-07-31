@@ -113,6 +113,18 @@ namespace chip8
 
         data_registers_[vx].Set(_op_bytes.second);
     }
+    
+    /**
+    * OpCode 7XNN 
+    * Add the value NN in register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_7XNN>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        data_registers_[vx].Add(_op_bytes.second);
+    }
 
     /**
     * OpCode DXYN 

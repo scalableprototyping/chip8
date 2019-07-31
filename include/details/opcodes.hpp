@@ -16,6 +16,7 @@ namespace chip8::opcodes
         OpCode_4XNN,
         OpCode_5XY0,
         OpCode_6XNN,
+        OpCode_7XNN,
         OpCode_DXYN,
         OpCode_ANNN
     };
