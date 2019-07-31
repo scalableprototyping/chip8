@@ -35,4 +35,9 @@ namespace chip8::io
     {
         keymap_.SetMapping(_new_key_mapping);
     }
+
+    const KeyMap::KeyMapping& Keypad::GetKeyMapping() const
+    {
+        return keymap_.GetMapping();
+    }
 }

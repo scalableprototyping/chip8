@@ -1,14 +1,26 @@
-#include <cstdint>          // for uint8_t
-#include <utility>          // for pair
+#include <iostream>
 
 #include "Interpreter.hpp"  // for Interpreter
-#include "details/opcodes.hpp"
 
-int main()
+int main(int argc, char** argv)
 {
-    chip8::Interpreter interpreter{};
+    if(argc != 2)
+    {
+        std::cerr << "Usage: " << argv[0] << "/path/to/rom" << std::endl;
+        return -1;
+    }
 
-    chip8::opcodes::OpBytes op{0x00, 0xEE}; // NOLINT
+    try
+    {
+        chip8::Interpreter interpreter {};
+        interpreter.LoadRom(argv[1]);
+        interpreter.StartRom();
+    }
+    catch(const chip8::Chip8Exception& ex)
+    {
+        std::cerr << ex.what() << std::endl;
+        return -1;
+    }
 
-    interpreter.processInstruction(op);
+    return 0;
 }

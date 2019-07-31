@@ -3,9 +3,18 @@
 #include "details/memory.hpp"    // for dumpRomToMemory, initSystemMemory
 #include "timers/TimerImpl.hpp"  // for GeneralizedTimer::GeneralizedTimer<R...
 
+#include "io/display/Renderer.hpp"
+
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include <string>
+#include <sstream>
+
 namespace chip8
 {
-    Interpreter::Interpreter()
+    Interpreter::Interpreter() :
+        sound_timer_([this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } )
     {
         InitializeRam();
     }
@@ -24,13 +33,31 @@ namespace chip8
 
     void Interpreter::StartRom()
     {
-        program_counter_ = ram_.begin();
+        program_counter_ = program_memory_;
+
+        chip8::io::display::Renderer displayRenderer(pixels_);
 
         //TODO: when should we stop?
         while(true)
         {
             opcodes::OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
+            program_counter_ += 2;
+
             processInstruction(op_bytes);
+
+            // Actually we only need to render in the draw instructions
+            displayRenderer.Update();
+
+            using namespace std::literals::chrono_literals;
+            std::this_thread::sleep_for(0.01s);
+
+            std::stringstream ss;
+            ss << "0x" 
+               << std::setfill('0') << std::setw(2) << std::hex
+               << static_cast<int>(op_bytes.first)
+               << std::setfill('0') << std::setw(2) << std::hex
+               << static_cast<int>(op_bytes.second);
+            std::cout << ss.str() << "\n";
 
             delay_timer_.Tick();
             sound_timer_.Tick();
@@ -127,10 +154,6 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_9XY0>(_op_bytes); 
         }
-        else if ((_op_bytes.first & 0xF0) == 0xD0) // NOLINT
-        {
-            ExecuteInstruction<OpCodes::OpCode_DXYN>(_op_bytes); 
-        }
         else if ((_op_bytes.first & 0xF0) == 0xA0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_ANNN>(_op_bytes); 
@@ -142,6 +165,38 @@ namespace chip8
         else if ((_op_bytes.first & 0xF0) == 0xC0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_CXNN>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xD0) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_DXYN>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xE0 && _op_bytes.second == 0x9E) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_EX9E>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xE0 && _op_bytes.second == 0xA1) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_EXA1>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x07) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX07>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x0A) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX0A>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x15) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX15>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x18) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX18>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x1E) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX1E>(_op_bytes); 
         }
         else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x29) // NOLINT
         {

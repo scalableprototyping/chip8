@@ -276,32 +276,6 @@ namespace chip8
     }
 
     /**
-    * OpCode DXYN 
-    * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
-    * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
-    */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_DXYN>(const OpBytes& _op_bytes)
-    {
-        auto x = (_op_bytes.first  & 0x0F); // NOLINT
-        auto y = (_op_bytes.second & 0xF0) >> 4; // NOLINT
-        auto n = (_op_bytes.second & 0x0F); // NOLINT
-
-        data_registers_[0xF].Set(0); // NOLINT
-        for (auto byte_index = 0; byte_index < n; ++byte_index)
-        {
-            auto y_i = y + byte_index;
-            auto byte_i = ram_.at(i_register_.Get() + byte_index);
-
-            bool unset_bit_flat = pixels_.WriteByteAt(x, y_i, byte_i);
-            if (unset_bit_flat) 
-            {
-                data_registers_[0xF].Set(1); // NOLINT
-            }
-        }
-    }
-
-    /**
     * OpCode ANNN 
     * Store memory address NNN in register I
     */
@@ -333,6 +307,121 @@ namespace chip8
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
         data_registers_[vx].Set(details::getRandomNumber(_op_bytes.second));
+    }
+
+    /**
+    * OpCode DXYN 
+    * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
+    * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_DXYN>(const OpBytes& _op_bytes)
+    {
+        auto x = (_op_bytes.first  & 0x0F); // NOLINT
+        auto y = (_op_bytes.second & 0xF0) >> 4; // NOLINT
+        auto n = (_op_bytes.second & 0x0F); // NOLINT
+
+        data_registers_[0xF].Set(0); // NOLINT
+        for (auto byte_index = 0; byte_index < n; ++byte_index)
+        {
+            auto y_i = y + byte_index;
+            auto byte_i = ram_.at(i_register_.Get() + byte_index);
+
+            bool unset_bit_flat = pixels_.WriteByteAt(x, y_i, byte_i);
+            if (unset_bit_flat) 
+            {
+                data_registers_[0xF].Set(1); // NOLINT
+            }
+        }
+    }
+
+    /**
+    * OpCode EX9E
+    * Skip the following instruction if the key corresponding to the hex value currently 
+    * stored in register VX is pressed
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_EX9E>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx        = _op_bytes.first & 0x0F;
+        const uint8_t hex_value = data_registers_[vx].Get();
+
+        if(keypad_.IsKeyPressed(hex_value)) { std::advance(program_counter_, 2); }
+    }
+
+    /**
+    * OpCode EXA1
+    * Skip the following instruction if the key corresponding to the hex value currently 
+    * stored in register VX is not being pressed
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_EXA1>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx        = _op_bytes.first & 0x0F;
+        const uint8_t hex_value = data_registers_[vx].Get();
+
+        if(!keypad_.IsKeyPressed(hex_value)) { std::advance(program_counter_, 2); }
+    }
+
+
+    /*
+    * OpCode FX07
+    * Store the curren value of the delay timer in register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX07>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        data_registers_[vx].Set(delay_timer_.GetValue());
+    }
+
+    /**
+    * OpCode FX0A
+    * Wait for a keypress and store the result in register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX0A>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        data_registers_[vx].Set(keypad_.WaitForKey());
+    }
+
+    /**
+    * OpCode FX15
+    * Set the delay timer to the value of register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX15>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        delay_timer_.SetValue(data_registers_[vx].Get());
+    }
+
+    /**
+    * OpCode FX18
+    * Set the sound timer to the value of register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX18>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        sound_timer_.SetValue(data_registers_[vx].Get());
+    }
+
+    /**
+    * OpCode FX1E
+    * Add the value stored in register VX to register I
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX1E>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        i_register_.Add(data_registers_[vx]);
     }
 
     /**

@@ -452,52 +452,6 @@ namespace chip8::test
             }
 
             /**
-            * OpCode DXYN 
-            * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
-            * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
-            */
-            void TestOpCode_DXYN() {
-                chip8::io::display::Renderer displayRenderer(pixels_);
-                using namespace std::literals::chrono_literals;
-
-                chip8::opcodes::OpBytes op_00E0{0x00, 0xE0}; // NOLINT
-                processInstruction(op_00E0);
-
-                i_register_.Set(5*0); // NOLINT
-
-                chip8::opcodes::OpBytes op_D005{0xD0, 0x05}; // NOLINT
-                processInstruction(op_D005);
-
-                EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
-
-                displayRenderer.Update();
-                std::this_thread::sleep_for(0.2s);
-
-                i_register_.Set(5*1); // NOLINT
-                processInstruction(op_D005);
-
-                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
-
-                displayRenderer.Update();
-                std::this_thread::sleep_for(0.2s);
-
-                i_register_.Set(5*2); // NOLINT
-                processInstruction(op_D005);
-
-                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
-
-                displayRenderer.Update();
-                std::this_thread::sleep_for(0.2s);
-
-                i_register_.Set(5*3); // NOLINT
-                processInstruction(op_D005);
-
-                displayRenderer.Update();
-                std::this_thread::sleep_for(0.2s);
-
-            }
-
-            /**
             * OpCode ANNN 
             * Store memory address NNN in register I
             */
@@ -543,6 +497,176 @@ namespace chip8::test
                     processInstruction(op);
                     EXPECT_LE(data_registers_[0].Get(), 0x0A); // NOLINT
                     EXPECT_GE(data_registers_[0].Get(), 0x00); // NOLINT
+                }
+            }
+
+            /**
+            * Test OpCode DXYN 
+            * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
+            * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
+            */
+            void TestOpCode_DXYN() {
+                chip8::io::display::Renderer displayRenderer(pixels_);
+                using namespace std::literals::chrono_literals;
+
+                chip8::opcodes::OpBytes op_00E0{0x00, 0xE0}; // NOLINT
+                processInstruction(op_00E0);
+
+                i_register_.Set(5*0); // NOLINT
+
+                chip8::opcodes::OpBytes op_D005{0xD0, 0x05}; // NOLINT
+                processInstruction(op_D005);
+
+                EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
+
+                displayRenderer.Update();
+                std::this_thread::sleep_for(0.2s);
+
+                i_register_.Set(5*1); // NOLINT
+                processInstruction(op_D005);
+
+                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
+
+                displayRenderer.Update();
+                std::this_thread::sleep_for(0.2s);
+
+                i_register_.Set(5*2); // NOLINT
+                processInstruction(op_D005);
+
+                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
+
+                displayRenderer.Update();
+                std::this_thread::sleep_for(0.2s);
+
+                i_register_.Set(5*3); // NOLINT
+                processInstruction(op_D005);
+
+                displayRenderer.Update();
+                std::this_thread::sleep_for(0.2s);
+
+            }
+
+            /**
+            * Test OpCode EX9E 
+            * Skip the following instruction if the key corresponding to the hex value currently
+            * stored in register VX is pressed
+            */
+            void TestOpCode_EX9E()
+            {
+                program_counter_ = program_memory_; // NOLINT
+
+                data_registers_[1].Set(0x0);
+                EXPECT_EQ(data_registers_[1].Get(), 0x0); // NOLINT
+
+                chip8::opcodes::OpBytes op {0xE1, 0x9E}; // NOLINT
+                processInstruction(op);
+
+                //The program counter should not have jumped the next instruction
+                //(the key was not pressed)
+                EXPECT_EQ(std::distance(program_memory_, program_counter_), 0); // NOLINT
+            }
+
+            /**
+            * Test OpCode EXA1 
+            * Skip the following instruction if the key corresponding to the hex value currently
+            * stored in register VX is not being pressed
+            */
+            void TestOpCode_EXA1()
+            {
+                program_counter_ = program_memory_; // NOLINT
+
+                data_registers_[1].Set(0x0);
+                EXPECT_EQ(data_registers_[1].Get(), 0x0); // NOLINT
+
+                chip8::opcodes::OpBytes op {0xE1, 0xA1}; // NOLINT
+                processInstruction(op);
+
+                //The program counter should have jumped the next instruction
+                //(the key was not pressed)
+                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+            }
+
+            /*
+            * Test OpCode FX07 
+            * Store the curent value of the delay timer in register VX
+            */
+            void TestOpCode_FX07()
+            {
+                opcodes::OpBytes op { 0xF0, 0x07 }; // NOLINT
+
+                delay_timer_.SetValue(10);
+
+                while(delay_timer_.GetValue() != 0)
+                {
+                    processInstruction(op);
+                    EXPECT_EQ(data_registers_[0].Get(), delay_timer_.GetValue()); // NOLINT
+                    delay_timer_.Tick();
+                }
+            }
+
+            /**
+            * Test OpCode FX0A 
+            * Wait for a keypress and store the result in register VX
+            */
+            void TestOpCode_FX0A()
+            {
+                //TODO: implement tests for this (WaitForKey blocks)
+            }
+
+            /**
+            * Test OpCode FX15 
+            * Set the delay timer to the value of register VX
+            */
+            void TestOpCode_FX15()
+            {
+                opcodes::OpBytes op { 0xF0, 0x15 }; // NOLINT
+
+                data_registers_[0].Set(10);
+                delay_timer_.SetValue(0);
+
+                EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
+                EXPECT_EQ(delay_timer_.GetValue(), 0); // NOLINT
+
+                processInstruction(op);
+                EXPECT_EQ(data_registers_[0].Get(), delay_timer_.GetValue()); // NOLINT
+            }
+
+            /**
+            * Test OpCode FX18 
+            * Set the sound timer to the value of register VX
+            */
+            void TestOpCode_FX18()
+            {
+                opcodes::OpBytes op { 0xF0, 0x18 }; // NOLINT
+
+                data_registers_[0].Set(10);
+                sound_timer_.SetValue(0);
+
+                EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
+                EXPECT_EQ(sound_timer_.GetValue(), 0); // NOLINT
+
+                processInstruction(op);
+                EXPECT_EQ(data_registers_[0].Get(), sound_timer_.GetValue()); // NOLINT
+            }
+
+            /**
+            * Test OpCode FX1E 
+            * Add the value stored in register VX to register I
+            */
+            void TestOpCode_FX1E()
+            {
+                opcodes::OpBytes op { 0xF1, 0x1E }; // NOLINT
+
+                data_registers_[1].Set(10);
+                i_register_.Set(15);
+
+                EXPECT_EQ(data_registers_[1].Get(), 10); // NOLINT
+                EXPECT_EQ(i_register_.Get(), 15); // NOLINT
+
+                for(size_t i = 0; i < 10; i++)
+                {
+                    processInstruction(op);
+                    EXPECT_EQ(i_register_.Get(), 15 + data_registers_[1].Get() * (i + 1)); // NOLINT
                 }
             }
 
@@ -655,10 +779,17 @@ namespace chip8::test
         interpreterTests.TestOpCode_8XY7();
         interpreterTests.TestOpCode_8XYE();
         interpreterTests.TestOpCode_9XY0();
-        interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
         interpreterTests.TestOpCode_BNNN();
         interpreterTests.TestOpCode_CXNN();
+        interpreterTests.TestOpCode_DXYN();
+        interpreterTests.TestOpCode_EX9E();
+        interpreterTests.TestOpCode_EXA1();
+        interpreterTests.TestOpCode_FX07();
+        interpreterTests.TestOpCode_FX0A();
+        interpreterTests.TestOpCode_FX15();
+        interpreterTests.TestOpCode_FX18();
+        interpreterTests.TestOpCode_FX1E();
         interpreterTests.TestOpCode_FX29();
         interpreterTests.TestOpCode_FX33();
         interpreterTests.TestOpCode_FX55();
