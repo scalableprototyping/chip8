@@ -316,6 +316,20 @@ namespace chip8
     }
 
     /**
+    * OpCode EXA1
+    * Skip the following instruction if the key corresponding to the hex value currently 
+    * stored in register VX is not being pressed
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_EXA1>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx        = _op_bytes.first & 0x0F;
+        const uint8_t hex_value = data_registers_[vx].Get();
+
+        if(!keypad_.IsKeyPressed(hex_value)) { std::advance(program_counter_, 2); }
+    }
+
+    /**
     * OpCode ANNN 
     * Store memory address NNN in register I
     */
