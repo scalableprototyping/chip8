@@ -14,6 +14,8 @@
 #include "details/opcodes.hpp"         // for Opcodes
 #include "details/exceptions.hpp"      // for Exceptions
 
+namespace chip8::test { class Interpreter; }
+
 namespace chip8
 {
     class Interpreter
@@ -52,6 +54,8 @@ namespace chip8
             io::display::PixelArray pixels_;
 
             std::vector<memory::RamIter> stack_;
+
+            friend class test::Interpreter;
     };
 }
 

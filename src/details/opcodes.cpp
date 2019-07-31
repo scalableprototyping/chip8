@@ -1,4 +1,5 @@
 #include "Interpreter.hpp"
+#include "details/opcodes.hpp"         // for Opcodes
 
 namespace chip8
 {
@@ -12,7 +13,6 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_0NNN>(const OpBytes& _op_bytes)
     {
-        (void) _op_bytes;
         throw OpCodeException(_op_bytes, "Instruction not implemented. ROM not supported.");
     }
 
