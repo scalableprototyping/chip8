@@ -8,6 +8,7 @@ int main()
 {
     chip8::Interpreter interpreter{};
 
-    OpBytes op{0x00, 0xEE}; // NOLINT
+    chip8::opcodes::OpBytes op{0x00, 0xEE}; // NOLINT
+
     interpreter.processInstruction(op);
 }

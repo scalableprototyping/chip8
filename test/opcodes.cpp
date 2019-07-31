@@ -1,4 +1,4 @@
-#include <gmock/gmock.h>
+//#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "Interpreter.hpp"
@@ -20,7 +20,9 @@ namespace chip8::test
                     FAIL() << "Expected chip8::OpCodeException";
                 }
                 catch(chip8::OpCodeException const & err) {
-                    EXPECT_THAT(err.what(), ::testing::HasSubstr("Instruction not implemented. ROM not supported."));
+                //|`MatchesRegex(string)` |`argument` matches the given regular expression with the match starting at the first character and ending at the last character.|
+                    //EXPECT_THAT(err.what(), ::testing::HasSubstr("Instruction not implemented. ROM not supported."));
+                    FAIL() << "TST";
                 }
                 catch(...) {
                     FAIL() << "Expected chip8::OpCodeException";
