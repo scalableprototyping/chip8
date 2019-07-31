@@ -206,7 +206,7 @@ namespace chip8
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
 
         const bool carry = data_registers_[vx].Subtract(data_registers_[vy]);
-        data_registers_[0xF].Set(static_cast<uint8_t>(carry));
+        data_registers_[0xF].Set(static_cast<uint8_t>(!carry));
     }
 
     /**

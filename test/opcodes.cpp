@@ -329,7 +329,7 @@ namespace chip8::test
                 processInstruction(op);
 
                 //No carry
-                EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
+                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
 
                 data_registers_[0].Set(10);
                 data_registers_[1].Set(11);
@@ -340,7 +340,7 @@ namespace chip8::test
                 processInstruction(op);
 
                 //Carry should be detected
-                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
+                EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
             }
 
             /**
