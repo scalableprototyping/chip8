@@ -311,4 +311,15 @@ namespace chip8
         i_register_.Set(nnn);
     }
 
+    /**
+    * OpCode BNNN
+    * Jump to address NNN + V0.
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_BNNN>(const OpBytes& _op_bytes)
+    {
+        const uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF);
+        program_counter_ = ram_.begin() + nnn + data_registers_[0].Get();
+    }
+
 }

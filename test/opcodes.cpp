@@ -511,6 +511,24 @@ namespace chip8::test
                 EXPECT_EQ(i_register_.Get(), 0x234);
 
             }
+
+            /**
+            * Test OpCode BNNN
+            * Jump to address NNN + V0.
+            */
+            void TestOpCode_BNNN()
+            {
+                program_counter_ = ram_.begin(); // NOLINT
+
+                data_registers_[0].Set(10);
+
+                EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
+
+                opcodes::OpBytes op { 0xB1, 0x11 }; // NOLINT
+                processInstruction(op);
+
+                EXPECT_EQ(std::distance(ram_.begin(), program_counter_), 0x111 + 10); // NOLINT
+            }
     };
 
     TEST(Chip8TestSuite, OpCodes)
@@ -539,5 +557,6 @@ namespace chip8::test
         interpreterTests.TestOpCode_9XY0();
         interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
+        interpreterTests.TestOpCode_BNNN();
     }
 }
