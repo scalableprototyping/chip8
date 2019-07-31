@@ -75,7 +75,7 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_4XNN>(_op_bytes); 
         }
-        else if ((_op_bytes.first & 0xF0) == 0x50) // NOLINT
+        else if ((_op_bytes.first & 0xF0) == 0x50 && (_op_bytes.second & 0x0F) == 0x0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_5XY0>(_op_bytes); 
         }
@@ -87,9 +87,13 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_7XNN>(_op_bytes); 
         }
-        else if ((_op_bytes.first & 0xF0) == 0x80) // NOLINT
+        else if ((_op_bytes.first & 0xF0) == 0x80 && (_op_bytes.second & 0x0F) == 0x0) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_8XY0>(_op_bytes); 
+        }
+        else if ((_op_bytes.first & 0xF0) == 0x80 && (_op_bytes.second & 0x0F) == 0x1) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_8XY1>(_op_bytes); 
         }
         else if ((_op_bytes.first & 0xF0) == 0xD0) // NOLINT
         {
