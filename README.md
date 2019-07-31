@@ -13,7 +13,7 @@ practices, making extensive use of C++17 features, the STL, and modern build,
 continuous integration and coverage tools. 
 
 This Chip8 Interpreter allows to run chip8 ROMs and to interact with them. Example ROMs can be found 
-[here](https://github.com/dmatlack/chip8/tree/master/roms)
+[here](https://github.com/dmatlack/chip8/tree/master/roms).
 
 ## Requirements ##
 
@@ -30,6 +30,6 @@ GTest is used as the testing environment. The CMake build system will download a
 
 ## Coding Standard ## 
 
-This project follows the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
+This project follows the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 
 
