@@ -546,6 +546,24 @@ namespace chip8::test
                 }
 
             }
+
+            /**
+            * Test OpCode FX07 
+            * Store the curent value of the delay timer in register VX
+            */
+            void TestOpCode_FX07()
+            {
+                opcodes::OpBytes op { 0xF0, 0x07 }; // NOLINT
+
+                delay_timer_.SetValue(10);
+
+                while(delay_timer_.GetValue() != 0)
+                {
+                    processInstruction(op);
+                    EXPECT_EQ(data_registers_[0].Get(), delay_timer_.GetValue()); // NOLINT
+                    delay_timer_.Tick();
+                }
+            }
     };
 
     TEST(Chip8TestSuite, OpCodes)
@@ -576,5 +594,6 @@ namespace chip8::test
         interpreterTests.TestOpCode_ANNN();
         interpreterTests.TestOpCode_BNNN();
         interpreterTests.TestOpCode_CXNN();
+        interpreterTests.TestOpCode_FX07();
     }
 }

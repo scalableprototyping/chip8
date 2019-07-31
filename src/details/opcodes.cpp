@@ -335,4 +335,16 @@ namespace chip8
         data_registers_[vx].Set(details::getRandomNumber(_op_bytes.second));
     }
 
+    /**
+    * OpCode FX07
+    * Store the curren value of the delay timer in register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX07>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        data_registers_[vx].Set(delay_timer_.GetValue());
+    }
+
 }
