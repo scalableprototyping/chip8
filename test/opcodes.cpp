@@ -404,6 +404,29 @@ namespace chip8::test
             }
 
             /**
+            * Test OpCode 8XYE 
+            * Store the value of VY shifted left one bit in register VX.
+            * Set register VF to the most significant bit prior to the shift.
+            */
+            void TestOpCode_8XYE()
+            {
+                data_registers_[0].Set(0x1);
+                data_registers_[1].Set(0b10000000);
+                data_registers_[0xF].Set(0);
+
+                EXPECT_EQ(data_registers_[0].Get(), 0x1); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 0b10000000); // NOLINT
+                EXPECT_EQ(data_registers_[0xF].Get(), 0x0); // NOLINT
+
+                chip8::opcodes::OpBytes op {0x80, 0x1E}; // NOLINT
+                processInstruction(op);
+
+                EXPECT_EQ(data_registers_[0].Get(), 0x0); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 0b10000000); // NOLINT
+                EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
+            }
+
+            /**
             * OpCode DXYN 
             * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
             * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
@@ -487,6 +510,7 @@ namespace chip8::test
         interpreterTests.TestOpCode_8XY5();
         interpreterTests.TestOpCode_8XY6();
         interpreterTests.TestOpCode_8XY7();
+        interpreterTests.TestOpCode_8XYE();
         interpreterTests.TestOpCode_DXYN();
         interpreterTests.TestOpCode_ANNN();
     }

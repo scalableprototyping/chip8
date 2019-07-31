@@ -245,6 +245,23 @@ namespace chip8
     }
 
     /**
+    * OpCode 8XYE 
+    * Store the value of register VY shifted left one bit in register VX.
+    * Set register VF to the most significant bit prior to the shift.
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XYE>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F;
+
+        data_registers_[vx].Set(data_registers_[vy]);
+        const uint8_t most_significant = data_registers_[vx].ShiftLeft();
+
+        data_registers_[0xF].Set(most_significant);
+    }
+
+    /**
     * OpCode DXYN 
     * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
     * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
