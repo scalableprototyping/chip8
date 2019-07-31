@@ -155,6 +155,10 @@ namespace chip8
         {
             ExecuteInstruction<OpCodes::OpCode_FX07>(_op_bytes); 
         }
+        else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x0A) // NOLINT
+        {
+            ExecuteInstruction<OpCodes::OpCode_FX0A>(_op_bytes); 
+        }
         else if ((_op_bytes.first & 0xF0) == 0xF0 && _op_bytes.second == 0x15) // NOLINT
         {
             ExecuteInstruction<OpCodes::OpCode_FX15>(_op_bytes); 

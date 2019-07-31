@@ -566,6 +566,15 @@ namespace chip8::test
             }
 
             /**
+            * Test OpCode FX0A 
+            * Wait for a keypress and store the result in register VX
+            */
+            void TestOpCode_FX0A()
+            {
+                //TODO: implement tests for this (WaitForKey blocks)
+            }
+
+            /**
             * Test OpCode FX15 
             * Set the delay timer to the value of register VX
             */
@@ -692,6 +701,7 @@ namespace chip8::test
         interpreterTests.TestOpCode_BNNN();
         interpreterTests.TestOpCode_CXNN();
         interpreterTests.TestOpCode_FX07();
+        interpreterTests.TestOpCode_FX0A();
         interpreterTests.TestOpCode_FX15();
         interpreterTests.TestOpCode_FX18();
         interpreterTests.TestOpCode_FX1E();

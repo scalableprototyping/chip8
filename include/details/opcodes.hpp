@@ -34,6 +34,7 @@ namespace chip8::opcodes
         OpCode_BNNN,
         OpCode_CXNN,
         OpCode_FX07,
+        OpCode_FX0A,
         OpCode_FX15,
         OpCode_FX18,
         OpCode_FX1E,

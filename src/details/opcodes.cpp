@@ -376,6 +376,18 @@ namespace chip8
     }
 
     /**
+    * OpCode FX0A
+    * Wait for a keypress and store the result in register VX
+    */
+    template<>
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX0A>(const OpBytes& _op_bytes)
+    {
+        const uint8_t vx = _op_bytes.first & 0x0F;
+
+        data_registers_[vx].Set(keypad_.WaitForKey());
+    }
+
+    /**
     * OpCode FX15
     * Set the delay timer to the value of register VX
     */
