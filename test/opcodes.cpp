@@ -2,7 +2,6 @@
 #include <gtest/gtest.h>
 
 #include "Interpreter.hpp"
-#include "io/display/Renderer.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -24,7 +23,7 @@ namespace chip8::test
             void TestOpCode_0NNN() {
                 try {
                     chip8::opcodes::OpBytes op{0x01, 0x23}; // NOLINT
-                    processInstruction(op);
+                    ProcessInstruction(op);
                     FAIL() << "Expected 0x0NNN chip8::OpCodeException";
                 }
                 catch(chip8::OpCodeException const & err) {
@@ -43,7 +42,7 @@ namespace chip8::test
                 pixels_.WriteByteAt(0,0, 0xFF); // NOLINT
 
                 chip8::opcodes::OpBytes op{0x00, 0xE0}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 for (const auto& pixel : pixels_)
                 {
@@ -62,7 +61,7 @@ namespace chip8::test
                 program_counter_ = ram_.begin() + 0x234; // NOLINT
 
                 chip8::opcodes::OpBytes op_2NNN{0x21, 0x11}; // NOLINT
-                processInstruction(op_2NNN);
+                ProcessInstruction(op_2NNN);
 
                 EXPECT_EQ(stack_.back() - ram_.begin(), 0x234); // NOLINT
                 EXPECT_EQ(program_counter_ - ram_.begin(), 0x111); // NOLINT
@@ -70,7 +69,7 @@ namespace chip8::test
                 auto stack_size_before_returning = stack_.size();
 
                 chip8::opcodes::OpBytes op_00EE{0x00, 0xEE}; // NOLINT
-                processInstruction(op_00EE);
+                ProcessInstruction(op_00EE);
 
                 auto stack_size_after_returning = stack_.size();
 
@@ -85,7 +84,7 @@ namespace chip8::test
             */
             void TestOpCode_1NNN() {
                 chip8::opcodes::OpBytes op{0x11, 0x11}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
                 EXPECT_EQ(program_counter_ - ram_.begin(), 0x111); // NOLINT
             }
 
@@ -99,7 +98,7 @@ namespace chip8::test
                 program_counter_ = ram_.begin() + 0x234; // NOLINT
 
                 chip8::opcodes::OpBytes op{0x21, 0x11}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(stack_.back() - ram_.begin(), 0x234); // NOLINT
                 EXPECT_EQ(program_counter_ - ram_.begin(), 0x111); // NOLINT
@@ -118,13 +117,13 @@ namespace chip8::test
                 data_registers_[1].Set(11);
 
                 chip8::opcodes::OpBytes op {0x31, 11}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should have jumped the next instruction
                 EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
 
                 op = {0x30, 11}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter shouldn't jump with the second instrution
                 EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
@@ -142,13 +141,13 @@ namespace chip8::test
                 data_registers_[1].Set(11);
 
                 chip8::opcodes::OpBytes op {0x41, 11}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should not have jumped the next instruction
                 EXPECT_EQ(std::distance(program_memory_, program_counter_), 0); // NOLINT
 
                 op = {0x40, 11}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should have jumped with the second instrution
                 EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
@@ -167,13 +166,13 @@ namespace chip8::test
                 data_registers_[2].Set(10);
 
                 chip8::opcodes::OpBytes op {0x50, 0x10}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should not have jumped the next instruction
                 EXPECT_EQ(std::distance(program_memory_, program_counter_), 0); // NOLINT
 
                 op = {0x50, 0x20}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should have jumped with the second instrution
                 EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
@@ -190,7 +189,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[3].Get(), 10); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x63, 90}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(data_registers_[3].Get(), 90); // NOLINT
             }
@@ -206,7 +205,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[3].Get(), 10); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x73, 90}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(data_registers_[3].Get(), 100); // NOLINT
             }
@@ -224,7 +223,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x10}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(data_registers_[0].Get(), data_registers_[1].Get()); // NOLINT
             }
@@ -242,7 +241,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x11}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(data_registers_[0].Get(), 10 | 11); // NOLINT
             }
@@ -260,7 +259,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x12}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(data_registers_[0].Get(), 10 & 11); // NOLINT
             }
@@ -278,7 +277,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x13}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(data_registers_[0].Get(), 10 ^ 11); // NOLINT
             }
@@ -296,7 +295,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x14}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //No carry
                 EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
@@ -307,7 +306,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0].Get(), 255); // NOLINT
                 EXPECT_EQ(data_registers_[1].Get(), 1); // NOLINT
 
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //Carry should be detected
                 EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
@@ -326,7 +325,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 9); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x15}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //No carry
                 EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
@@ -337,7 +336,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
                 EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
 
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //Carry should be detected
                 EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
@@ -359,7 +358,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0xF].Get(), 0x0); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x16}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(data_registers_[0].Get(), 0x0); // NOLINT
                 EXPECT_EQ(data_registers_[1].Get(), 0x1); // NOLINT
@@ -381,7 +380,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x17}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //No borrow
                 EXPECT_EQ(data_registers_[0].Get(), 1); // NOLINT
@@ -395,7 +394,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 9); // NOLINT
                 EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
 
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //Borrow should be detected
                 EXPECT_EQ(data_registers_[0].Get(), 255); // NOLINT
@@ -419,7 +418,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0xF].Get(), 0x0); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x1E}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(data_registers_[0].Get(), 0x0); // NOLINT
                 EXPECT_EQ(data_registers_[1].Get(), 0b10000000); // NOLINT
@@ -439,13 +438,13 @@ namespace chip8::test
                 data_registers_[2].Set(10);
 
                 chip8::opcodes::OpBytes op {0x90, 0x10}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should have jumped the next instruction
                 EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
 
                 op = {0x90, 0x20}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should not have jumped with the second instrution
                 EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
@@ -457,11 +456,11 @@ namespace chip8::test
             */
             void TestOpCode_ANNN() {
                 chip8::opcodes::OpBytes op_A123{0xA1, 0x23}; // NOLINT
-                processInstruction(op_A123);
+                ProcessInstruction(op_A123);
                 EXPECT_EQ(i_register_.Get(), 0x123);
 
                 chip8::opcodes::OpBytes op_A234{0xA2, 0x34}; // NOLINT
-                processInstruction(op_A234);
+                ProcessInstruction(op_A234);
                 EXPECT_EQ(i_register_.Get(), 0x234);
 
             }
@@ -479,7 +478,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
 
                 opcodes::OpBytes op { 0xB1, 0x11 }; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 EXPECT_EQ(std::distance(ram_.begin(), program_counter_), 0x111 + 10); // NOLINT
             }
@@ -494,7 +493,7 @@ namespace chip8::test
 
                 for(size_t i = 0; i < 100; i++)
                 {
-                    processInstruction(op);
+                    ProcessInstruction(op);
                     EXPECT_LE(data_registers_[0].Get(), 0x0A); // NOLINT
                     EXPECT_GE(data_registers_[0].Get(), 0x00); // NOLINT
                 }
@@ -506,42 +505,37 @@ namespace chip8::test
             * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
             */
             void TestOpCode_DXYN() {
-                chip8::io::display::Renderer displayRenderer(pixels_);
                 using namespace std::literals::chrono_literals;
 
                 chip8::opcodes::OpBytes op_00E0{0x00, 0xE0}; // NOLINT
-                processInstruction(op_00E0);
+                ProcessInstruction(op_00E0);
 
                 i_register_.Set(5*0); // NOLINT
 
                 chip8::opcodes::OpBytes op_D005{0xD0, 0x05}; // NOLINT
-                processInstruction(op_D005);
+                ProcessInstruction(op_D005);
 
                 EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
 
-                displayRenderer.Update();
                 std::this_thread::sleep_for(0.2s);
 
                 i_register_.Set(5*1); // NOLINT
-                processInstruction(op_D005);
+                ProcessInstruction(op_D005);
 
                 EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
 
-                displayRenderer.Update();
                 std::this_thread::sleep_for(0.2s);
 
                 i_register_.Set(5*2); // NOLINT
-                processInstruction(op_D005);
+                ProcessInstruction(op_D005);
 
                 EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
 
-                displayRenderer.Update();
                 std::this_thread::sleep_for(0.2s);
 
                 i_register_.Set(5*3); // NOLINT
-                processInstruction(op_D005);
+                ProcessInstruction(op_D005);
 
-                displayRenderer.Update();
                 std::this_thread::sleep_for(0.2s);
 
             }
@@ -559,7 +553,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 0x0); // NOLINT
 
                 chip8::opcodes::OpBytes op {0xE1, 0x9E}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should not have jumped the next instruction
                 //(the key was not pressed)
@@ -579,7 +573,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[1].Get(), 0x0); // NOLINT
 
                 chip8::opcodes::OpBytes op {0xE1, 0xA1}; // NOLINT
-                processInstruction(op);
+                ProcessInstruction(op);
 
                 //The program counter should have jumped the next instruction
                 //(the key was not pressed)
@@ -598,7 +592,7 @@ namespace chip8::test
 
                 while(delay_timer_.GetValue() != 0)
                 {
-                    processInstruction(op);
+                    ProcessInstruction(op);
                     EXPECT_EQ(data_registers_[0].Get(), delay_timer_.GetValue()); // NOLINT
                     delay_timer_.Tick();
                 }
@@ -627,7 +621,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
                 EXPECT_EQ(delay_timer_.GetValue(), 0); // NOLINT
 
-                processInstruction(op);
+                ProcessInstruction(op);
                 EXPECT_EQ(data_registers_[0].Get(), delay_timer_.GetValue()); // NOLINT
             }
 
@@ -645,7 +639,7 @@ namespace chip8::test
                 EXPECT_EQ(data_registers_[0].Get(), 10); // NOLINT
                 EXPECT_EQ(sound_timer_.GetValue(), 0); // NOLINT
 
-                processInstruction(op);
+                ProcessInstruction(op);
                 EXPECT_EQ(data_registers_[0].Get(), sound_timer_.GetValue()); // NOLINT
             }
 
@@ -665,7 +659,7 @@ namespace chip8::test
 
                 for(size_t i = 0; i < 10; i++)
                 {
-                    processInstruction(op);
+                    ProcessInstruction(op);
                     EXPECT_EQ(i_register_.Get(), 15 + data_registers_[1].Get() * (i + 1)); // NOLINT
                 }
             }
@@ -679,7 +673,7 @@ namespace chip8::test
             {
                 data_registers_[2].Set(0xA); // NOLINT
                 opcodes::OpBytes op_F229 { 0xF2, 0x29 }; // NOLINT
-                processInstruction(op_F229);
+                ProcessInstruction(op_F229);
                 EXPECT_EQ(i_register_.Get(), 5*0xA); // NOLINT
             }
 
@@ -693,7 +687,7 @@ namespace chip8::test
                 data_registers_[2].Set(123); // NOLINT
 
                 opcodes::OpBytes op_F233 { 0xF2, 0x33 }; // NOLINT
-                processInstruction(op_F233);
+                ProcessInstruction(op_F233);
 
                 EXPECT_EQ(ram_.at(i_register_.Get()+0), 1); // NOLINT
                 EXPECT_EQ(ram_.at(i_register_.Get()+1), 2); // NOLINT
@@ -716,7 +710,7 @@ namespace chip8::test
                 i_register_.Set(i_0);
 
                 opcodes::OpBytes op_F355 { 0xF3, 0x55 }; // NOLINT
-                processInstruction(op_F355);
+                ProcessInstruction(op_F355);
 
                 EXPECT_EQ(ram_.at(i_0+0), 0); // NOLINT
                 EXPECT_EQ(ram_.at(i_0+1), 1); // NOLINT
@@ -743,7 +737,7 @@ namespace chip8::test
                 i_register_.Set(i_0);
 
                 opcodes::OpBytes op_F365 { 0xF3, 0x65 }; // NOLINT
-                processInstruction(op_F365);
+                ProcessInstruction(op_F365);
 
                 EXPECT_EQ(data_registers_[0].Get(), 5); // NOLINT
                 EXPECT_EQ(data_registers_[1].Get(), 6); // NOLINT

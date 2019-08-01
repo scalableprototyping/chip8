@@ -7,6 +7,7 @@
 #include <vector>                      // for vector
 
 #include "io/display/PixelArray.hpp"   // for PixelArray
+#include "io/display/Renderer.hpp"
 #include "io/Keypad.hpp"               // for Keyboard
 #include "io/Speaker.hpp"              // for Speaker
 #include "memory/Ram.hpp"              // for RamIter, Ram, begin_program_ram
@@ -31,7 +32,7 @@ namespace chip8
 
         private:
             void InitializeRam();
-            void processInstruction(const opcodes::OpBytes& _op_bytes);
+            void ProcessInstruction(const opcodes::OpBytes& _op_bytes);
 
             template<opcodes::OpCodes> 
             void ExecuteInstruction(const opcodes::OpBytes& _op_byte)
@@ -43,20 +44,21 @@ namespace chip8
             memory::Ram ram_{};
             memory::RamIter program_counter_{};
 
-            io::display::PixelArray pixels_;
-            io::Keypad  keypad_;
-            io::Speaker speaker_;
-
-            timers::Timer delay_timer_;
+            timers::Timer delay_timer_{};
             timers::Timer sound_timer_;
 
-            registers::IRegister i_register_;
-            registers::DataRegisters data_registers_;
+            registers::IRegister i_register_{};
+            registers::DataRegisters data_registers_{};
+
+            io::display::PixelArray pixels_{};
+            io::display::Renderer display_renderer_;
+            io::Keypad  keypad_{};
+            io::Speaker speaker_{};
 
             const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
 
-            std::vector<memory::RamIter> stack_;
+            std::vector<memory::RamIter> stack_{};
 
             friend class test::Interpreter;
     };

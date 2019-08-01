@@ -9,7 +9,7 @@ namespace chip8::io::display
     class PixelArray
     {
         public:
-            using PixelValue_t = char;
+            using PixelValue_t = uint8_t;
             static constexpr uint8_t kWidth_ = 64;
             static constexpr uint8_t kHeight_ = 32;
             using Array_t = std::array<PixelValue_t, kHeight_*kWidth_>;

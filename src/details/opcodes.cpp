@@ -312,19 +312,21 @@ namespace chip8
     /**
     * OpCode DXYN 
     * Draw a sprite at position VX, VY with N bytes of sprite data starting at the address 
-    * stored in I. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
+    * stored in I. Sprites are XORed to the existing screen. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
     */
+
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_DXYN>(const OpBytes& _op_bytes)
     {
-        auto x = (_op_bytes.first  & 0x0F); // NOLINT
-        auto y = (_op_bytes.second & 0xF0) >> 4; // NOLINT
-        auto n = (_op_bytes.second & 0x0F); // NOLINT
+        const auto vx = (_op_bytes.first  & 0x0F); // NOLINT
+        const auto vy = (_op_bytes.second & 0xF0) >> 4; // NOLINT
+        const auto n  = (_op_bytes.second & 0x0F); // NOLINT
+        const auto x  = data_registers_[vx].Get();
 
         data_registers_[0xF].Set(0); // NOLINT
         for (auto byte_index = 0; byte_index < n; ++byte_index)
         {
-            auto y_i = y + byte_index;
+            auto y_i = data_registers_[vy].Get() + byte_index;
             auto byte_i = ram_.at(i_register_.Get() + byte_index);
 
             bool unset_bit_flat = pixels_.WriteByteAt(x, y_i, byte_i);
@@ -362,7 +364,6 @@ namespace chip8
 
         if(!keypad_.IsKeyPressed(hex_value)) { std::advance(program_counter_, 2); }
     }
-
 
     /*
     * OpCode FX07

@@ -25,12 +25,14 @@ namespace chip8::io::display
     {
         auto unset_bit_flag = false;
         chip8::details::forEachBitInByteLittleEndian(_byte, [&](auto bit_index_little_endian, auto bit ) {
-            auto bit_index_big_endian = 7 - bit_index_little_endian; // NOLINT
-            if (at(_col + bit_index_big_endian, _row) == 1 && bit == 0) 
+            const auto bit_index_big_endian = 7 - bit_index_little_endian; // NOLINT
+            const auto col_i = (_col + bit_index_big_endian) % kWidth_;
+            const auto row_i = _row % kHeight_;
+            if (at(col_i, row_i) == 1 && bit == 1) 
             {
                 unset_bit_flag = true;
             }
-            at(_col + bit_index_big_endian, _row) = bit;
+            at(col_i, row_i) ^= bit; // NOLINT
         });
         return unset_bit_flag;
     }

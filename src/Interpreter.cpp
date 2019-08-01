@@ -14,7 +14,8 @@
 namespace chip8
 {
     Interpreter::Interpreter() :
-        sound_timer_([this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } )
+        sound_timer_([this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } ),
+        display_renderer_(pixels_)
     {
         InitializeRam();
     }
@@ -35,21 +36,31 @@ namespace chip8
     {
         program_counter_ = program_memory_;
 
-        chip8::io::display::Renderer displayRenderer(pixels_);
+        /* We need to add locks for opcodes not to break this
+        std::thread([&]() {
+            while (true)
+            {
+                delay_timer_.Tick();
+                sound_timer_.Tick();
+                using namespace std::literals::chrono_literals;
+                const int micros60Hz = 1.0/60.0*1.0e6; // NOLINT
+                std::this_thread::sleep_for(std::chrono::microseconds(micros60Hz)); 
+            }
+        }).detach();
+        */
 
-        //TODO: when should we stop?
         while(true)
         {
-            opcodes::OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
-            program_counter_ += 2;
-
-            processInstruction(op_bytes);
-
-            // Actually we only need to render in the draw instructions
-            displayRenderer.Update();
-
             using namespace std::literals::chrono_literals;
-            std::this_thread::sleep_for(0.01s);
+            std::this_thread::sleep_for(std::chrono::microseconds(100)); 
+
+            opcodes::OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
+            std::advance(program_counter_, 2);
+
+            ProcessInstruction(op_bytes);
+
+            //using namespace std::literals::chrono_literals;
+            //std::this_thread::sleep_for(0.001s);
 
             std::stringstream ss;
             ss << "0x" 
@@ -59,8 +70,14 @@ namespace chip8
                << static_cast<int>(op_bytes.second);
             std::cout << ss.str() << "\n";
 
-            delay_timer_.Tick();
-            sound_timer_.Tick();
+            static int tick_counter = 0;
+            if (tick_counter++ > 166) // Approximately 60 Hz when running the main loop at 100 microseconds
+            {
+                delay_timer_.Tick();
+                sound_timer_.Tick();
+                display_renderer_.Update();
+                tick_counter = 0;
+            }
         }
     }
 
@@ -69,7 +86,7 @@ namespace chip8
         details::initSystemMemory(ram_.begin(), end_interpreter_memory_);
     }
 
-    void Interpreter::processInstruction(const opcodes::OpBytes& _op_bytes)
+    void Interpreter::ProcessInstruction(const opcodes::OpBytes& _op_bytes)
     {
         using namespace opcodes;
 
