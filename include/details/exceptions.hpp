@@ -2,8 +2,6 @@
 #define CHIP_8_EXCEPTIONS_HPP
 
 #include <string>
-#include <iomanip>
-#include <iostream>
 #include <stdexcept>
 #include <string_view>
 
@@ -29,7 +27,7 @@ class Chip8Exception : public std::exception
         return message_.c_str();
     }
 
-  protected:
+  private:
     std::string message_;
 };
 
@@ -37,16 +35,9 @@ class OpCodeException : public Chip8Exception
 {
   public:
     template <class... Strings>
-    OpCodeException(const opcodes::OpBytes& _op_byte, const Strings&... _strings) : Chip8Exception(utils::strcat(_strings...))
-    {
-        std::stringstream ss;
-        ss << "0x" << std::setfill('0') << std::setw(2) << std::hex
-           << static_cast<int>(_op_byte.first)
-           << static_cast<int>(_op_byte.second)
-           << ": " << message_;
-
-        message_ = ss.str();
-    }
+    OpCodeException(const opcodes::OpBytes& _op_byte, const Strings&... _strings)
+        : Chip8Exception(utils::strcat(_op_byte, ": ", _strings...))
+    {}
 };
 
 }

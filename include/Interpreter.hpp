@@ -2,7 +2,6 @@
 #define CHIP_8_INTERPRETER_HPP
 
 #include <cstdint>                     // for uint8_t
-#include <stdexcept>                   // for runtime_error
 #include <string_view>                 // for string_view
 #include <vector>                      // for vector
 
@@ -14,8 +13,12 @@
 #include "registers/DataRegister.hpp"  // for DataRegisters
 #include "registers/IRegister.hpp"     // for IRegister
 #include "timers/Timer.hpp"            // for Timer
+#include "timers/RateGuard.hpp"        // for RateGuard
+#include "timers/clock.hpp"            // for Frequency, etc
 #include "details/opcodes.hpp"         // for Opcodes
 #include "details/exceptions.hpp"      // for Exceptions
+
+#include "loggers/CoutLogger.hpp"      // for CoutLogger
 
 namespace chip8::test { class Interpreter; }
 
@@ -34,6 +37,10 @@ namespace chip8
             void InitializeRam();
             void ProcessInstruction(const opcodes::OpBytes& _op_bytes);
 
+            void InstructionCycle();
+            void TickTimers();
+            void RefreshDisplay();
+
             template<opcodes::OpCodes> 
             void ExecuteInstruction(const opcodes::OpBytes& _op_byte)
             {
@@ -46,6 +53,7 @@ namespace chip8
 
             timers::Timer delay_timer_{};
             timers::Timer sound_timer_;
+            timers::RateGuard tick_guard_;
 
             registers::IRegister i_register_{};
             registers::DataRegisters data_registers_{};
@@ -59,6 +67,10 @@ namespace chip8
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
 
             std::vector<memory::RamIter> stack_{};
+
+            log::CoutLogger cout_logger_;
+            
+            const timers::Frequency cpu_frequency_ { 500_Hz };
 
             friend class test::Interpreter;
     };

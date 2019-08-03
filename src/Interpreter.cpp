@@ -1,21 +1,14 @@
-#include "Interpreter.hpp"
-
-#include "details/memory.hpp"    // for dumpRomToMemory, initSystemMemory
-#include "timers/TimerImpl.hpp"  // for GeneralizedTimer::GeneralizedTimer<R...
-
-#include "io/display/Renderer.hpp"
-
-#include <iostream>
-#include <chrono>
 #include <thread>
-#include <string>
-#include <sstream>
+
+#include "Interpreter.hpp"
+#include "details/memory.hpp"    // for dumpRomToMemory, initSystemMemory
 
 namespace chip8
 {
     Interpreter::Interpreter() :
-        sound_timer_([this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } ),
-        display_renderer_(pixels_)
+        sound_timer_      ( [this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } ),
+        tick_guard_       ( [this] () { TickTimers(); RefreshDisplay(); }, 60_Hz ),
+        display_renderer_ ( pixels_ )
     {
         InitializeRam();
     }
@@ -34,56 +27,49 @@ namespace chip8
 
     void Interpreter::StartRom()
     {
-        program_counter_ = program_memory_;
+        using namespace timers;
 
-        /* We need to add locks for opcodes not to break this
-        std::thread([&]() {
-            while (true)
-            {
-                delay_timer_.Tick();
-                sound_timer_.Tick();
-                using namespace std::literals::chrono_literals;
-                const int micros60Hz = 1.0/60.0*1.0e6; // NOLINT
-                std::this_thread::sleep_for(std::chrono::microseconds(micros60Hz)); 
-            }
-        }).detach();
-        */
+        program_counter_ = program_memory_;
 
         while(true)
         {
-            using namespace std::literals::chrono_literals;
-            std::this_thread::sleep_for(std::chrono::microseconds(100)); 
+            const Microseconds& execution_time  = measureExecutionTime([this] () { InstructionCycle(); });
+            const Microseconds& sleep_time      = cpu_frequency_.Period<Microseconds>() - execution_time;
+            const Clock::time_point& next_cycle = Clock::now() + sleep_time;
 
-            opcodes::OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
-            std::advance(program_counter_, 2);
-
-            ProcessInstruction(op_bytes);
-
-            //using namespace std::literals::chrono_literals;
-            //std::this_thread::sleep_for(0.001s);
-
-            std::stringstream ss;
-            ss << "0x" 
-               << std::setfill('0') << std::setw(2) << std::hex
-               << static_cast<int>(op_bytes.first)
-               << std::setfill('0') << std::setw(2) << std::hex
-               << static_cast<int>(op_bytes.second);
-            std::cout << ss.str() << "\n";
-
-            static int tick_counter = 0;
-            if (tick_counter++ > 166) // Approximately 60 Hz when running the main loop at 100 microseconds
+            while(Clock::now() < next_cycle)
             {
-                delay_timer_.Tick();
-                sound_timer_.Tick();
-                display_renderer_.Update();
-                tick_counter = 0;
+                tick_guard_.Execute();
+                std::this_thread::sleep_for(1ms);
             }
         }
+    }
+
+    void Interpreter::InstructionCycle()
+    {
+        opcodes::OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
+        std::advance(program_counter_, 2);
+
+        ProcessInstruction(op_bytes);
+
+        //TODO: make this optional
+        cout_logger_.Log(op_bytes);
     }
 
     void Interpreter::InitializeRam()
     {
         details::initSystemMemory(ram_.begin(), end_interpreter_memory_);
+    }
+
+    void Interpreter::TickTimers()
+    {
+        delay_timer_.Tick();
+        sound_timer_.Tick();
+    }
+
+    void Interpreter::RefreshDisplay()
+    {
+        display_renderer_.Update();
     }
 
     void Interpreter::ProcessInstruction(const opcodes::OpBytes& _op_bytes)
