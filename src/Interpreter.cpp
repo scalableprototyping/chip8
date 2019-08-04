@@ -7,7 +7,7 @@ namespace chip8
 {
     Interpreter::Interpreter() :
         sound_timer_      ( [this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } ),
-        tick_guard_       ( [this] () { TickTimers(); RefreshDisplay(); }, 60_Hz ),
+        tick_guard_       ( [this] () { TickTimers(); }, 60_Hz ),
         display_renderer_ ( pixels_ )
     {
         InitializeRam();
@@ -36,6 +36,8 @@ namespace chip8
             const Microseconds& execution_time  = measureExecutionTime([this] () { InstructionCycle(); });
             const Microseconds& sleep_time      = cpu_frequency_.Period<Microseconds>() - execution_time;
             const Clock::time_point& next_cycle = Clock::now() + sleep_time;
+
+            RefreshDisplay();
 
             while(Clock::now() < next_cycle)
             {
@@ -69,7 +71,11 @@ namespace chip8
 
     void Interpreter::RefreshDisplay()
     {
-        display_renderer_.Update();
+        if(update_display_)
+        {
+            display_renderer_.Update();
+            update_display_ = false;
+        }
     }
 
     void Interpreter::ProcessInstruction(const opcodes::OpBytes& _op_bytes)

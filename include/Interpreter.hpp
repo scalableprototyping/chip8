@@ -58,9 +58,11 @@ namespace chip8
             registers::IRegister i_register_{};
             registers::DataRegisters data_registers_{};
 
-            io::display::PixelArray pixels_{};
+            io::display::PixelArray pixels_ {};
             io::display::Renderer display_renderer_;
-            io::Keypad  keypad_{};
+            bool update_display_ { false };
+
+            io::Keypad  keypad_ {};
             io::Speaker speaker_{};
 
             const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };

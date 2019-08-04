@@ -22,10 +22,10 @@ namespace chip8
     * Clear the pixel frame buffer.
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_00E0>(const OpBytes& _op_bytes)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_00E0>(const OpBytes&)
     {
-        (void) _op_bytes;
         pixels_.Clear();
+        update_display_ = true;
     }
 
     /**
@@ -335,6 +335,8 @@ namespace chip8
                 data_registers_[0xF].Set(1); // NOLINT
             }
         }
+
+        update_display_ = true;
     }
 
     /**
