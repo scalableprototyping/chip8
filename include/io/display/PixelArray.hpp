@@ -23,8 +23,8 @@ namespace chip8::io::display
             PixelArray& operator= (const PixelArray&) = delete;
 
             void Clear();
-            using UnsetBitFlag = bool;
-            UnsetBitFlag WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte);
+            using CollisionFlag = bool;
+            CollisionFlag WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte);
 
             PixelValue_t& at(uint8_t _col, uint8_t _row);
             const PixelValue_t& at(uint8_t _col, uint8_t _row) const;

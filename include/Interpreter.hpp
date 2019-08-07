@@ -65,14 +65,14 @@ namespace chip8
             io::Keypad  keypad_ {};
             io::Speaker speaker_{};
 
-            const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };
+            const memory::RamIter program_memory_begin_         { ram_.begin() + memory::begin_program_ram };
             const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
 
             std::vector<memory::RamIter> stack_{};
 
             log::CoutLogger cout_logger_;
             
-            const timers::Frequency cpu_frequency_ { 500_Hz };
+            const timers::Frequency cpu_frequency_ { 1000_Hz };
 
             friend class test::Interpreter;
     };

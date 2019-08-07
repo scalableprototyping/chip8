@@ -15,6 +15,8 @@ continuous integration and coverage tools.
 This Chip8 Interpreter allows to run chip8 ROMs and to interact with them. Example ROMs can be found 
 [here](https://github.com/dmatlack/chip8/tree/master/roms).
 
+![Chip8 running Space Invaders](https://imgur.com/kqwkJlM)
+
 ## Requirements ##
 
 ScalablePrototyping Chip8 Interpreter has been designed to have fairly minimal 

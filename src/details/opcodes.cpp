@@ -73,9 +73,9 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_3XNN>(const OpBytes& _op_bytes)
     {
-        const uint8_t register_id = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
-        if(data_registers_[register_id].Get() == _op_bytes.second) { std::advance(program_counter_, 2); } // NOLINT
+        if(data_registers_[vx].Get() == _op_bytes.second) { std::advance(program_counter_, 2); } // NOLINT
     }
 
     /**
@@ -85,9 +85,9 @@ namespace chip8
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_4XNN>(const OpBytes& _op_bytes)
     {
-        const uint8_t register_id = _op_bytes.first & 0x0F; // NOLINT
+        const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
-        if(data_registers_[register_id].Get() != _op_bytes.second) { std::advance(program_counter_, 2); } // NOLINT
+        if(data_registers_[vx].Get() != _op_bytes.second) { std::advance(program_counter_, 2); } // NOLINT
     }
 
     /**
@@ -207,23 +207,20 @@ namespace chip8
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
 
         const bool carry = data_registers_[vx].Subtract(data_registers_[vy]);
+
         data_registers_[0xF].Set(static_cast<uint8_t>(!carry)); // NOLINT
     }
 
     /**
     * OpCode 8XY6 
-    * Store the value of register VY shifted right one bit in register VX.
+    * Shift register VX to the right. VY is ignored.
     * Set register VF to the least significant bit prior to the shift
     */
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY6>(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
-
-        data_registers_[vx].Set(data_registers_[vy]);
         const uint8_t less_significant = data_registers_[vx].ShiftRight();
-
         data_registers_[0xF].Set(less_significant); // NOLINT
     }
 
@@ -247,18 +244,14 @@ namespace chip8
 
     /**
     * OpCode 8XYE 
-    * Store the value of register VY shifted left one bit in register VX.
+    * Shift register VX to the left. VY is ignored.
     * Set register VF to the most significant bit prior to the shift.
     */
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XYE>(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
-        const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
-
-        data_registers_[vx].Set(data_registers_[vy]);
         const uint8_t most_significant = data_registers_[vx].ShiftLeft();
-
         data_registers_[0xF].Set(most_significant); // NOLINT
     }
 
@@ -315,6 +308,10 @@ namespace chip8
     * stored in I. Sprites are XORed to the existing screen. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
     */
 
+    void collision_detected() {
+
+    }
+
     template<>
     void Interpreter::ExecuteInstruction<OpCodes::OpCode_DXYN>(const OpBytes& _op_bytes)
     {
@@ -324,20 +321,30 @@ namespace chip8
         const auto x  = data_registers_[vx].Get();
 
         data_registers_[0xF].Set(0); // NOLINT
+        bool collision_flag = false;
         for (auto byte_index = 0; byte_index < n; ++byte_index)
         {
             auto y_i = data_registers_[vy].Get() + byte_index;
             auto byte_i = ram_.at(i_register_.Get() + byte_index);
 
-            bool unset_bit_flat = pixels_.WriteByteAt(x, y_i, byte_i);
-            if (unset_bit_flat) 
+            bool collision_in_byte = pixels_.WriteByteAt(x, y_i, byte_i);
+            if (collision_in_byte) 
             {
-                data_registers_[0xF].Set(1); // NOLINT
+                collision_flag = true;
             }
+        }
+
+        display_renderer_.Update();
+
+        if (collision_flag) 
+        {
+            data_registers_[0xF].Set(1); // NOLINT
+            collision_detected();
         }
 
         update_display_ = true;
     }
+
 
     /**
     * OpCode EX9E

@@ -17,7 +17,7 @@ namespace chip8
     {
         try
         {
-            details::dumpRomToMemory(_rom, program_memory_, ram_.end());
+            details::dumpRomToMemory(_rom, program_memory_begin_, ram_.end());
         }
         catch(const std::runtime_error& ex)
         {
@@ -29,15 +29,13 @@ namespace chip8
     {
         using namespace timers;
 
-        program_counter_ = program_memory_;
+        program_counter_ = program_memory_begin_;
 
         while(true)
         {
             const Microseconds& execution_time  = measureExecutionTime([this] () { InstructionCycle(); });
             const Microseconds& sleep_time      = cpu_frequency_.Period<Microseconds>() - execution_time;
             const Clock::time_point& next_cycle = Clock::now() + sleep_time;
-
-            RefreshDisplay();
 
             while(Clock::now() < next_cycle)
             {
@@ -55,7 +53,7 @@ namespace chip8
         ProcessInstruction(op_bytes);
 
         //TODO: make this optional
-        cout_logger_.Log(op_bytes);
+        //cout_logger_.Log(op_bytes);
     }
 
     void Interpreter::InitializeRam()
@@ -67,15 +65,6 @@ namespace chip8
     {
         delay_timer_.Tick();
         sound_timer_.Tick();
-    }
-
-    void Interpreter::RefreshDisplay()
-    {
-        if(update_display_)
-        {
-            display_renderer_.Update();
-            update_display_ = false;
-        }
     }
 
     void Interpreter::ProcessInstruction(const opcodes::OpBytes& _op_bytes)
