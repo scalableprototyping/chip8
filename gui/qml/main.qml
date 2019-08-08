@@ -1,5 +1,5 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.0
+import QtQuick 2.3
+import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.0
 
 ApplicationWindow
@@ -26,6 +26,25 @@ ApplicationWindow
                 onTriggered: Qt.quit();
             }
         }
+    }
+
+    Slider
+    {
+        id: cpuFrequencySlider
+        from: 1
+        to: 1000
+        value: 500
+        onValueChanged: interpreter.SetCpuFrequency(value)
+    }
+
+    Slider
+    {
+        id: timersFrequencySlider
+        from: 1
+        to: 100
+        value: 60
+        onValueChanged: interpreter.SetTimersFrequency(value)
+        y: 50
     }
 
     FileDialog

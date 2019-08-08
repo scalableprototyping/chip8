@@ -19,6 +19,9 @@ namespace chip8
 
             Q_SLOT void LoadRom(const QUrl& _path);
 
+            Q_SLOT void SetCpuFrequency(qreal _new_frequency);
+            Q_SLOT void SetTimersFrequency(qreal _new_frequency);
+
         private:
             Interpreter interpreter_;
     };

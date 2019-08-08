@@ -4,7 +4,6 @@
 #include <cstdint>                      // for uint8_t
 #include <string_view>                  // for string_view
 #include <vector>                       // for vector
-#include <atomic>                       // for vector
 
 #include "io/display/PixelArray.hpp"    // for PixelArray
 #include "io/display/Renderer.hpp"
@@ -36,8 +35,10 @@ namespace chip8
             void StartRom(bool async = true);
 
             void Stop();
-
             bool IsRunning() const;
+
+            void SetCpuFrequency(timers::Frequency _new_frequency);
+            void SetTimersFrequency(timers::Frequency _new_frequency);
 
         private:
             void InitializeRam();
@@ -77,8 +78,6 @@ namespace chip8
             tasks::RecurrentTask cpu_task_;
 
             log::CoutLogger cout_logger_;
-            
-            const timers::Frequency cpu_frequency_ { 100_kHz };
 
             const memory::RamIter program_memory_begin_   { ram_.begin() + memory::begin_program_ram };
             const memory::RamIter interpreter_memory_end_ { ram_.begin() + memory::interpreter_ram_size };

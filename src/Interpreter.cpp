@@ -5,10 +5,9 @@ namespace chip8
 {
     Interpreter::Interpreter() :
         display_renderer_       ( pixels_ ),
-        sound_timer_            ( [this] () { speaker_.Play(); }, 
-                                  [this] () { speaker_.Stop(); } ),
-        cpu_cycle_guard_        ( [this] () { InstructionCycle(); },    500_Hz ),
-        timers_tick_guard_      ( [this] () { TickTimers(); },          60_Hz  ),
+        sound_timer_            ( [this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } ),
+        cpu_cycle_guard_        ( [this] () { InstructionCycle(); }, timers::default_cpu_frequency ),
+        timers_tick_guard_      ( [this] () { TickTimers(); }, timers::default_timers_frequency),
         cpu_task_               ( [this] () { CpuCycle(); }, 1us )
     {
         InitializeRam();
@@ -40,6 +39,16 @@ namespace chip8
     bool Interpreter::IsRunning() const
     {
         return cpu_task_.IsRunning();
+    }
+
+    void Interpreter::SetCpuFrequency(timers::Frequency _new_frequency)
+    {
+        cpu_cycle_guard_.SetFrequency(_new_frequency);
+    }
+
+    void Interpreter::SetTimersFrequency(timers::Frequency _new_frequency)
+    {
+        timers_tick_guard_.SetFrequency(_new_frequency);
     }
 
     // Private

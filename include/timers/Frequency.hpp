@@ -23,30 +23,34 @@ namespace chip8::timers
             uint64_t hertz;
     };
 
+    constexpr chip8::timers::Frequency operator"" _Hz(unsigned long long int hz)
+    {
+        return chip8::timers::Frequency { hz };
+    }
+
+    constexpr chip8::timers::Frequency operator"" _kHz(unsigned long long int khz)
+    {
+        const int kilo = 1e3;
+        return chip8::timers::Frequency { khz * kilo };
+    }
+
+    constexpr chip8::timers::Frequency operator"" _MHz(unsigned long long int mhz)
+    {
+        const int mega = 1e6;
+        return chip8::timers::Frequency { mhz * mega };
+    }
+
+    constexpr chip8::timers::Frequency operator"" _GHz(unsigned long long int ghz)
+    {
+        const int giga = 1e9;
+        return chip8::timers::Frequency { ghz * giga };
+    }
+
+    static constexpr Frequency default_cpu_frequency    { 500_Hz };
+    static constexpr Frequency default_timers_frequency { 60_Hz };
 }
 
-constexpr chip8::timers::Frequency operator"" _Hz(unsigned long long int hz)
-{
-    return chip8::timers::Frequency { hz };
-}
 
-constexpr chip8::timers::Frequency operator"" _kHz(unsigned long long int khz)
-{
-    const int kilo = 1e3;
-    return chip8::timers::Frequency { khz * kilo };
-}
-
-constexpr chip8::timers::Frequency operator"" _MHz(unsigned long long int mhz)
-{
-    const int mega = 1e6;
-    return chip8::timers::Frequency { mhz * mega };
-}
-
-constexpr chip8::timers::Frequency operator"" _GHz(unsigned long long int ghz)
-{
-    const int giga = 1e9;
-    return chip8::timers::Frequency { ghz * giga };
-}
 
 #endif
 
