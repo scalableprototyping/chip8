@@ -8,7 +8,7 @@ Welcome to ScalablePrototyping Chip8 Interpreter, developed by:
 * Álvaro Páez Guerra
 * Juan José Blasco Burguillos
 
-This project show cases the latest C++ cross-platform development best 
+This project showcases the latest C++ cross-platform development best 
 practices, making extensive use of C++17 features, the STL, and modern build, 
 continuous integration and coverage tools. 
 
