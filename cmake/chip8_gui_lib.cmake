@@ -38,6 +38,3 @@ string(CONCAT CHIP8_GUI_LIB_CLANG_TIDY_CHECKS "-checks=*,"
     "-hicpp-vararg"
     )
 target_add_clang_tidy(CHIP8_GUI_LIB ${CHIP8_GUI_LIB_CLANG_TIDY_CHECKS})
-
-include(chip8_coverage)
-target_add_coverage(${MAIN_EXECUTABLE})

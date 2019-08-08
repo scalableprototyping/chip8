@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CHIP_8_SPEAKER_HPP
 #define CHIP_8_SPEAKER_HPP
 

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CHIP_8_CLOCK_HPP
 #define CHIP_8_CLOCK_HPP
 

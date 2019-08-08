@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CHIP_8_INTERPRETER_HPP
 #define CHIP_8_INTERPRETER_HPP
 
