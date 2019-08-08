@@ -1,10 +1,7 @@
 macro(target_add_qt TARGET_NAME_ARG)
 
     find_package(Qt5 COMPONENTS Widgets Qml Quick REQUIRED)
-
     target_link_libraries(${TARGET_NAME_ARG} PRIVATE Qt5::Widgets Qt5::Qml Qt5::Quick)
-    #target_compile_definitions(${TARGET_NAME_ARG} PRIVATE ${Qt5Widgets_DEFINITIONS} ${QtQml_DEFINITIONS} ${${Qt5Quick_DEFINITIONS}})
-    #target_compile_options(${TARGET_NAME_ARG} PRIVATE ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS})
 
 endmacro(target_add_qt)
 

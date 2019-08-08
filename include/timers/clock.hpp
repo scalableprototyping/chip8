@@ -3,10 +3,10 @@
 
 #include <chrono>
 
+using namespace std::literals::chrono_literals;
+
 namespace chip8::timers
 {
-    using namespace std::literals::chrono_literals;
-
     using Clock        = std::chrono::high_resolution_clock;
     using Milliseconds = std::chrono::milliseconds;
     using Microseconds = std::chrono::microseconds;

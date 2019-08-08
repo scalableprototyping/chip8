@@ -1,5 +1,3 @@
-#include <thread>
-
 #include "Interpreter.hpp"
 #include "details/memory.hpp"    // for dumpRomToMemory, initSystemMemory
 
@@ -10,7 +8,8 @@ namespace chip8
         sound_timer_            ( [this] () { speaker_.Play(); }, 
                                   [this] () { speaker_.Stop(); } ),
         cpu_cycle_guard_        ( [this] () { InstructionCycle(); },    500_Hz ),
-        timers_tick_guard_      ( [this] () { TickTimers(); },          60_Hz  )
+        timers_tick_guard_      ( [this] () { TickTimers(); },          60_Hz  ),
+        cpu_task_               ( [this] () { CpuCycle(); }, 1us )
     {
         InitializeRam();
     }
@@ -27,25 +26,32 @@ namespace chip8
         }
     }
 
-    void Interpreter::StartRom()
+    void Interpreter::StartRom(bool _async)
     {
         program_counter_ = program_memory_begin_;
+        cpu_task_.Start(_async);
+    }
 
-        while(true)
-        {
-            cpu_cycle_guard_.Execute();
-            timers_tick_guard_.Execute();
+    void Interpreter::Stop()
+    {
+        cpu_task_.Stop();
+    }
 
-            using namespace std::literals::chrono_literals;
-            std::this_thread::sleep_for(1us);
-        }
+    bool Interpreter::IsRunning() const
+    {
+        return cpu_task_.IsRunning();
+    }
+
+    // Private
+    void Interpreter::CpuCycle()
+    {
+        cpu_cycle_guard_.Execute();
+        timers_tick_guard_.Execute();
     }
 
     void Interpreter::InstructionCycle()
     {
-        opcodes::OpBytes op_bytes(
-            *program_counter_, *(std::next(program_counter_))
-            );
+        opcodes::OpBytes op_bytes(*program_counter_, *(std::next(program_counter_)));
         const auto bytes_per_opcode = 2;
         std::advance(program_counter_, bytes_per_opcode);
         ProcessInstruction(op_bytes);

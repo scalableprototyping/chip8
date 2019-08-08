@@ -18,6 +18,9 @@ if(BUILD_INTERPRETER)
     target_compile_features(${INTERPRETER_EXECUTABLE} PRIVATE cxx_std_17)
     set_property(TARGET ${INTERPRETER_EXECUTABLE} PROPERTY LINK_WHAT_YOU_USE TRUE)
 
+    include(chip8_threads)
+    target_link_threads(${INTERPRETER_EXECUTABLE})
+
     include(chip8_sfml)
     target_add_sfml(${INTERPRETER_EXECUTABLE})
 
@@ -42,6 +45,9 @@ if(BUILD_GUI)
     target_include_directories(${GUI_EXECUTABLE} PRIVATE include)
     target_compile_features(${GUI_EXECUTABLE} PRIVATE cxx_std_17)
     set_property(TARGET ${GUI_EXECUTABLE} PROPERTY LINK_WHAT_YOU_USE TRUE)
+
+    include(chip8_threads)
+    target_link_threads(${GUI_EXECUTABLE})
 
     include(chip8_qt)
     target_add_qt(${GUI_EXECUTABLE})

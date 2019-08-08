@@ -10,11 +10,12 @@ int main(int argc, char** argv)
         return -1;
     }
 
+    chip8::Interpreter interpreter {};
+
     try
     {
-        chip8::Interpreter interpreter {};
         interpreter.LoadRom(argv[1]);
-        interpreter.StartRom();
+        interpreter.StartRom(false); // Async disabled
     }
     catch(const chip8::Chip8Exception& ex)
     {

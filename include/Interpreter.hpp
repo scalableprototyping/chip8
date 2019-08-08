@@ -1,24 +1,26 @@
 #ifndef CHIP_8_INTERPRETER_HPP
 #define CHIP_8_INTERPRETER_HPP
 
-#include <cstdint>                     // for uint8_t
-#include <string_view>                 // for string_view
-#include <vector>                      // for vector
+#include <cstdint>                      // for uint8_t
+#include <string_view>                  // for string_view
+#include <vector>                       // for vector
+#include <atomic>                       // for vector
 
-#include "io/display/PixelArray.hpp"   // for PixelArray
+#include "io/display/PixelArray.hpp"    // for PixelArray
 #include "io/display/Renderer.hpp"
-#include "io/Keypad.hpp"               // for Keyboard
-#include "io/Speaker.hpp"              // for Speaker
-#include "memory/Ram.hpp"              // for RamIter, Ram, begin_program_ram
-#include "registers/DataRegister.hpp"  // for DataRegisters
-#include "registers/IRegister.hpp"     // for IRegister
-#include "timers/Timer.hpp"            // for Timer
-#include "timers/RateGuard.hpp"        // for RateGuard
-#include "timers/clock.hpp"            // for Frequency, etc
-#include "details/opcodes.hpp"         // for Opcodes
-#include "details/exceptions.hpp"      // for Exceptions
+#include "io/Keypad.hpp"                // for Keyboard
+#include "io/Speaker.hpp"               // for Speaker
+#include "memory/Ram.hpp"               // for RamIter, Ram, begin_program_ram
+#include "registers/DataRegister.hpp"   // for DataRegisters
+#include "registers/IRegister.hpp"      // for IRegister
+#include "timers/Timer.hpp"             // for Timer
+#include "timers/RateGuard.hpp"         // for RateGuard
+#include "timers/clock.hpp"             // for Frequency, etc
+#include "details/opcodes.hpp"          // for Opcodes
+#include "details/exceptions.hpp"       // for Exceptions
+#include "tasks/RecurrentTask.hpp"      // for RecurrentTask
 
-#include "loggers/CoutLogger.hpp"      // for CoutLogger
+#include "loggers/CoutLogger.hpp"       // for CoutLogger
 
 namespace chip8::test { class Interpreter; }
 
@@ -31,12 +33,17 @@ namespace chip8
             ~Interpreter() = default;
 
             void LoadRom(std::string_view _rom);
-            void StartRom();
+            void StartRom(bool async = true);
+
+            void Stop();
+
+            bool IsRunning() const;
 
         private:
             void InitializeRam();
             void ProcessInstruction(const opcodes::OpBytes& _op_bytes);
 
+            void CpuCycle();
             void InstructionCycle();
             void TickTimers();
             void RefreshDisplay();
@@ -65,14 +72,16 @@ namespace chip8
             registers::IRegister i_register_{};
             registers::DataRegisters data_registers_{};
 
-            const memory::RamIter program_memory_begin_   { ram_.begin() + memory::begin_program_ram };
-            const memory::RamIter interpreter_memory_end_ { ram_.begin() + memory::interpreter_ram_size };
-
             std::vector<memory::RamIter> stack_{};
+
+            tasks::RecurrentTask cpu_task_;
 
             log::CoutLogger cout_logger_;
             
             const timers::Frequency cpu_frequency_ { 100_kHz };
+
+            const memory::RamIter program_memory_begin_   { ram_.begin() + memory::begin_program_ram };
+            const memory::RamIter interpreter_memory_end_ { ram_.begin() + memory::interpreter_ram_size };
 
             friend class test::Interpreter;
     };
