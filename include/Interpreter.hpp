@@ -1,4 +1,3 @@
-#pragma once
 #ifndef CHIP_8_INTERPRETER_HPP
 #define CHIP_8_INTERPRETER_HPP
 
@@ -49,31 +48,31 @@ namespace chip8
             }
 
         private:
-            memory::Ram ram_{};
+            memory::Ram     ram_{};
             memory::RamIter program_counter_{};
+
+            io::display::PixelArray pixels_ {};
+            io::display::Renderer   display_renderer_;
+            io::Keypad              keypad_ {};
+            io::Speaker             speaker_{};
 
             timers::Timer delay_timer_{};
             timers::Timer sound_timer_;
-            timers::RateGuard tick_guard_;
+
+            timers::RateGuard cpu_cycle_guard_;
+            timers::RateGuard timers_tick_guard_;
 
             registers::IRegister i_register_{};
             registers::DataRegisters data_registers_{};
 
-            io::display::PixelArray pixels_ {};
-            io::display::Renderer display_renderer_;
-            bool update_display_ { false };
-
-            io::Keypad  keypad_ {};
-            io::Speaker speaker_{};
-
-            const memory::RamIter program_memory_         { ram_.begin() + memory::begin_program_ram };
-            const memory::RamIter end_interpreter_memory_ { ram_.begin() + memory::interpreter_ram_size };
+            const memory::RamIter program_memory_begin_   { ram_.begin() + memory::begin_program_ram };
+            const memory::RamIter interpreter_memory_end_ { ram_.begin() + memory::interpreter_ram_size };
 
             std::vector<memory::RamIter> stack_{};
 
             log::CoutLogger cout_logger_;
             
-            const timers::Frequency cpu_frequency_ { 500_Hz };
+            const timers::Frequency cpu_frequency_ { 100_kHz };
 
             friend class test::Interpreter;
     };

@@ -8,12 +8,14 @@ Welcome to ScalablePrototyping Chip8 Interpreter, developed by:
 * Álvaro Páez Guerra
 * Juan José Blasco Burguillos
 
-This project show cases the latest C++ cross-platform development best 
+This project showcases the latest C++ cross-platform development best 
 practices, making extensive use of C++17 features, the STL, and modern build, 
 continuous integration and coverage tools. 
 
 This Chip8 Interpreter allows to run chip8 ROMs and to interact with them. Example ROMs can be found 
 [here](https://github.com/dmatlack/chip8/tree/master/roms).
+
+![chip8_space_invaders](https://user-images.githubusercontent.com/3214400/62686890-2acfee80-b9b5-11e9-8f7a-cae5c0d57eb4.png)
 
 ## Requirements ##
 

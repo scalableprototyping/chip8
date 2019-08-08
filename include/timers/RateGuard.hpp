@@ -1,4 +1,3 @@
-#pragma once
 #ifndef CHIP_8_RATE_GUARD_HPP
 #define CHIP_8_RATE_GUARD_HPP
 

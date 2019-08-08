@@ -6,9 +6,11 @@
 namespace chip8
 {
     Interpreter::Interpreter() :
-        sound_timer_      ( [this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } ),
-        tick_guard_       ( [this] () { TickTimers(); }, 60_Hz ),
-        display_renderer_ ( pixels_ )
+        display_renderer_       ( pixels_ ),
+        sound_timer_            ( [this] () { speaker_.Play(); }, 
+                                  [this] () { speaker_.Stop(); } ),
+        cpu_cycle_guard_        ( [this] () { InstructionCycle(); },    500_Hz ),
+        timers_tick_guard_      ( [this] () { TickTimers(); },          60_Hz  )
     {
         InitializeRam();
     }
@@ -17,7 +19,7 @@ namespace chip8
     {
         try
         {
-            details::dumpRomToMemory(_rom, program_memory_, ram_.end());
+            details::dumpRomToMemory(_rom, program_memory_begin_, ram_.end());
         }
         catch(const std::runtime_error& ex)
         {
@@ -27,55 +29,40 @@ namespace chip8
 
     void Interpreter::StartRom()
     {
-        using namespace timers;
-
-        program_counter_ = program_memory_;
+        program_counter_ = program_memory_begin_;
 
         while(true)
         {
-            const Microseconds& execution_time  = measureExecutionTime([this] () { InstructionCycle(); });
-            const Microseconds& sleep_time      = cpu_frequency_.Period<Microseconds>() - execution_time;
-            const Clock::time_point& next_cycle = Clock::now() + sleep_time;
+            cpu_cycle_guard_.Execute();
+            timers_tick_guard_.Execute();
 
-            RefreshDisplay();
-
-            while(Clock::now() < next_cycle)
-            {
-                tick_guard_.Execute();
-                std::this_thread::sleep_for(1ms);
-            }
+            using namespace std::literals::chrono_literals;
+            std::this_thread::sleep_for(1us);
         }
     }
 
     void Interpreter::InstructionCycle()
     {
-        opcodes::OpBytes op_bytes(*program_counter_, *(program_counter_ + 1));
-        std::advance(program_counter_, 2);
-
+        opcodes::OpBytes op_bytes(
+            *program_counter_, *(std::next(program_counter_))
+            );
+        const auto bytes_per_opcode = 2;
+        std::advance(program_counter_, bytes_per_opcode);
         ProcessInstruction(op_bytes);
 
         //TODO: make this optional
-        cout_logger_.Log(op_bytes);
+        //cout_logger_.Log(op_bytes);
     }
 
     void Interpreter::InitializeRam()
     {
-        details::initSystemMemory(ram_.begin(), end_interpreter_memory_);
+        details::initSystemMemory(ram_.begin(), interpreter_memory_end_);
     }
 
     void Interpreter::TickTimers()
     {
         delay_timer_.Tick();
         sound_timer_.Tick();
-    }
-
-    void Interpreter::RefreshDisplay()
-    {
-        if(update_display_)
-        {
-            display_renderer_.Update();
-            update_display_ = false;
-        }
     }
 
     void Interpreter::ProcessInstruction(const opcodes::OpBytes& _op_bytes)

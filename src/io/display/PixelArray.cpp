@@ -23,18 +23,18 @@ namespace chip8::io::display
 
     bool PixelArray::WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte)
     {
-        auto unset_bit_flag = false;
+        auto collision_in_byte = false;
         chip8::details::forEachBitInByteLittleEndian(_byte, [&](auto bit_index_little_endian, auto bit ) {
             const auto bit_index_big_endian = 7 - bit_index_little_endian; // NOLINT
             const auto col_i = (_col + bit_index_big_endian) % kWidth_;
             const auto row_i = _row % kHeight_;
-            if (at(col_i, row_i) == 1 && bit == 1) 
+            if (at(col_i, row_i) == 1 && bit == 1)
             {
-                unset_bit_flag = true;
-            }
+                collision_in_byte = true;
+            } 
             at(col_i, row_i) ^= bit; // NOLINT
         });
-        return unset_bit_flag;
+        return collision_in_byte;
     }
 
     PixelValue_t& PixelArray::at(uint8_t col, uint8_t row)

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef CHIP_8_FREQUENCY_HPP
 #define CHIP_8_FREQUENCY_HPP
 
@@ -16,7 +15,7 @@ namespace chip8::timers
             template<class Unit>
             constexpr Unit Period() const
             {
-                const auto period = static_cast<unsigned long>((1000000) / (1.0 * hertz));
+                const auto period = static_cast<unsigned long>((1.0e6) / (1.0 * hertz));
                 return std::chrono::microseconds(period);
             }
 
@@ -33,17 +32,20 @@ constexpr chip8::timers::Frequency operator"" _Hz(unsigned long long int hz)
 
 constexpr chip8::timers::Frequency operator"" _kHz(unsigned long long int khz)
 {
-    return chip8::timers::Frequency { khz * 1000 };
+    const int kilo = 1e3;
+    return chip8::timers::Frequency { khz * kilo };
 }
 
 constexpr chip8::timers::Frequency operator"" _MHz(unsigned long long int mhz)
 {
-    return chip8::timers::Frequency { mhz * 1000000 };
+    const int mega = 1e6;
+    return chip8::timers::Frequency { mhz * mega };
 }
 
 constexpr chip8::timers::Frequency operator"" _GHz(unsigned long long int ghz)
 {
-    return chip8::timers::Frequency { ghz * 1000000000 };
+    const int giga = 1e9;
+    return chip8::timers::Frequency { ghz * giga };
 }
 
 #endif

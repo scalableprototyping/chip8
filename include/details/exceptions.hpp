@@ -1,4 +1,3 @@
-#pragma once
 #ifndef CHIP_8_EXCEPTIONS_HPP
 #define CHIP_8_EXCEPTIONS_HPP
 

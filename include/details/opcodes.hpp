@@ -1,4 +1,3 @@
-#pragma once
 #ifndef CHIP_8_OPCODES_HPP
 #define CHIP_8_OPCODES_HPP
 

@@ -111,7 +111,7 @@ namespace chip8::test
             */
             void TestOpCode_3XNN()
             {
-                program_counter_ = program_memory_; // NOLINT
+                program_counter_ = program_memory_begin_; // NOLINT
 
                 data_registers_[0].Set(10);
                 data_registers_[1].Set(11);
@@ -120,13 +120,13 @@ namespace chip8::test
                 ProcessInstruction(op);
 
                 //The program counter should have jumped the next instruction
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 2); // NOLINT
 
                 op = {0x30, 11}; // NOLINT
                 ProcessInstruction(op);
 
                 //The program counter shouldn't jump with the second instrution
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 2); // NOLINT
             }
 
             /**
@@ -135,7 +135,7 @@ namespace chip8::test
             */
             void TestOpCode_4XNN()
             {
-                program_counter_ = program_memory_; // NOLINT
+                program_counter_ = program_memory_begin_; // NOLINT
 
                 data_registers_[0].Set(10);
                 data_registers_[1].Set(11);
@@ -144,13 +144,13 @@ namespace chip8::test
                 ProcessInstruction(op);
 
                 //The program counter should not have jumped the next instruction
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 0); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 0); // NOLINT
 
                 op = {0x40, 11}; // NOLINT
                 ProcessInstruction(op);
 
                 //The program counter should have jumped with the second instrution
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 2); // NOLINT
             }
 
             /**
@@ -159,7 +159,7 @@ namespace chip8::test
             */
             void TestOpCode_5XY0()
             {
-                program_counter_ = program_memory_; // NOLINT
+                program_counter_ = program_memory_begin_; // NOLINT
 
                 data_registers_[0].Set(10);
                 data_registers_[1].Set(11);
@@ -169,13 +169,13 @@ namespace chip8::test
                 ProcessInstruction(op);
 
                 //The program counter should not have jumped the next instruction
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 0); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 0); // NOLINT
 
                 op = {0x50, 0x20}; // NOLINT
                 ProcessInstruction(op);
 
                 //The program counter should have jumped with the second instrution
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 2); // NOLINT
             }
 
             /**
@@ -266,7 +266,7 @@ namespace chip8::test
 
             /**
             * Test OpCode 8XY3 
-            * Set VX to VX AND VY
+            * Set VX to VX XOR VY
             */
             void TestOpCode_8XY3()
             {
@@ -329,6 +329,8 @@ namespace chip8::test
 
                 //No carry
                 EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
+                EXPECT_EQ(data_registers_[0].Get(), uint8_t(10 - 9)); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 9); // NOLINT
 
                 data_registers_[0].Set(10);
                 data_registers_[1].Set(11);
@@ -340,28 +342,27 @@ namespace chip8::test
 
                 //Carry should be detected
                 EXPECT_EQ(data_registers_[0xF].Get(), 0); // NOLINT
+                EXPECT_EQ(data_registers_[0].Get(), uint8_t(10 - 11)); // NOLINT
+                EXPECT_EQ(data_registers_[1].Get(), 11); // NOLINT
             }
 
             /**
             * Test OpCode 8XY6 
-            * Store the value of VY shifted right one bit in register VX.
-            * Set register VF to the least significant bit prior to the shift.
+            * Shift register VX to the right. VY is ignored.
+            * Set register VF to the least significant bit prior to the shift
             */
             void TestOpCode_8XY6()
             {
-                data_registers_[0].Set(0x1);
-                data_registers_[1].Set(0x1);
+                data_registers_[0].Set(0b11);
                 data_registers_[0xF].Set(0);
 
-                EXPECT_EQ(data_registers_[0].Get(), 0x1); // NOLINT
-                EXPECT_EQ(data_registers_[1].Get(), 0x1); // NOLINT
+                EXPECT_EQ(data_registers_[0].Get(), 0b11); // NOLINT
                 EXPECT_EQ(data_registers_[0xF].Get(), 0x0); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x16}; // NOLINT
                 ProcessInstruction(op);
 
-                EXPECT_EQ(data_registers_[0].Get(), 0x0); // NOLINT
-                EXPECT_EQ(data_registers_[1].Get(), 0x1); // NOLINT
+                EXPECT_EQ(data_registers_[0].Get(), 0x1); // NOLINT
                 EXPECT_EQ(data_registers_[0xF].Get(), 0x1); // NOLINT
             }
 
@@ -403,25 +404,22 @@ namespace chip8::test
             }
 
             /**
-            * Test OpCode 8XYE 
-            * Store the value of VY shifted left one bit in register VX.
+            * OpCode 8XYE 
+            * Shift register VX to the left. VY is ignored.
             * Set register VF to the most significant bit prior to the shift.
             */
             void TestOpCode_8XYE()
             {
-                data_registers_[0].Set(0x1);
-                data_registers_[1].Set(0b10000000);
+                data_registers_[0].Set(0b10000001);
                 data_registers_[0xF].Set(0);
 
-                EXPECT_EQ(data_registers_[0].Get(), 0x1); // NOLINT
-                EXPECT_EQ(data_registers_[1].Get(), 0b10000000); // NOLINT
+                EXPECT_EQ(data_registers_[0].Get(), 0b10000001); // NOLINT
                 EXPECT_EQ(data_registers_[0xF].Get(), 0x0); // NOLINT
 
                 chip8::opcodes::OpBytes op {0x80, 0x1E}; // NOLINT
                 ProcessInstruction(op);
 
-                EXPECT_EQ(data_registers_[0].Get(), 0x0); // NOLINT
-                EXPECT_EQ(data_registers_[1].Get(), 0b10000000); // NOLINT
+                EXPECT_EQ(data_registers_[0].Get(), 0b00000010); // NOLINT
                 EXPECT_EQ(data_registers_[0xF].Get(), 1); // NOLINT
             }
 
@@ -431,7 +429,7 @@ namespace chip8::test
             */
             void TestOpCode_9XY0()
             {
-                program_counter_ = program_memory_; // NOLINT
+                program_counter_ = program_memory_begin_; // NOLINT
 
                 data_registers_[0].Set(10);
                 data_registers_[1].Set(11);
@@ -441,13 +439,13 @@ namespace chip8::test
                 ProcessInstruction(op);
 
                 //The program counter should have jumped the next instruction
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 2); // NOLINT
 
                 op = {0x90, 0x20}; // NOLINT
                 ProcessInstruction(op);
 
                 //The program counter should not have jumped with the second instrution
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 2); // NOLINT
             }
 
             /**
@@ -547,7 +545,7 @@ namespace chip8::test
             */
             void TestOpCode_EX9E()
             {
-                program_counter_ = program_memory_; // NOLINT
+                program_counter_ = program_memory_begin_; // NOLINT
 
                 data_registers_[1].Set(0x0);
                 EXPECT_EQ(data_registers_[1].Get(), 0x0); // NOLINT
@@ -557,7 +555,7 @@ namespace chip8::test
 
                 //The program counter should not have jumped the next instruction
                 //(the key was not pressed)
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 0); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 0); // NOLINT
             }
 
             /**
@@ -567,7 +565,7 @@ namespace chip8::test
             */
             void TestOpCode_EXA1()
             {
-                program_counter_ = program_memory_; // NOLINT
+                program_counter_ = program_memory_begin_; // NOLINT
 
                 data_registers_[1].Set(0x0);
                 EXPECT_EQ(data_registers_[1].Get(), 0x0); // NOLINT
@@ -577,7 +575,7 @@ namespace chip8::test
 
                 //The program counter should have jumped the next instruction
                 //(the key was not pressed)
-                EXPECT_EQ(std::distance(program_memory_, program_counter_), 2); // NOLINT
+                EXPECT_EQ(std::distance(program_memory_begin_, program_counter_), 2); // NOLINT
             }
 
             /*
