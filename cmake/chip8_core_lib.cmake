@@ -8,6 +8,7 @@ add_library(CHIP8_CORE_LIB
         src/io/display/Renderer.cpp
         src/details/memory.cpp
         src/details/audio.cpp
+        src/details/opcodes.cpp
         src/registers/DataRegister.cpp
         src/registers/IRegister.cpp
 )

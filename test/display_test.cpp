@@ -52,9 +52,8 @@ namespace chip8::test
             }
         }
 
-        chip8::details::forEachBitInByte(0b101, [i=0, &pixels](auto bit) mutable {
-            pixels.at(15+i, 15) = bit;
-            ++i;
+        chip8::details::forEachBitInByteLittleEndian(0b0000'0101, [&](auto bit_index_little_endian, auto bit) {
+            pixels.at(15+bit_index_little_endian, 15) = bit;
         });
         EXPECT_TRUE(pixels.at(15,15) == 1);
         EXPECT_TRUE(pixels.at(16,15) == 0);

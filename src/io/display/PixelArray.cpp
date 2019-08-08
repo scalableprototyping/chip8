@@ -1,5 +1,6 @@
 #include "io/display/PixelArray.hpp"
 
+#include "details/display.hpp"
 #include <stdexcept>  // for out_of_range
 
 namespace chip8::io::display
@@ -18,6 +19,22 @@ namespace chip8::io::display
     void PixelArray::Clear() 
     { 
         pixels_.fill(0); 
+    }
+
+    bool PixelArray::WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte)
+    {
+        auto collision_in_byte = false;
+        chip8::details::forEachBitInByteLittleEndian(_byte, [&](auto bit_index_little_endian, auto bit ) {
+            const auto bit_index_big_endian = 7 - bit_index_little_endian; // NOLINT
+            const auto col_i = (_col + bit_index_big_endian) % kWidth_;
+            const auto row_i = _row % kHeight_;
+            if (at(col_i, row_i) == 1 && bit == 1)
+            {
+                collision_in_byte = true;
+            } 
+            at(col_i, row_i) ^= bit; // NOLINT
+        });
+        return collision_in_byte;
     }
 
     PixelValue_t& PixelArray::at(uint8_t col, uint8_t row)

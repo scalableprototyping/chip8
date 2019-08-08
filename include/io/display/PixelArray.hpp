@@ -9,7 +9,7 @@ namespace chip8::io::display
     class PixelArray
     {
         public:
-            using PixelValue_t = char;
+            using PixelValue_t = uint8_t;
             static constexpr uint8_t kWidth_ = 64;
             static constexpr uint8_t kHeight_ = 32;
             using Array_t = std::array<PixelValue_t, kHeight_*kWidth_>;
@@ -23,12 +23,14 @@ namespace chip8::io::display
             PixelArray& operator= (const PixelArray&) = delete;
 
             void Clear();
+            using CollisionFlag = bool;
+            CollisionFlag WriteByteAt(uint8_t _col, uint8_t _row, uint8_t _byte);
 
-            PixelValue_t& at(uint8_t col, uint8_t row);
-            const PixelValue_t& at(uint8_t col, uint8_t row) const;
+            PixelValue_t& at(uint8_t _col, uint8_t _row);
+            const PixelValue_t& at(uint8_t _col, uint8_t _row) const;
 
-            Iterator_t iterator_at(uint8_t col, uint8_t row);
-            ConstIterator_t iterator_at(uint8_t col, uint8_t row) const;
+            Iterator_t iterator_at(uint8_t _col, uint8_t _row);
+            ConstIterator_t iterator_at(uint8_t _col, uint8_t _row) const;
 
             Iterator_t begin();
             Iterator_t end();
