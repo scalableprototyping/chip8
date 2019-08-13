@@ -18,6 +18,7 @@ namespace chip8
         try
         {
             details::dumpRomToMemory(_rom, program_memory_begin_, ram_.end());
+            display_renderer_.Begin();
         }
         catch(const std::runtime_error& ex)
         {

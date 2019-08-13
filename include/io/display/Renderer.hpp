@@ -10,6 +10,7 @@
 #include <SFML/System/Vector2.hpp>          // for Vector2f
 #include <SFML/Window/VideoMode.hpp>        // for VideoMode
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -23,6 +24,7 @@ namespace chip8::io::display
         public:
             Renderer() = delete;
             explicit Renderer(PixelArray& pixels);
+            void Begin();
             void Update();
 
         private:
@@ -58,7 +60,7 @@ namespace chip8::io::display
             };
             PixelQuads pixelQuads_;
 
-            sf::RenderWindow window_{sf::VideoMode(800, 600), "Chip8 Display"};
+            std::unique_ptr<sf::RenderWindow> window_;
     };
 }
 

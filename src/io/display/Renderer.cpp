@@ -13,6 +13,7 @@
 #include <algorithm>                        // for transform
 #include <ext/alloc_traits.h>               // for __alloc_traits<>::value_type
 #include <iterator>                         // for back_insert_iterator, bac...
+#include <memory>
 #include <stdexcept>                        // for runtime_error
 
 namespace chip8::io::display
@@ -21,31 +22,35 @@ namespace chip8::io::display
         pixels_(pixels),
         pixelQuads_(pixels_)
     {
+    }
+
+    void Renderer::Begin() {
+        window_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "Chip8 Display");
         const int kMapWidth = PixelArray::kWidth_ * PixelQuads::kTextureWidth_;
         const int kMapHeight = PixelArray::kHeight_ * PixelQuads::kTextureHeight_;
         pixelQuads_.setScale(
-            float(window_.getSize().x) / kMapWidth, 
-            float(window_.getSize().y) / kMapHeight
+            float(window_->getSize().x) / kMapWidth, 
+            float(window_->getSize().y) / kMapHeight
             );
     }
 
     void Renderer::Update() 
     {
-        if (window_.isOpen()) 
+        if (window_  && window_->isOpen()) 
         {
             sf::Event event{};
-            while (window_.pollEvent(event))
+            while (window_->pollEvent(event))
             {
                 if(event.type == sf::Event::Closed)
                 {
-                    window_.close();
+                    window_->close();
                 }
             }
 
             pixelQuads_.Update();
-            window_.clear();
-            window_.draw(pixelQuads_);
-            window_.display();
+            window_->clear();
+            window_->draw(pixelQuads_);
+            window_->display();
         }
     }
 
