@@ -33,13 +33,28 @@ Window {
             width: grid.width / grid.columns
             height: grid.height / grid.rows
 
+
+            Image {
+                id: pixel
+                anchors.fill: parent
+
+                source: {
+                    if (gridItem.pixel_state == true) {
+                        "qrc:/assets/pixel_on.png"
+                    } else {
+                        "qrc:/assets/pixel_off.png"
+                    }
+                }
+            }
+
+            /*
             Rectangle {
                 id: pixel
                 anchors.fill: parent
 
                 color: if (gridItem.pixel_state == true ) { "white" } else { "black" }
             }
-
+            */
         }
     }
 
