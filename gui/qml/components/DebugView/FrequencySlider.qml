@@ -9,7 +9,7 @@ Item {
     property int minValue: 0
     property int maxValue: 100
 
-    function chip8_interpreter_update(newValue) {}
+    function updateFun(newValue) {}
 
     function update(newValue) {
         chip8_slider.value = newValue

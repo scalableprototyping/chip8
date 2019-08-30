@@ -17,4 +17,30 @@ ApplicationWindow
     DebugView {
         id: debugView
     }
+
+    Item {
+        anchors.fill: parent
+        focus: true
+        Keys.onPressed: {
+            if (event.key == Qt.Key_F5) {
+                console.log("reloading")
+                _loader.reload()
+                event.accepted = true
+            }
+        }
+    }
+
+    Loader {
+        id: _loader
+
+        function reload() {
+            source = "";
+            qmlEngine.clearComponentCache();
+            source = "./components/TopMenu.qml";
+        }
+
+        anchors.centerIn: parent
+        source: "./components/TopMenu.qml"
+    }
+
 }

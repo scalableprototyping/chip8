@@ -18,8 +18,8 @@ Item {
             minValue: 0
             maxValue: 1000
             value: 500
-            function chip8_interpreter_update(newValue) {
-                interpreter.setCpuFrequency(newValue)
+            function updateFun(newValue) {
+                chip8Interpreter.setCpuFrequency(newValue)
             }
         }
 
@@ -29,8 +29,8 @@ Item {
             minValue: 0
             maxValue: 300
             value: 60
-            function chip8_interpreter_update(newValue) {
-                interpreter.setTimersFrequency(newValue)
+            function updateFun(newValue) {
+                chip8Interpreter.setTimersFrequency(newValue)
             }
         }
 

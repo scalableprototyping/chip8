@@ -17,7 +17,7 @@ MenuBar {
             title: "Please choose a chip8 rom"
 
             onAccepted: {
-                interpreter.loadRom(romFilePicker.fileUrl)
+                chip8Interpreter.loadRom(romFilePicker.fileUrl)
                 console.log("You chose: " + romFilePicker.fileUrls)
             }
 
