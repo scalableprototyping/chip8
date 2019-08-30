@@ -1,4 +1,0 @@
-/home/woowapdabug/projects/blog/chip8/qt_project/build-Qt_chip8-Desktop-Debug/CMakeFiles/rebuild_cache.dir
-/home/woowapdabug/projects/blog/chip8/qt_project/build-Qt_chip8-Desktop-Debug/CMakeFiles/Qt_chip8.dir
-/home/woowapdabug/projects/blog/chip8/qt_project/build-Qt_chip8-Desktop-Debug/CMakeFiles/edit_cache.dir
-/home/woowapdabug/projects/blog/chip8/qt_project/build-Qt_chip8-Desktop-Debug/CMakeFiles/Qt_chip8_autogen.dir

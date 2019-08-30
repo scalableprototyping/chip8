@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>main.qml</file>
-        <file>assets/pixel_off.png</file>
-        <file>assets/pixel_on.png</file>
-        <file>assets/tileset.png</file>
-        <file>main.cpp</file>
-    </qresource>
-</RCC>
