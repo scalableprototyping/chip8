@@ -8,7 +8,7 @@ namespace chip8
     QInterpreter::QInterpreter(QObject* _parent) : QObject(_parent)
     {}
 
-    void QInterpreter::loadRom(const QUrl& _path)
+    void QInterpreter::LoadRom(const QUrl& _path)
     {
         //TODO: log errors
         if(!_path.isLocalFile()) { return; }
@@ -19,7 +19,7 @@ namespace chip8
         interpreter_->StartRom();
     }
 
-    void QInterpreter::setCpuFrequency(qreal _new_frequency)
+    void QInterpreter::SetCpuFrequency(qreal _new_frequency)
     {
         if (interpreter_)
         {
@@ -28,7 +28,7 @@ namespace chip8
         }
     }
 
-    void QInterpreter::setTimersFrequency(qreal _new_frequency)
+    void QInterpreter::SetTimersFrequency(qreal _new_frequency)
     {
         if (interpreter_)
         {
@@ -37,12 +37,47 @@ namespace chip8
         }
     }
 
-    bool QInterpreter::getPixelState(int col, int row)
+    bool QInterpreter::GetPixelState(int _col, int _row)
     {
         if (interpreter_)
         {
-            return interpreter_->pixels_.at(col, row);
+            return interpreter_->pixels_.at(_col, _row);
         }
         return false;
     }
+
+    auto QInterpreter::GetDataRegister(int _reg)
+    {
+        return interpreter_->data_registers_[_reg].Get();
+    }
+
+    auto QInterpreter::GetIRegister()
+    {
+        return interpreter_->i_register_.Get();
+    }
+
+    void QInterpreter::Play()
+    {
+        if (interpreter_)
+        {
+            interpreter_->Continue();
+        }
+    }
+
+    void QInterpreter::Pause()
+    {
+        if (interpreter_)
+        {
+            interpreter_->Pause();
+        }
+    }
+
+    void QInterpreter::Step()
+    {
+        if (interpreter_)
+        {
+            interpreter_->Step();
+        }
+    }
+
 }

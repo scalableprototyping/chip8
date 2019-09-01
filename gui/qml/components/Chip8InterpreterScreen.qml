@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import QtQuick.Window 2.12
 
 Item {
     id: chip8InterpreterScreen
@@ -97,7 +96,7 @@ Item {
                 var pixel = pixels.itemAt(i)
                 var col = i % grid.columns
                 var row = Math.floor(i / grid.columns);
-                var pixelIsOn = chip8Interpreter.getPixelState(col, row)
+                var pixelIsOn = chip8Interpreter.GetPixelState(col, row)
                 if (pixelIsOn == true) {
                     pixel.state = "on"
                 } else {

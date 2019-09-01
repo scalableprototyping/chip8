@@ -34,7 +34,9 @@ namespace chip8
             void LoadRom(std::string_view _rom);
             void StartRom(bool async = true);
 
-            void Stop();
+            void Pause();
+            void Continue();
+            void Step();
             bool IsRunning() const;
 
             void SetCpuFrequency(timers::Frequency _new_frequency);

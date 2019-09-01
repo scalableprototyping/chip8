@@ -17,7 +17,7 @@ MenuBar {
             title: qsTr("Please choose a chip8 rom")
 
             onAccepted: {
-                chip8Interpreter.loadRom(romFilePicker.fileUrl)
+                chip8Interpreter.LoadRom(romFilePicker.fileUrl)
                 console.log("You chose: " + romFilePicker.fileUrls)
             }
 

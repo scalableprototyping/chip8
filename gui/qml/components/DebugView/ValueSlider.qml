@@ -31,8 +31,6 @@ Item {
 
         Text {
             text: qsTr(valueSlider.label)
-
-            // Style
             width: 100 
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 12
@@ -45,15 +43,12 @@ Item {
             to: valueSlider.maxValue
             onValueChanged: valueSlider.update(value)
 
-            // Style
             anchors.verticalCenter: parent.verticalCenter
         }
 
         TextEdit {
             text: valueSlider.value
             onTextChanged: valueSlider.update(Number(text))
-
-            // Style
             width: 30
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 12
@@ -61,8 +56,6 @@ Item {
 
         Text {
             text: units
-
-            // Style
             anchors.verticalCenter: parent.verticalCenter
         }
     }

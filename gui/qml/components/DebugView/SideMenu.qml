@@ -2,8 +2,7 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 
 Item {
-    state: "hidden"
-    visible: false
+    state: "visible"
     width: 450
     anchors.right: parent.right
     anchors.rightMargin: 0
@@ -22,7 +21,7 @@ Item {
             }
             PropertyChanges {
                 target: chip8InterpreterScreen
-                width: window.width - sideMenu.width
+                width: root.width - sideMenu.width
 
             }
         },
@@ -35,7 +34,7 @@ Item {
             }
             PropertyChanges {
                 target: chip8InterpreterScreen
-                width: window.width
+                width: root.width
             }
         }
     ]

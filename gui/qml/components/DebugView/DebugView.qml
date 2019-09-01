@@ -16,6 +16,7 @@ Item {
 
              property int margin: 10
              anchors.margins: margin 
+             spacing: 10
 
              ValueSlider {
                  id: cpuSlider
@@ -25,7 +26,7 @@ Item {
                  defaultValue: 500
                  units: "Hz"
                  function updateFun(newValue) {
-                     chip8Interpreter.setCpuFrequency(newValue)
+                     chip8Interpreter.SetCpuFrequency(newValue)
                  }
              }
 
@@ -37,7 +38,7 @@ Item {
                  defaultValue: 60
                  units: "Hz"
                  function updateFun(newValue) {
-                     chip8Interpreter.setTimersFrequency(newValue)
+                     chip8Interpreter.SetTimersFrequency(newValue)
                  }
              }
 
@@ -74,8 +75,34 @@ Item {
                      pixelOffSlider.resetDefaultValue()
                  }
                  anchors.horizontalCenter: parent.horizontalCenter
-                 anchors.horizontalCenterOffset: 30
+             }
+
+             Row {
+                 anchors.margins: 15
+                 anchors.horizontalCenter: parent.horizontalCenter
+                 spacing: 10
+
+                 Button {
+                     text: "Continue"
+                     onClicked: {
+                         chip8Interpreter.Play()
+                     }
+                 }
+                 Button {
+                     text: "Pause"
+                     onClicked: {
+                         chip8Interpreter.Pause()
+                     }
+                 }
+                 Button {
+                     text: "Step"
+                     onClicked: {
+                         chip8Interpreter.Step()
+                     }
+                 }
+
              }
          }
-    }
-}
+     }
+
+ }

@@ -1,6 +1,8 @@
 #include "Interpreter.hpp"
 #include "details/memory.hpp"    // for dumpRomToMemory, initSystemMemory
 
+#include <iostream>
+
 namespace chip8
 {
     Interpreter::Interpreter() :
@@ -32,9 +34,19 @@ namespace chip8
         cpu_task_.Start(_async);
     }
 
-    void Interpreter::Stop()
+    void Interpreter::Continue()
+    {
+        cpu_task_.Start();
+    }
+
+    void Interpreter::Pause()
     {
         cpu_task_.Stop();
+    }
+
+    void Interpreter::Step()
+    {
+        CpuCycle();
     }
 
     bool Interpreter::IsRunning() const
