@@ -2,15 +2,19 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 
 Item {
-    visible: false
-    width: 300
+    id: debugView
+    state: "hidden"
+    width: column.width + 2*column.margin
     anchors.right: parent.right
+    anchors.rightMargin: 0
     anchors.top: parent.top
     anchors.bottom: parent.bottom
 
     Column {
+        id: column
         anchors.right: parent.right
-        anchors.margins:10 
+        property int margin: 10
+        anchors.margins: margin 
 
         FrequencySlider {
             id: cpuSlider
@@ -40,10 +44,67 @@ Item {
                 cpuSlider.value = 500
                 timersSlider.value = 60
             }
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: 30
 
             // Style
             // TODO possition under theslider
-            anchors.horizontalCenter: timersSlider.frequencySlider.horizontalCenter
+            //anchors.horizontalCenter: timersSlider.frequencySlider.horizontalCenter
         }
     }
+
+    states: [
+        State {
+            name: "visible"
+            PropertyChanges {
+                target: debugView
+                anchors.rightMargin: 0
+            }
+            PropertyChanges {
+                target: chip8InterpreterScreen
+                width: window.width - debugView.width
+
+            }
+        },
+        State {
+            name: "hidden"
+            PropertyChanges {
+                target: debugView
+                anchors.rightMargin: -debugView.width
+            }
+            PropertyChanges {
+                target: chip8InterpreterScreen
+                width: window.width
+
+            }
+        }
+    ]
+
+    transitions: [
+        Transition {
+            from: "hidden"
+            to: "visible"
+            NumberAnimation {
+                properties:"anchors.rightMargin"
+                duration: 400
+            }
+            NumberAnimation {
+                properties:"width"
+                duration: 400
+            }
+        },
+        Transition {
+            from: "visible"
+            to: "hidden"
+            NumberAnimation {
+                properties:"anchors.rightMargin"
+                duration: 400
+            }
+            NumberAnimation {
+                properties:"width"
+                duration: 400
+            }
+        }
+    ]
+
 }

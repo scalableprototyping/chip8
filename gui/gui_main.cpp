@@ -1,13 +1,18 @@
 #include <QApplication>
 #include <QQmlContext>
-#include <QQmlApplicationEngine>
+
+// TODO: Enable for release build
+//#include <QQmlApplicationEngine>
+#include "liveReload/liveReloadQmlApplicationEngine.hpp"
 
 #include "QInterpreter.hpp"
 
 int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
-    QQmlApplicationEngine qml_engine;
+    // TODO: enable for release buidl
+    //QQmlApplicationEngine qml_engine;
+    chip8::liveReloadQmlApplicationEngine qml_engine;
 
     qml_engine.rootContext()->setContextProperty("qmlEngine", &qml_engine);
 

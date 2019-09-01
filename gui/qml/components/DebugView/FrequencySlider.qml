@@ -13,7 +13,7 @@ Item {
 
     function update(newValue) {
         chip8_slider.value = newValue
-        chip8_interpreter_update(newValue)
+        updateFun(newValue)
     }
 
     width: row.width

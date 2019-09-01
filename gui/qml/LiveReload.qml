@@ -6,7 +6,6 @@ import "components/DebugView"
 
 ApplicationWindow
 {
-    id: window
     visible: true
     width: 640
     height: 480
@@ -19,14 +18,15 @@ ApplicationWindow
         id: debugView
     }
 
-   Rectangle {
-       id: chip8InterpreterScreen
-       color: "black"
-       width: window.width
-       height: 50
-       anchors.left: window.left
-       anchors.top: parent.top
-       anchors.bottom: parent.bottom
-   }
-
+    Item {
+        anchors.fill: parent
+        focus: true
+        Keys.onPressed: {
+            if (event.key == Qt.Key_F5) {
+                console.log("reloading")
+                _loader.reload()
+                event.accepted = true
+            }
+        }
+    }
 }

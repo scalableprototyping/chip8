@@ -40,7 +40,11 @@ MenuBar {
             checked: false
             text: qsTr("Debug Tools")
             onToggled: {
-                debugView.visible = checked
+                if (checked) {
+                    debugView.state = "visible"
+                } else {
+                    debugView.state = "hidden"
+                }
             }
         }
     }

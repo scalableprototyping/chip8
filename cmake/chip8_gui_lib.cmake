@@ -1,6 +1,7 @@
 add_library(CHIP8_GUI_LIB
     OBJECT
         gui/QInterpreter.cpp
+        gui/liveReload/liveReloadQmlApplicationEngine.cpp
 )
 
 target_include_directories(CHIP8_GUI_LIB PRIVATE include)
@@ -8,8 +9,14 @@ target_compile_features(CHIP8_GUI_LIB PRIVATE cxx_std_17)
 
 include(chip8_qt)
 target_add_qt(CHIP8_GUI_LIB)
-target_add_qt_resources(CHIP8_GUI_LIB gui/qml/qml.qrc)
-target_add_qt_headers(CHIP8_GUI_LIB gui/QInterpreter.hpp)
+
+target_add_qt_resources(CHIP8_GUI_LIB 
+    gui/qml/qml.qrc
+)
+target_add_qt_headers(CHIP8_GUI_LIB 
+    gui/QInterpreter.hpp
+    gui/liveReload/liveReloadQmlApplicationEngine.hpp
+)
 
 include(chip8_sfml)
 target_add_sfml(CHIP8_GUI_LIB)
