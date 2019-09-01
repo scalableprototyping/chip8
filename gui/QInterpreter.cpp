@@ -36,4 +36,13 @@ namespace chip8
             interpreter_->SetTimersFrequency(frequency);
         }
     }
+
+    bool QInterpreter::getPixelState(int col, int row)
+    {
+        if (interpreter_)
+        {
+            return interpreter_->pixels_.at(col, row);
+        }
+        return false;
+    }
 }

@@ -14,7 +14,7 @@ MenuBar {
 
         FileDialog {
             id: romFilePicker
-            title: "Please choose a chip8 rom"
+            title: qsTr("Please choose a chip8 rom")
 
             onAccepted: {
                 chip8Interpreter.loadRom(romFilePicker.fileUrl)
@@ -41,9 +41,9 @@ MenuBar {
             text: qsTr("Debug Tools")
             onToggled: {
                 if (checked) {
-                    debugView.state = "visible"
+                    debugView.sideMenu.state = "visible"
                 } else {
-                    debugView.state = "hidden"
+                    debugView.sideMenu.state = "hidden"
                 }
             }
         }

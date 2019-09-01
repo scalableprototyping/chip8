@@ -19,14 +19,11 @@ ApplicationWindow
         id: debugView
     }
 
-   Rectangle {
-       id: chip8InterpreterScreen
-       color: "black"
-       width: window.width
-       height: 50
-       anchors.left: window.left
-       anchors.top: parent.top
-       anchors.bottom: parent.bottom
-   }
-
+    Chip8InterpreterScreen {
+        id: chip8InterpreterScreen
+        width: parent.width
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+    }
 }

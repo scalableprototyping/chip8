@@ -83,6 +83,7 @@ namespace chip8
             const memory::RamIter interpreter_memory_end_ { ram_.begin() + memory::interpreter_ram_size };
 
             friend class test::Interpreter;
+            friend class QInterpreter;
     };
 }
 

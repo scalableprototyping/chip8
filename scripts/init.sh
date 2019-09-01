@@ -13,3 +13,5 @@ alias configure_chip8_gcc=". ${CHIP8_ROOT_DIR}/scripts/configure.sh gcc"
 alias configure_chip8_clang=". ${CHIP8_ROOT_DIR}/scripts/configure.sh clang"
 
 alias make_less="cd ${CHIP8_ROOT_DIR}/build; make 2>&1 | less"
+
+export MAIN_QML="${CHIP8_ROOT_DIR}/gui/qml/main.qml"

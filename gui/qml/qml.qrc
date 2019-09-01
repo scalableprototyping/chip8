@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>components/DebugView/FrequencySlider.qml</file>
-        <file>components/TopMenu.qml</file>
     </qresource>
 </RCC>

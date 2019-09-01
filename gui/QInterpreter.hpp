@@ -24,6 +24,7 @@ namespace chip8
 
             Q_SLOT void setCpuFrequency(qreal _new_frequency);
             Q_SLOT void setTimersFrequency(qreal _new_frequency);
+            Q_SLOT bool getPixelState(int col, int row);
 
         private:
             std::unique_ptr<Interpreter> interpreter_;

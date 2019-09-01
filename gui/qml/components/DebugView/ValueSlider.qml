@@ -2,18 +2,24 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 
 Item {
-    id: chip8_slider
+    id: valueSlider
 
     property string label: "Slider"
-    property int value: 50
+    property int defaultValue: 50
+    property int value: defaultValue
     property int minValue: 0
     property int maxValue: 100
+    property string units: ""
 
     function updateFun(newValue) {}
 
     function update(newValue) {
-        chip8_slider.value = newValue
+        valueSlider.value = newValue
         updateFun(newValue)
+    }
+
+    function resetDefaultValue() {
+        value = defaultValue
     }
 
     width: row.width
@@ -24,7 +30,7 @@ Item {
         spacing: 15
 
         Text {
-            text: qsTr(chip8_slider.label)
+            text: qsTr(valueSlider.label)
 
             // Style
             width: 100 
@@ -34,18 +40,18 @@ Item {
 
         Slider {
             id: frequencySlider
-            value: chip8_slider.value
-            from: chip8_slider.minValue
-            to: chip8_slider.maxValue
-            onValueChanged: chip8_slider.update(value)
+            value: valueSlider.value
+            from: valueSlider.minValue
+            to: valueSlider.maxValue
+            onValueChanged: valueSlider.update(value)
 
             // Style
             anchors.verticalCenter: parent.verticalCenter
         }
 
         TextEdit {
-            text: chip8_slider.value
-            onTextChanged: chip8_slider.update(Number(text))
+            text: valueSlider.value
+            onTextChanged: valueSlider.update(Number(text))
 
             // Style
             width: 30
@@ -54,7 +60,7 @@ Item {
         }
 
         Text {
-            text: "Hz"
+            text: units
 
             // Style
             anchors.verticalCenter: parent.verticalCenter
