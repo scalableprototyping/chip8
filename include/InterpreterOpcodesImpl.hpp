@@ -11,8 +11,15 @@ namespace chip8
     * Jump to a machine code routine at nnn. This instruction is only used on the old computers on which Chip-8
     * was originally implemented. It is ignored by modern interpreters. This will not be implemented.
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_0NNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_0NNN(const OpBytes& _op_bytes)
     {
         throw OpCodeException(_op_bytes, "Instruction not implemented. ROM not supported.");
     }
@@ -21,8 +28,15 @@ namespace chip8
     * OpCode 00E0 
     * Clear the pixel frame buffer.
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_00E0>(const OpBytes&)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_00E0(const OpBytes&)
     {
         pixels_.Clear();
     }
@@ -31,8 +45,15 @@ namespace chip8
     * OpCode 00EE
     * Return from a subrutine.
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_00EE>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_00EE(const OpBytes& _op_bytes)
     {
         if (stack_.empty())
         {
@@ -46,8 +67,15 @@ namespace chip8
     * OpCode 1NNN
     * Jump to address NNN.
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_1NNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_1NNN(const OpBytes& _op_bytes)
     {
         auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF); // NOLINT
         program_counter_ = ram_.begin() + nnn;
@@ -57,8 +85,15 @@ namespace chip8
     * OpCode 2NNN 
     * Execute subroutine starting at address NNN
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_2NNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_2NNN(const OpBytes& _op_bytes)
     {
         auto nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF); // NOLINT
         stack_.push_back(program_counter_);
@@ -69,8 +104,15 @@ namespace chip8
     * OpCode 3XNN 
     * Skip the following instruction if the value of register VX equals NN
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_3XNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_3XNN(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
@@ -81,8 +123,15 @@ namespace chip8
     * OpCode 4XNN 
     * Skip the following instruction if the value of register VX is not equal to NN
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_4XNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_4XNN(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
@@ -93,8 +142,15 @@ namespace chip8
     * OpCode 5XY0 
     * Skip the following instruction if the value of register VX is equal to the value of VY
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_5XY0>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_5XY0(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -106,8 +162,15 @@ namespace chip8
     * OpCode 6XNN 
     * Store number NN in register VX
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_6XNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_6XNN(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
@@ -118,8 +181,15 @@ namespace chip8
     * OpCode 7XNN 
     * Add the value NN in register VX
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_7XNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_7XNN(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
@@ -130,8 +200,15 @@ namespace chip8
     * OpCode 8XY0 
     * Store the value of register VY in register VX
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY0>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XY0(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -143,8 +220,15 @@ namespace chip8
     * OpCode 8XY1 
     * Set VX to VX OR VY
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY1>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XY1(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -157,8 +241,15 @@ namespace chip8
     * OpCode 8XY2 
     * Set VX to VX AND VY
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY2>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XY2(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -171,8 +262,15 @@ namespace chip8
     * OpCode 8XY3 
     * Set VX to VX XOR VY
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY3>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XY3(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -185,8 +283,15 @@ namespace chip8
     * OpCode 8XY4 
     * Add the value of register VY to register VX with carry
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY4>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XY4(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -199,8 +304,15 @@ namespace chip8
     * OpCode 8XY5 
     * Subtract the value of register VY to register VX with carry
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY5>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XY5(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -215,8 +327,15 @@ namespace chip8
     * Shift register VX to the right. VY is ignored.
     * Set register VF to the least significant bit prior to the shift
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY6>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XY6(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t less_significant = data_registers_[vx].ShiftRight();
@@ -227,8 +346,15 @@ namespace chip8
     * OpCode 8XY7 
     * Set register VX to the value of VY minus VX. Set VF to carry value
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XY7>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XY7(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -246,8 +372,15 @@ namespace chip8
     * Shift register VX to the left. VY is ignored.
     * Set register VF to the most significant bit prior to the shift.
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_8XYE>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_8XYE(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t most_significant = data_registers_[vx].ShiftLeft();
@@ -258,8 +391,15 @@ namespace chip8
     * OpCode 9XY0 
     * Skip the following instruction if the value of register VX is not equal to the value of VY
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_9XY0>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_9XY0(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint8_t vy = (_op_bytes.second >> 4) & 0x0F; // NOLINT
@@ -271,8 +411,15 @@ namespace chip8
     * OpCode ANNN 
     * Store memory address NNN in register I
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_ANNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_ANNN(const OpBytes& _op_bytes)
     {
         uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | _op_bytes.second; // NOLINT
         i_register_.Set(nnn);
@@ -282,8 +429,15 @@ namespace chip8
     * OpCode BNNN
     * Jump to address NNN + V0.
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_BNNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_BNNN(const OpBytes& _op_bytes)
     {
         const uint16_t nnn = (_op_bytes.first & 0x0F) << 8 | (_op_bytes.second & 0xFF); // NOLINT
         program_counter_ = ram_.begin() + nnn + data_registers_[0].Get(); // NOLINT
@@ -293,8 +447,15 @@ namespace chip8
     * OpCode CXNN
     * Set VX to a random number with a mask of NN
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_CXNN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_CXNN(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
 
@@ -307,12 +468,15 @@ namespace chip8
     * stored in I. Sprites are XORed to the existing screen. Set VF to 1 if any set pixels are changed to unset, and 0 otherwise.
     */
 
-    void collision_detected() {
-
-    }
-
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_DXYN>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_DXYN(const OpBytes& _op_bytes)
     {
         const auto vx = (_op_bytes.first  & 0x0F); // NOLINT
         const auto vy = (_op_bytes.second & 0xF0) >> 4; // NOLINT
@@ -338,7 +502,6 @@ namespace chip8
         if (collision_flag) 
         {
             data_registers_[0xF].Set(1); // NOLINT
-            collision_detected();
         }
     }
 
@@ -348,8 +511,15 @@ namespace chip8
     * Skip the following instruction if the key corresponding to the hex value currently 
     * stored in register VX is pressed
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_EX9E>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_EX9E(const OpBytes& _op_bytes)
     {
         const uint8_t vx        = _op_bytes.first & 0x0F;
         const uint8_t hex_value = data_registers_[vx].Get();
@@ -362,8 +532,15 @@ namespace chip8
     * Skip the following instruction if the key corresponding to the hex value currently 
     * stored in register VX is not being pressed
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_EXA1>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_EXA1(const OpBytes& _op_bytes)
     {
         const uint8_t vx        = _op_bytes.first & 0x0F;
         const uint8_t hex_value = data_registers_[vx].Get();
@@ -375,8 +552,15 @@ namespace chip8
     * OpCode FX07
     * Store the curren value of the delay timer in register VX
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX07>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX07(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F;
 
@@ -387,8 +571,15 @@ namespace chip8
     * OpCode FX0A
     * Wait for a keypress and store the result in register VX
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX0A>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX0A(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F;
 
@@ -399,8 +590,15 @@ namespace chip8
     * OpCode FX15
     * Set the delay timer to the value of register VX
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX15>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX15(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F;
 
@@ -411,8 +609,15 @@ namespace chip8
     * OpCode FX18
     * Set the sound timer to the value of register VX
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX18>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX18(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F;
 
@@ -423,8 +628,15 @@ namespace chip8
     * OpCode FX1E
     * Add the value stored in register VX to register I
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX1E>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX1E(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F;
 
@@ -436,8 +648,15 @@ namespace chip8
     * Set I to the memory address of the sprite data corresponding to the 
     * hexadecimal digit stored in register VX
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX29>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX29(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint16_t rows_per_sprite = 5;
@@ -449,8 +668,15 @@ namespace chip8
     * Store the binary-coded decimal equivalent of the value stored 
     * in register VX at addresses I, I+1, and I+2
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX33>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX33(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         const uint16_t vx_val = data_registers_[vx].Get();
@@ -470,8 +696,15 @@ namespace chip8
     * Store the values of registers V0 to VX inclusive in memory starting at address I
     * I is set to I + X + 1 after operation
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX55>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX55(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         for (auto i = 0; i <= vx; ++i) 
@@ -486,8 +719,15 @@ namespace chip8
     * Fill registers V0 to VX inclusive with the values stored in memory 
     * starting at address I. I is set to I + X + 1 after operation
     */
-    template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_FX65>(const OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ExecuteInstruction_FX65(const OpBytes& _op_bytes)
     {
         const uint8_t vx = _op_bytes.first & 0x0F; // NOLINT
         for (auto i = 0; i <= vx; ++i) 

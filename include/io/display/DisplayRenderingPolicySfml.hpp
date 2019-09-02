@@ -1,5 +1,5 @@
-#ifndef CHIP_8_RENDERER_HPP
-#define CHIP_8_RENDERER_HPP
+#ifndef CHIP_8_DISPLAY_RENDERING_POLICY_SFML_HPP
+#define CHIP_8_DISPLAY_RENDERING_POLICY_SFML_HPP
 
 #include <SFML/Graphics/Drawable.hpp>       // for Drawable
 #include <SFML/Graphics/RenderStates.hpp>   // for RenderStates
@@ -22,8 +22,8 @@ namespace chip8::io::display
     class DisplayRenderingPolicySfml
     {
         protected:
-            Renderer() = delete;
-            explicit Renderer(PixelArray& pixels);
+            DisplayRenderingPolicySfml() = delete;
+            explicit DisplayRenderingPolicySfml(PixelArray& pixels);
             void Begin();
             void Update();
 

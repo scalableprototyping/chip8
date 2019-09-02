@@ -6,6 +6,7 @@
 #include <QUrl>
 
 #include "Interpreter.hpp"
+#include "io/display/DisplayRenderingPolicyDoNothing.hpp"
 
 #include <memory>
 
@@ -34,7 +35,15 @@ namespace chip8
             Q_SLOT void Step();
 
         private:
-            std::unique_ptr<Interpreter<>> interpreter_;
+            std::unique_ptr
+            <
+                Interpreter
+                <
+                    // QML UI fetches the pixel status information, no rendering required
+                    io::display::DisplayRenderingPolicyDoNothing 
+                >
+            > 
+            interpreter_;
     };
 }
 

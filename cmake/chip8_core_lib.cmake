@@ -1,6 +1,5 @@
 add_library(CHIP8_CORE_LIB
     OBJECT
-        src/Interpreter.cpp
         src/io/Speaker.cpp
         src/io/Keypad.cpp
         src/io/KeyMap.cpp
@@ -9,7 +8,6 @@ add_library(CHIP8_CORE_LIB
         src/io/display/DisplayRenderingPolicySfml.cpp
         src/details/memory.cpp
         src/details/audio.cpp
-        src/details/opcodes.cpp
         src/registers/DataRegister.cpp
         src/registers/IRegister.cpp
         src/tasks/RecurrentTask.cpp

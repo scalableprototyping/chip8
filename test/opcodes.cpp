@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "Interpreter.hpp"
+#include "io/display/DisplayRenderingPolicySfml.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -13,7 +14,11 @@
 namespace chip8::test
 {
 
-    class Interpreter : public chip8::Interpreter<> { 
+    class Interpreter : public chip8::Interpreter
+                        <
+                            io::display::DisplayRenderingPolicySfml
+                        > 
+    { 
         public: 
             /**
             * Test OpCode 0NNN 

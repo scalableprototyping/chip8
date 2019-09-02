@@ -13,7 +13,13 @@ namespace chip8
         //TODO: log errors
         if(!_path.isLocalFile()) { return; }
 
-        interpreter_ = std::make_unique<Interpreter<>>();
+        interpreter_ = std::make_unique
+            <
+                Interpreter
+                <
+                    io::display::DisplayRenderingPolicyDoNothing 
+                >
+            >();
 
         interpreter_->LoadRom(QDir::toNativeSeparators(_path.toLocalFile()).toStdString());
         interpreter_->StartRom();

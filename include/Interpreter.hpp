@@ -54,13 +54,42 @@ namespace chip8
             void CpuCycle();
             void InstructionCycle();
             void TickTimers();
-            void RefreshDisplay();
 
-            template<opcodes::OpCodes> 
-            void ExecuteInstruction(const opcodes::OpBytes& _op_byte)
-            {
-                throw OpCodeException(_op_byte, "Unimplemented opcode function.");
-            }
+            void ExecuteInstruction_0NNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_00E0(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_00EE(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_1NNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_2NNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_3XNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_4XNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_5XY0(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_6XNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_7XNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XY0(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XY1(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XY2(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XY3(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XY4(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XY5(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XY6(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XY7(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_8XYE(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_9XY0(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_ANNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_BNNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_CXNN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_DXYN(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_EX9E(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_EXA1(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX07(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX0A(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX15(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX18(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX1E(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX29(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX33(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX55(const opcodes::OpBytes& op_bytes); 
+            void ExecuteInstruction_FX65(const opcodes::OpBytes& op_bytes); 
 
         private:
             memory::Ram     ram_{};
@@ -92,5 +121,8 @@ namespace chip8
             friend class QInterpreter;
     };
 }
+
+#include "InterpreterImpl.hpp"
+#include "InterpreterOpcodesImpl.hpp"
 
 #endif
