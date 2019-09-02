@@ -42,6 +42,10 @@ namespace chip8
             void SetCpuFrequency(timers::Frequency _new_frequency);
             void SetTimersFrequency(timers::Frequency _new_frequency);
 
+            std::function<void()> tick_timers_completed_;
+            std::function<void()> instruction_cycle_completed_;
+            std::function<void(std::string&&)> disassembled_instruction_;
+
         private:
             void InitializeRam();
             void ProcessInstruction(const opcodes::OpBytes& _op_bytes);
@@ -83,6 +87,8 @@ namespace chip8
 
             const memory::RamIter program_memory_begin_   { ram_.begin() + memory::begin_program_ram };
             const memory::RamIter interpreter_memory_end_ { ram_.begin() + memory::interpreter_ram_size };
+
+            std::string FormatDisassembly(const opcodes::OpBytes& _op_bytes, const std::string& _msg) const;
 
             friend class test::Interpreter;
             friend class QInterpreter;

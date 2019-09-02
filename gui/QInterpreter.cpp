@@ -15,6 +15,18 @@ namespace chip8
 
         interpreter_ = std::make_unique<Interpreter>();
 
+        interpreter_->tick_timers_completed_ = [this] () {
+            emit tickTimersCompleted();
+        };
+
+        interpreter_->instruction_cycle_completed_ = [this] () {
+            emit instructionCycleCompleted();
+        };
+
+        interpreter_->disassembled_instruction_ = [this] (std::string &&_msg) {
+            std::cout << _msg << "\n";
+        };
+
         interpreter_->LoadRom(QDir::toNativeSeparators(_path.toLocalFile()).toStdString());
         interpreter_->StartRom();
     }
@@ -46,12 +58,12 @@ namespace chip8
         return false;
     }
 
-    auto QInterpreter::GetDataRegister(int _reg)
+    int QInterpreter::GetDataRegister(int _reg)
     {
         return interpreter_->data_registers_[_reg].Get();
     }
 
-    auto QInterpreter::GetIRegister()
+    int QInterpreter::GetIRegister()
     {
         return interpreter_->i_register_.Get();
     }

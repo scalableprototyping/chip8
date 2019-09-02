@@ -26,12 +26,16 @@ namespace chip8
             Q_SLOT void SetTimersFrequency(qreal _new_frequency);
 
             Q_SLOT bool GetPixelState(int _col, int _row);
-            Q_SLOT auto GetDataRegister(int _reg);
-            Q_SLOT auto GetIRegister();
+            Q_SLOT int GetDataRegister(int _reg);
+            Q_SLOT int GetIRegister();
 
             Q_SLOT void Play();
             Q_SLOT void Pause();
             Q_SLOT void Step();
+
+        signals:
+            void instructionCycleCompleted();
+            void tickTimersCompleted();
 
         private:
             std::unique_ptr<Interpreter> interpreter_;

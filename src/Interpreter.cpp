@@ -78,6 +78,8 @@ namespace chip8
         std::advance(program_counter_, bytes_per_opcode);
         ProcessInstruction(op_bytes);
 
+        instruction_cycle_completed_();
+
         //TODO: make this optional
         //cout_logger_.Log(op_bytes);
     }
@@ -91,6 +93,7 @@ namespace chip8
     {
         delay_timer_.Tick();
         sound_timer_.Tick();
+        tick_timers_completed_();
     }
 
     void Interpreter::ProcessInstruction(const opcodes::OpBytes& _op_bytes)

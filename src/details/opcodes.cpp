@@ -6,6 +6,24 @@ namespace chip8
 {
     using namespace opcodes; // NOLINT
 
+    const auto bytes_per_opcode = 2;
+
+    std::string hexToStr(int _hex)
+    {
+        std::stringstream ss;
+        ss << "0x" 
+           << std::setfill('0') << std::setw(2) << std::hex
+           << _hex;
+        return ss.str();
+    }
+
+    std::string Interpreter::FormatDisassembly(const OpBytes& _op_bytes, const std::string& _msg) const
+    {
+        return  hexToStr((program_counter_-2) - ram_.begin())  + ": " + 
+                toStr(_op_bytes) + " -> " + 
+                _msg;
+    }
+
     /**
     * OpCode 0NNN 
     * Jump to a machine code routine at nnn. This instruction is only used on the old computers on which Chip-8
@@ -22,9 +40,13 @@ namespace chip8
     * Clear the pixel frame buffer.
     */
     template<>
-    void Interpreter::ExecuteInstruction<OpCodes::OpCode_00E0>(const OpBytes&)
+    void Interpreter::ExecuteInstruction<OpCodes::OpCode_00E0>(const OpBytes& _op_bytes)
     {
         pixels_.Clear();
+
+        disassembled_instruction_(
+            FormatDisassembly(_op_bytes, "Clear pixel frame buffer") 
+        );
     }
 
     /**

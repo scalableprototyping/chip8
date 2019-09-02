@@ -121,26 +121,43 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             Repeater {
-                anchors.topMargin: 20
                 id: registers
-                model: 16
+                property int numberOfRegisters: 16
+                model: numberOfRegisters
                 delegate: registerComponent
+                anchors.topMargin: 20
             }
         }
 
         Component {
             id: registerComponent
-            Row {
-                Text {
-                    text: "R" + index + ": "
-                }
-                Text {
-                    text: "0"
-                    // TODO: connect C++ model to link with the register values so the changes are reflected
-                }
+            Item {
+                id: registersItem
+                property int value
+                width: 50
+                height: 15
+                Row {
+                    Text {
+                        text: "R" + index + ": "
+                    }
+                    Text {
+                        text: value
+                        // TODO: connect C++ model to link with the register values so the changes are reflected
+                    }
 
+                }
             }
+        }
 
+        Connections {
+            target: chip8Interpreter
+            onTickTimersCompleted: {
+                var i
+                for (i = 0; i < registers.numberOfRegisters; i++) {
+                    var register = registers.itemAt(i)
+                    register.value = chip8Interpreter.GetDataRegister(i)
+                }
+            }
         }
    }
 }
