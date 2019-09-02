@@ -6,6 +6,7 @@ add_library(CHIP8_CORE_LIB
         src/io/KeyMap.cpp
         src/io/display/PixelArray.cpp
         src/io/display/Renderer.cpp
+        src/io/display/DisplayRenderingPolicySfml.cpp
         src/details/memory.cpp
         src/details/audio.cpp
         src/details/opcodes.cpp

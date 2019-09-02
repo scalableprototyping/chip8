@@ -6,7 +6,7 @@
 #include <vector>                       // for vector
 
 #include "io/display/PixelArray.hpp"    // for PixelArray
-#include "io/display/Renderer.hpp"
+#include "io/display/DisplayRenderingPolicySfml.hpp"
 #include "io/Keypad.hpp"                // for Keyboard
 #include "io/Speaker.hpp"               // for Speaker
 #include "memory/Ram.hpp"               // for RamIter, Ram, begin_program_ram
@@ -25,7 +25,12 @@ namespace chip8::test { class Interpreter; }
 
 namespace chip8
 {
-    class Interpreter
+        //TODO: add void_t concept to make sure it has the methods required
+    template
+    <
+        class DisplayRenderingPolicy = io::display::DisplayRenderingPolicySfml
+    >
+    class Interpreter : private DisplayRenderingPolicy
     {
         public:
             Interpreter();
@@ -62,7 +67,6 @@ namespace chip8
             memory::RamIter program_counter_{};
 
             io::display::PixelArray pixels_ {};
-            io::display::Renderer   display_renderer_;
             io::Keypad              keypad_ {};
             io::Speaker             speaker_{};
 

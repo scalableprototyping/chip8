@@ -34,7 +34,7 @@ namespace chip8
             Q_SLOT void Step();
 
         private:
-            std::unique_ptr<Interpreter> interpreter_;
+            std::unique_ptr<Interpreter<>> interpreter_;
     };
 }
 

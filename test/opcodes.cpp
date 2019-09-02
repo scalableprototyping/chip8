@@ -13,7 +13,7 @@
 namespace chip8::test
 {
 
-    class Interpreter : public chip8::Interpreter { 
+    class Interpreter : public chip8::Interpreter<> { 
         public: 
             /**
             * Test OpCode 0NNN 

@@ -333,7 +333,7 @@ namespace chip8
             }
         }
 
-        display_renderer_.Update();
+        DisplayRenderingPolicy::Update();
 
         if (collision_flag) 
         {

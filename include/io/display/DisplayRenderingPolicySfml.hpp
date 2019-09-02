@@ -19,9 +19,9 @@ namespace sf { class RenderTarget; }
 
 namespace chip8::io::display
 {
-    class Renderer
+    class DisplayRenderingPolicySfml
     {
-        public:
+        protected:
             Renderer() = delete;
             explicit Renderer(PixelArray& pixels);
             void Begin();

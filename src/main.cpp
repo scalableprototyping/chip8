@@ -10,7 +10,7 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    chip8::Interpreter interpreter {};
+    chip8::Interpreter<> interpreter {};
 
     try
     {

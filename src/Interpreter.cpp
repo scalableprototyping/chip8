@@ -5,8 +5,16 @@
 
 namespace chip8
 {
-    Interpreter::Interpreter() :
-        display_renderer_       ( pixels_ ),
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::Interpreter() :
+        DisplayRenderingPolicy  ( pixels_ ),
         sound_timer_            ( [this] () { speaker_.Play(); }, [this] () { speaker_.Stop(); } ),
         cpu_cycle_guard_        ( [this] () { InstructionCycle(); }, timers::default_cpu_frequency ),
         timers_tick_guard_      ( [this] () { TickTimers(); }, timers::default_timers_frequency),
@@ -15,12 +23,20 @@ namespace chip8
         InitializeRam();
     }
 
-    void Interpreter::LoadRom(std::string_view _rom)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::LoadRom(std::string_view _rom)
     {
         try
         {
             details::dumpRomToMemory(_rom, program_memory_begin_, ram_.end());
-            display_renderer_.Begin();
+            DisplayRenderingPolicy::Begin();
         }
         catch(const std::runtime_error& ex)
         {
@@ -28,50 +44,122 @@ namespace chip8
         }
     }
 
-    void Interpreter::StartRom(bool _async)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::StartRom(bool _async)
     {
         program_counter_ = program_memory_begin_;
         cpu_task_.Start(_async);
     }
 
-    void Interpreter::Continue()
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::Continue()
     {
         cpu_task_.Start();
     }
 
-    void Interpreter::Pause()
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::Pause()
     {
         cpu_task_.Stop();
     }
 
-    void Interpreter::Step()
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::Step()
     {
         CpuCycle();
     }
 
-    bool Interpreter::IsRunning() const
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    bool Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::IsRunning() const
     {
         return cpu_task_.IsRunning();
     }
 
-    void Interpreter::SetCpuFrequency(timers::Frequency _new_frequency)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::SetCpuFrequency(timers::Frequency _new_frequency)
     {
         cpu_cycle_guard_.SetFrequency(_new_frequency);
     }
 
-    void Interpreter::SetTimersFrequency(timers::Frequency _new_frequency)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::SetTimersFrequency(timers::Frequency _new_frequency)
     {
         timers_tick_guard_.SetFrequency(_new_frequency);
     }
 
     // Private
-    void Interpreter::CpuCycle()
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::CpuCycle()
     {
         cpu_cycle_guard_.Execute();
         timers_tick_guard_.Execute();
     }
 
-    void Interpreter::InstructionCycle()
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::InstructionCycle()
     {
         opcodes::OpBytes op_bytes(*program_counter_, *(std::next(program_counter_)));
         const auto bytes_per_opcode = 2;
@@ -82,18 +170,42 @@ namespace chip8
         //cout_logger_.Log(op_bytes);
     }
 
-    void Interpreter::InitializeRam()
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::InitializeRam()
     {
         details::initSystemMemory(ram_.begin(), interpreter_memory_end_);
     }
 
-    void Interpreter::TickTimers()
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::TickTimers()
     {
         delay_timer_.Tick();
         sound_timer_.Tick();
     }
 
-    void Interpreter::ProcessInstruction(const opcodes::OpBytes& _op_bytes)
+    template
+    <
+        class DisplayRenderingPolicy
+    >
+    void Interpreter
+    <
+        DisplayRenderingPolicy
+    >
+    ::ProcessInstruction(const opcodes::OpBytes& _op_bytes)
     {
         using namespace opcodes;
 
