@@ -136,6 +136,7 @@ Item {
                 }
                 Text {
                     text: "0"
+                    // TODO: connect C++ model to link with the register values so the changes are reflected
                 }
 
             }
