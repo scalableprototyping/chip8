@@ -25,6 +25,7 @@ namespace chip8
 
         interpreter_->disassembled_instruction_ = [this] (std::string &&_msg) {
             std::cout << _msg << "\n";
+            emit disassemblyCompleted(QString::fromStdString(_msg));
         };
 
         interpreter_->LoadRom(QDir::toNativeSeparators(_path.toLocalFile()).toStdString());

@@ -159,5 +159,47 @@ Item {
                 }
             }
         }
-   }
+
+        ListView {
+            id: disassembly
+            width: 300; height: 100
+            anchors.top: registersGrid.bottom
+            anchors.topMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            clip: true
+            contentWidth: 320
+
+            ScrollBar.vertical: ScrollBar {}
+
+            /*
+            Timer {
+                id: positionTimer
+                interval: 200
+                repeat: false
+                onTriggered: view.positionViewAtIndex(view.count - 1, ListView.Visible)
+            }
+
+            onCountChanged: {
+                positionTimer.start()
+            }
+            */
+
+           model: ListModel {
+               id: contactModel
+           }
+            delegate: Row {
+                Text { text: instruction; width: 160 }
+            }
+        }
+
+        Connections {
+            target: chip8Interpreter
+            onDisassemblyCompleted: {
+                contactModel.append({
+                    instruction: message,
+                })
+            }
+        }
+
+    }
 }

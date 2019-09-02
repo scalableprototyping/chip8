@@ -36,6 +36,8 @@ namespace chip8
         signals:
             void instructionCycleCompleted();
             void tickTimersCompleted();
+            void disassemblyCompleted(QString message);
+            // TODO: emit string with the disassmebly
 
         private:
             std::unique_ptr<Interpreter> interpreter_;
