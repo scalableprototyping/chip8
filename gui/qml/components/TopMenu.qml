@@ -26,10 +26,20 @@ MenuBar {
             }
         }
 
+        MenuItem { 
+            text: qsTr("Restart")
+            onTriggered: {
+                if (romFilePicker.fileUrl) {
+                    onTriggered: chip8Interpreter.LoadRom(romFilePicker.fileUrl)
+                }
+            }
+        }
+
         MenuItem {
             text: qsTr("Exit")
-            onTriggered: Qt.quit();
+            onTriggered: Qt.quit()
         }
+
     }
 
     Menu {
