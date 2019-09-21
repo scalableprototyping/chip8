@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(chip8_cpp VERSION 1.0.0)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 list(APPEND CMAKE_MODULE_PATH 
     "${PROJECT_SOURCE_DIR}/cmake"
     "${PROJECT_SOURCE_DIR}/cmake/modules"

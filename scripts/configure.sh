@@ -13,7 +13,8 @@ function build_project()
     rm -rf build
     mkdir build
     cd build
-    cmake -DBUILD_INTERPRETER=True \
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=True \
+          -DBUILD_INTERPRETER=True \
           -DBUILD_TESTS=True \
           -DBUILD_GUI=True \
           -DCMAKE_BUILD_TYPE=Debug \
@@ -21,6 +22,7 @@ function build_project()
           -DIWYU=True \
           ..
     make -j8
+    cp compile_commands.json ..
 }
 
 if [[ "$1" == "gcc" ]]; then

@@ -2,3 +2,6 @@ build/
 
 # Vim Ctrl P project root marker
 .ctrlp
+
+# CMake generated compilation flags required by YouCompleteMe
+compile_commands.json
