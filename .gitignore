@@ -5,3 +5,4 @@ build/
 
 # CMake generated compilation flags required by YouCompleteMe
 compile_commands.json
+.clangd/
